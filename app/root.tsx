@@ -1,10 +1,12 @@
+import { ReactNode, useState } from 'react'
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react'
 import { NextUIProvider } from '@nextui-org/react'
+import { ThemeProvider as NextThemesProvider } from 'next-themes'
 // import type { LinksFunction } from '@remix-run/node'
 
-import './styles/tailwind.css'
-import './styles/main.css'
-import { useState } from 'react'
+import '~/styles/tailwind.css'
+import '~/styles/main.css'
+import { Header } from '~/components'
 
 // export const links: LinksFunction = () => [
 // 	{ rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -37,14 +39,23 @@ export function Layout({ children }: { children: React.ReactNode }) {
 	)
 }
 
-export default function App() {
-	const [theme, setTheme] = useState('dark')
+export function Providers({ children }: { children: ReactNode }) {
 	return (
 		<NextUIProvider>
-			<main className={`${theme} text-foreground bg-background`}>
-				{' '}
-				<Outlet />
-			</main>
+			<NextThemesProvider attribute='class' defaultTheme='dark'>
+				{children}
+			</NextThemesProvider>
 		</NextUIProvider>
+	)
+}
+
+export default function App() {
+	const [theme, setTheme] = useState('light')
+	return (
+		<Providers>
+			<main className={`${theme} text-foreground bg-background`}>
+				<Header /> <Outlet />
+			</main>
+		</Providers>
 	)
 }
