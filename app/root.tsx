@@ -50,7 +50,7 @@ export function Providers({ children }: { children: ReactNode }) {
 }
 
 export default function App() {
-	const [theme, setTheme] = useState('light')
+	const [theme, setTheme] = useState('dark')
 	return (
 		<Providers>
 			<main className={`${theme} text-foreground bg-background`}>
