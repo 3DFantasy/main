@@ -1,7 +1,7 @@
 import Result, { err, ok } from 'true-myth/result'
 import { teamFindUnique, depthChartUpdate } from '~/dao'
 
-import type { DepthChartObject } from '~/types'
+import type { DepthChartObject, Error } from '~/types'
 
 export type CheckAndUpdateDepthChartInput = {
 	teamId: number
@@ -23,14 +23,11 @@ export async function checkAndUpdateDepthChart({
 	})
 	if (!team) {
 		return err({
-			name: 'TeamFindUnique',
 			message: 'No team with that ID found',
 			code: 404,
 		})
 	}
-	const currentDepthChart = team.depthChart.filter(
-		(depthChart: CheckAndUpdateDepthChartInput) => depthChart.year === year
-	)
+	const currentDepthChart = team.depthChart.filter((depthChart) => depthChart.year === year)
 
 	if (currentDepthChart.length === 0 || currentDepthChart.length > 1) {
 		return err({

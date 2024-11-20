@@ -1,6 +1,5 @@
 import puppeteer from 'puppeteer'
-import { checkAndUpdateDepthChart } from '~/utils/db/index.server'
-
+import { saveAllDepthCharts } from '~/utils/index.server'
 import type { DepthChartObject } from '~/types'
 
 export async function Team5Check() {
@@ -42,21 +41,9 @@ export async function Team5Check() {
 		return resultArray
 	})
 
-	// compare w db
-	const updateDepthChartResp = await checkAndUpdateDepthChart({
-		depthChart: result,
-		teamId: 5,
-		year: 2024,
-	})
-
-	if (updateDepthChartResp.isErr) {
-		return updateDepthChartResp.error
-	}
-
-	if (updateDepthChartResp.value.code === 200) {
-		// trigger email
-	}
-
 	await browser.close()
+
+	await saveAllDepthCharts({ result, teamId: 5, year: 2024 })
+
 	return true
 }

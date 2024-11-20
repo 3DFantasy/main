@@ -47,3 +47,27 @@ export async function depthChartFindUnique({
 	})
 	return depthChart
 }
+
+export type DepthChartCreateInput = {
+	data: {
+		teamId: number
+		value: string
+		year: number
+		title: string
+	}
+}
+
+export async function depthChartCreate({ data }: DepthChartCreateInput): Promise<typeof depthChart> {
+	const depthChart = await db.depthChart.create({
+		data: data,
+		select: {
+			id: true,
+			teamId: true,
+			value: true,
+			year: true,
+			createdAt: true,
+			updatedAt: true,
+		},
+	})
+	return depthChart
+}
