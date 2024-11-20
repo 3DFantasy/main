@@ -1,13 +1,5 @@
 import { useState } from 'react'
-import {
-	Navbar,
-	NavbarBrand,
-	NavbarContent,
-	NavbarItem,
-	NavbarMenuToggle,
-	NavbarMenu,
-	NavbarMenuItem,
-} from '@nextui-org/navbar'
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@nextui-org/navbar'
 import {
 	Avatar,
 	Button,
@@ -18,20 +10,24 @@ import {
 	Link,
 } from '@nextui-org/react'
 
-export type MenuItem = { label: string; key: string }
+import type { Account } from '@prisma/client'
 
-export function Header() {
-	const [loggedIn] = useState(true)
+export type MenuItem = { label: string; key: string; to: any }
 
+export type HeaderInput = {
+	account: Account | null
+}
+
+export function Header({ account }: HeaderInput) {
 	const loggedOutMenuItems: MenuItem[] = [
-		{ label: 'Sign Up', key: 'sign-up' },
-		{ label: 'Log In', key: 'log-in' },
+		{ label: 'Sign Up', key: 'sign-up', to: '/auth/signup' },
+		{ label: 'Log In', key: 'log-in', to: '/auth/login' },
 	]
 
 	const loggedInMenuItems: MenuItem[] = [
-		{ label: 'Profile', key: 'profile' },
-		{ label: 'Dashboard', key: 'dashboard' },
-		{ label: 'Log Out', key: 'log-out' },
+		{ label: 'Profile', key: 'profile', to: '/profile' },
+		{ label: 'Dashboard', key: 'dashboard', to: '/dashboard' },
+		{ label: 'Log Out', key: 'log-out', to: '/auth/logout' },
 	]
 
 	return (
@@ -60,7 +56,7 @@ export function Header() {
 				</NavbarItem> */}
 			</NavbarContent>
 			<NavbarContent as='div' justify='end'>
-				{loggedIn ? (
+				{account ? (
 					<Dropdown placement='bottom-end'>
 						<DropdownTrigger>
 							<Avatar
@@ -75,19 +71,31 @@ export function Header() {
 						</DropdownTrigger>
 
 						<DropdownMenu aria-label='Profile Actions' variant='flat'>
-							{loggedInMenuItems.map((item) => {
-								return <DropdownItem key={item.key}>{item.label}</DropdownItem>
+							{loggedInMenuItems.map((item, i) => {
+								return (
+									<DropdownItem key={item.key}>
+										{' '}
+										<Link
+											className='w-full'
+											// color={i === 0 ? 'default' : i === 1 ? 'primary' : 'secondary'}
+											href={item.to}
+											// variant='flat'
+										>
+											{item.label}
+										</Link>
+									</DropdownItem>
+								)
 							})}
 						</DropdownMenu>
 					</Dropdown>
 				) : (
 					loggedOutMenuItems.map((item, i) => {
 						return (
-							<NavbarItem>
+							<NavbarItem key={i}>
 								<Button
 									as={Link}
 									color={i === 0 ? 'default' : i === 1 ? 'primary' : 'secondary'}
-									href='#'
+									href={item.to}
 									variant='flat'
 								>
 									{item.label}

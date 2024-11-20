@@ -1,6 +1,6 @@
 import { Scheduler, Queue, Worker } from 'node-resque'
 import * as schedule from 'node-schedule'
-import { Team9Check } from '.'
+import { Team9Check } from './index.server'
 
 // import { createSignature } from './createSignature'
 

@@ -1,5 +1,5 @@
 import Result, { err, ok } from 'true-myth/result'
-import { teamFindUnique, depthChartUpdate } from '../../dao'
+import { teamFindUnique, depthChartUpdate } from '~/dao'
 
 import type { DepthChartObject } from '~/types'
 

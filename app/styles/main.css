@@ -17,3 +17,12 @@ header {
 .container {
 	max-width: 1440px;
 }
+
+.toast {
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 10px;
+	margin-inline: auto;
+	width: fit-content;
+}
