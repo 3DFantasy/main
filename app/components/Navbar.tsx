@@ -21,12 +21,11 @@ import {
 export type MenuItem = { label: string; key: string }
 
 export function Header() {
-	const [loggedIn] = useState(false)
+	const [loggedIn] = useState(true)
 
 	const loggedOutMenuItems: MenuItem[] = [
 		{ label: 'Sign Up', key: 'sign-up' },
 		{ label: 'Log In', key: 'log-in' },
-		{ label: 'Log In2', key: 'log-in2' },
 	]
 
 	const loggedInMenuItems: MenuItem[] = [
