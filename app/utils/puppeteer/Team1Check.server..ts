@@ -1,7 +1,9 @@
 import puppeteer from 'puppeteer'
-import { checkAndUpdateDepthChart } from '~/utils/db/index.server'
+import { checkAndUpdateDepthChart, saveAllDepthCharts } from '~/utils/db/index.server'
 
 import type { DepthChartObject } from '~/types'
+import { depthChartCreate } from '~/dao'
+import { depthChartListCreate } from '~/dao/depthChartList.server'
 
 export async function Team1Check() {
 	const browser = await puppeteer.launch()
@@ -38,22 +40,15 @@ export async function Team1Check() {
 		})
 		return resultArray
 	})
-
-	// compare w db
-	const updateDepthChartResp = await checkAndUpdateDepthChart({
-		depthChart: result,
-		teamId: 1,
-		year: 2024,
-	})
-
-	if (updateDepthChartResp.isErr) {
-		return updateDepthChartResp.error
-	}
-
-	if (updateDepthChartResp.value.code === 200) {
-		// trigger email
-	}
-
 	await browser.close()
-	return updateDepthChartResp
+
+	await saveAllDepthCharts({ result, teamId: 1, year: 2024 })
+
+	// // compare w db
+
+	// if (updateDepthChartResp.value.code === 200) {
+	// 	// trigger email
+	// }
+
+	return {}
 }

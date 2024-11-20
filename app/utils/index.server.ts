@@ -11,3 +11,4 @@ export {
 	Team8Check,
 	Team9Check,
 } from './puppeteer'
+export { saveAllDepthCharts, checkAndUpdateDepthChart } from './db/index.server'
