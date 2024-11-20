@@ -1,5 +1,5 @@
 import puppeteer from 'puppeteer'
-import { checkAndUpdateDepthChart } from '~/utils/db'
+import { checkAndUpdateDepthChart } from '~/utils/db/index.server'
 
 import type { DepthChartObject } from '~/types'
 
