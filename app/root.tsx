@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, useNavigate } from '@remix-run/react'
 import { NextUIProvider } from '@nextui-org/react'
 import { ThemeProvider as NextThemesProvider } from 'next-themes'
@@ -31,7 +31,7 @@ export type RootContext = {
 // ]
 
 export const loader: LoaderFunction = async ({ request }) => {
-	return rootLoader()
+	return rootLoader(request)
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -75,6 +75,16 @@ export default function App() {
 	})
 
 	const rootContext: RootContext = { setToast, setAccount }
+
+	useEffect(() => {
+		if (account) {
+			setAccount(account)
+			setToast({
+				message: `Authenticated: ${account.email}`,
+				error: false,
+			})
+		}
+	}, [account])
 
 	return (
 		<Providers>
