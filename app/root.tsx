@@ -3,10 +3,12 @@ import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/reac
 import { NextUIProvider } from '@nextui-org/react'
 import { ThemeProvider as NextThemesProvider } from 'next-themes'
 import { Header } from '~/components'
+import { rootLoader } from './loader/root.server'
 // import type { LinksFunction } from '@remix-run/node'
 
 import '~/styles/tailwind.css'
 import '~/styles/main.css'
+import type { LoaderFunction } from '@remix-run/node'
 
 // export const links: LinksFunction = () => [
 // 	{ rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -20,6 +22,10 @@ import '~/styles/main.css'
 // 		href: 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap',
 // 	},
 // ]
+
+export const loader: LoaderFunction = async ({ request }) => {
+	return rootLoader(request)
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
 	return (

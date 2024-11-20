@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer'
-import { checkAndUpdateDepthChart } from '../db'
+import { checkAndUpdateDepthChart } from '~/utils/db'
 
-import type { DepthChartObject } from '../../types'
+import type { DepthChartObject } from '~/types'
 
 export async function Team2Check() {
 	const browser = await puppeteer.launch()
