@@ -1,8 +1,10 @@
 // import { nodeResque } from '~/utils'
 
-// import { authenticator } from '~/utils/auth.server'
+import { authenticator } from '~/utils/auth/auth.server'
 
-export const rootLoader = async () => {
+export const rootLoader = async (request: Request) => {
+	const account = await authenticator.isAuthenticated(request)
+
 	// const account = await authenticator.isAuthenticated(request)
 	// nodeResque()
 
@@ -16,5 +18,5 @@ export const rootLoader = async () => {
 	// 	Sentry.setTag('application', process.env.SENTRY_APP_SERVER_TAG)
 	// }
 
-	return {}
+	return { account }
 }

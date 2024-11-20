@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
-
 import { Button, Input } from '@nextui-org/react'
 import { authSignupLoader } from '~/loader/auth.signup.server'
 import { authSignupAction } from '~/actions/auth.signup.server'
-import { useFetcher, useLoaderData, useOutletContext } from '@remix-run/react'
+import { Form, useActionData, useFetcher, useLoaderData, useOutletContext } from '@remix-run/react'
 
 import type { ActionFunctionArgs, LoaderFunction, MetaFunction } from '@remix-run/node'
 import type { RootContext } from '~/root'
+import type { ActionData } from '~/actions/auth.signup.server'
 
 export const meta: MetaFunction = () => {
 	return [{ title: 'Signup | 3DF' }, { name: '3DF Signup', content: '3DF signup page' }]
@@ -23,7 +23,9 @@ export async function action({ request }: ActionFunctionArgs) {
 const inputClass = 'my-2'
 
 export default function Signup() {
-	const loaderData = useLoaderData()
+	const actionData = useActionData<ActionData>()
+
+	// const loaderData = useLoaderData<LoaderData>()
 	const { setToast, setAccount } = useOutletContext<RootContext>()
 	const fetcher = useFetcher<{ message: string; code: number }>()
 	const [formData, setFormData] = useState<{
@@ -50,53 +52,61 @@ export default function Signup() {
 	}, [])
 
 	useEffect(() => {
-		if (fetcher.data) {
-			if (fetcher.data.message.includes('email')) {
-				setError({
-					...error,
-					email: true,
-				})
+		if (actionData) {
+			if (actionData.message) {
 				setToast({
 					error: true,
-					message: fetcher.data.message,
+					message: actionData.message,
 				})
+				if (actionData.message.includes('characters')) {
+					setError({
+						email: false,
+						password: true,
+					})
+				} else if (actionData.message.includes('email')) {
+					setError({
+						email: true,
+						password: false,
+					})
+				} else {
+					setError({
+						email: true,
+						password: true,
+					})
+				}
 			}
 		}
-	}, [fetcher.data])
+	}, [actionData])
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, formDataField: string) => {
 		setError({
 			email: false,
 			password: false,
 		})
-		setFormData((prev) => ({
-			...prev,
-			[formDataField]: e.target.value,
-		}))
+		setFormData((form) => ({ ...form, [formDataField]: e.target.value }))
 	}
 
 	return (
 		<div className='mt-40 mx-auto max-w-80'>
-			<h1 className='mx-auto w-fit'>Create Account</h1>
-			<form method='POST'>
+			<h1 className='mx-auto w-fit'>Signup for 3DF</h1>
+			<Form method='post'>
 				<Input
 					className={inputClass}
-					type='email'
+					type='text'
 					name='email'
 					label='Email'
-					defaultValue={formData.email}
 					color={error.email ? 'danger' : 'default'}
+					value={formData.email}
 					onChange={(e) => handleInputChange(e, 'email')}
 				/>
-
 				<Input
 					className={inputClass}
 					type={formData.hidePassword ? 'password' : 'text'}
 					label='Password'
 					name='password'
-					defaultValue={formData.password}
-					color={error.password ? 'danger' : 'default'}
+					value={formData.password}
 					onChange={(e) => handleInputChange(e, 'password')}
+					color={error.password ? 'danger' : 'default'}
 					endContent={
 						<button
 							onClick={(e) => {
@@ -127,29 +137,17 @@ export default function Signup() {
 				<div className='mx-auto w-fit'>
 					<Button
 						color='default'
-						type='button'
-						onClick={() =>
-							fetcher.submit(
-								{
-									email: formData.email,
-									password: formData.password,
-								},
-								{
-									action: '/auth/signup',
-									method: 'POST',
-								}
-							)
-						}
+						type='submit'
 						isDisabled={
-							formData.email.length === 0 ||
+							formData.password !== formData.confirm ||
 							formData.password.length === 0 ||
-							formData.password !== formData.confirm
+							formData.email.length === 0
 						}
 					>
 						Sign up
 					</Button>
 				</div>
-			</form>
+			</Form>
 		</div>
 	)
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { authLoginAction } from '~/actions/auth.login.server'
+import { ActionData, authLoginAction } from '~/actions/auth.login.server'
 import { authLoginLoader } from '~/loader/auth.login.server'
 import { Button, Input } from '@nextui-org/react'
 import { Form, useActionData, useLoaderData, useOutletContext } from '@remix-run/react'
@@ -9,32 +9,33 @@ import { RootContext } from '~/root'
 
 export const meta: MetaFunction = () => {
 	return [
-		{ title: 'Login | OneReview' },
-		{ name: 'Summary API Login screen', content: 'Provide password and authenticate to continue' },
+		{ title: 'Login | 3DF' },
+		{ name: '3DF Login screen', content: 'Provide password and authenticate to continue' },
 	]
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
 	return authLoginLoader(request)
 }
+
 export const action: ActionFunction = async ({ request }) => {
 	return authLoginAction(request)
 }
 
 export default function Login() {
+	const actionData = useActionData<ActionData>()
 	const { setAccount, setToast } = useOutletContext<RootContext>()
-	const actionData = useActionData<{
-		fields: {
-			password: string
-			email: string
-		}
-	}>()
-	const { error } = useLoaderData<typeof loader>()
+	const { account } = useLoaderData<typeof loader>()
 	const [formData, setFormData] = useState({
 		email: '',
-		password: actionData?.fields?.email || '',
+		password: '',
 		hidePassword: true,
 	})
+	const [error, setError] = useState({
+		email: false,
+		password: false,
+	})
+
 	const inputClass = 'my-2'
 
 	useEffect(() => {
@@ -42,16 +43,25 @@ export default function Login() {
 	}, [])
 
 	useEffect(() => {
-		console
-		if (error === 'credentials') {
-			setToast({
-				message: 'Login credentials not found',
-				error: true,
-			})
+		if (actionData) {
+			if (actionData.message) {
+				setError({
+					email: true,
+					password: true,
+				})
+				setToast({
+					message: actionData.message,
+					error: true,
+				})
+			}
 		}
-	}, [error])
+	}, [actionData])
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, formDataField: string) => {
+		setError({
+			email: false,
+			password: false,
+		})
 		setFormData((form) => ({ ...form, [formDataField]: e.target.value }))
 	}
 
@@ -64,6 +74,7 @@ export default function Login() {
 					type='email'
 					name='email'
 					label='Email'
+					color={error.email ? 'danger' : 'default'}
 					value={formData.email}
 					onChange={(e) => handleInputChange(e, 'email')}
 				/>
@@ -73,7 +84,7 @@ export default function Login() {
 					label='Password'
 					name='password'
 					value={formData.password}
-					color={error ? 'danger' : 'default'}
+					color={error.password ? 'danger' : 'default'}
 					onChange={(e) => handleInputChange(e, 'password')}
 					endContent={
 						<button

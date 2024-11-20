@@ -25,8 +25,8 @@ export function Header({ account }: HeaderInput) {
 	]
 
 	const loggedInMenuItems: MenuItem[] = [
-		{ label: 'Profile', key: 'profile', to: '/profile' },
-		{ label: 'Dashboard', key: 'dashboard', to: '/dashboard' },
+		// { label: 'Profile', key: 'profile', to: '/profile' },
+		// { label: 'Dashboard', key: 'dashboard', to: '/dashboard' },
 		{ label: 'Log Out', key: 'log-out', to: '/auth/logout' },
 	]
 
@@ -77,9 +77,8 @@ export function Header({ account }: HeaderInput) {
 										{' '}
 										<Link
 											className='w-full'
-											// color={i === 0 ? 'default' : i === 1 ? 'primary' : 'secondary'}
+											color={item.key === 'log-out' ? 'danger' : 'primary'}
 											href={item.to}
-											// variant='flat'
 										>
 											{item.label}
 										</Link>
