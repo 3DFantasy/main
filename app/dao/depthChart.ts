@@ -1,4 +1,4 @@
-import { db } from '../../lib/db'
+import { db } from '~/lib/db.server'
 
 export type DepthChartUpdateInput = {
 	data: {
