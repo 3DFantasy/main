@@ -53,5 +53,3 @@ export default async function handleRequest(
 		setTimeout(abort, ABORT_DELAY)
 	})
 }
-
-nodeResque()

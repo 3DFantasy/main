@@ -1,10 +1,8 @@
 import { Scheduler, Queue, Worker, Plugins } from 'node-resque'
 // import * as schedule from 'node-schedule'
 // import { createSignature } from './createSignature'
-import { PXPAPIResponse } from '~/types'
-import { gameCreate } from '~/dao'
-import { gameIDs } from '~/data/gameIDs'
-import { timeout } from './timeout'
+
+import { fetchAPIPXP } from './fetch/apiPXP.server'
 
 export async function nodeResque() {
 	// ////////////////////////
@@ -32,31 +30,8 @@ export async function nodeResque() {
 			pluginOptions: {
 				JobLock: { reEnqueue: true },
 			},
-			perform: async (gameIDs: string[]) => {
-				const url = process.env.PXP_API_URL
-				gameIDs.map(async (gameID) => {
-					const resp = await fetch(url + gameID, {
-						method: 'GET',
-						headers: {
-							'Content-Type': 'application/json',
-						},
-					}).then(async (result) => {
-						const resp = (await result.json()) as PXPAPIResponse
-
-						const game = await gameCreate({
-							data: {
-								id: gameID,
-								response: JSON.stringify(resp),
-							},
-						})
-						await timeout(5)
-						if (!game) {
-							console.log(`Something went wrong creating: ${gameID}`)
-						} else {
-							console.log(`${gameID} ✔`)
-						}
-					})
-				})
+			perform: async (gameIDs: string[], year: number) => {
+				return await fetchAPIPXP({ gameIDs, year })
 			},
 		},
 	}
@@ -143,7 +118,6 @@ export async function nodeResque() {
 		console.log(error)
 	})
 	await queue.connect()
-	await queue.enqueue(process.env.REDIS_QUEUE, 'fetchAllPXP', [gameIDs])
 
 	// const midnight = new schedule.RecurrenceRule()
 	// midnight.hour = 0
@@ -157,7 +131,7 @@ export async function nodeResque() {
 
 	// schedule.scheduleJob(test, async () => {
 	// 	console.log('>>> enquing a job')
-	// 	await queue.enqueue(process.env.REDIS_QUEUE, 'test')
+	// 	await queue.enqueue(process.env.REDIS_QUEUE, 'fetchAllPXP', [gameIDs])
 	// })
 
 	// ////////////////////

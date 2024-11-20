@@ -34,8 +34,9 @@ model DepthChart {
 }
 
 model Game {
-  id String @id 
-  response String
+  id        String   @id
+  response  String
+  year      Int      @default(2024)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

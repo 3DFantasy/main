@@ -4,6 +4,7 @@ export type GameCreateInput = {
 	data: {
 		id: string
 		response: string
+		year: number
 	}
 }
 
