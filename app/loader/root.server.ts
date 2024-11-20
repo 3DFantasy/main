@@ -1,11 +1,9 @@
-import { gameIDs } from '~/data/2022gameIDs'
 import { authenticator } from '~/utils/auth/auth.server'
-import { fetchAPIPXP } from '~/utils/fetch/apiPXP.server'
 
 export const rootLoader = async (request: Request) => {
 	const account = await authenticator.isAuthenticated(request)
 
-	const resp = await fetchAPIPXP({ gameIDs, year: 2022 })
+	// const resp = await fetchAPIPXP({ gameIDs, year: 2022 })
 
 	// const account = await authenticator.isAuthenticated(request)
 
