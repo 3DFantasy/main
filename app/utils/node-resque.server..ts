@@ -1,8 +1,10 @@
-import { Scheduler, Queue, Worker } from 'node-resque'
-import * as schedule from 'node-schedule'
-import { Team9Check } from './index.server'
-
+import { Scheduler, Queue, Worker, Plugins } from 'node-resque'
+// import * as schedule from 'node-schedule'
 // import { createSignature } from './createSignature'
+import { PXPAPIResponse } from '~/types'
+import { gameCreate } from '~/dao'
+import { gameIDs } from '~/data/gameIDs'
+import { timeout } from './timeout'
 
 export async function nodeResque() {
 	// ////////////////////////
@@ -22,35 +24,41 @@ export async function nodeResque() {
 	// JOBS                  //
 	// ////////////////////////
 
-	let jobsToComplete = 0
+	// let jobsToComplete = 0
 
 	const jobs: any = {
-		checkAll: async (time: string, callback: any) => {
-			await Team9Check()
+		fetchAllPXP: {
+			plugins: [Plugins.JobLock],
+			pluginOptions: {
+				JobLock: { reEnqueue: true },
+			},
+			perform: async (gameIDs: string[]) => {
+				const url = process.env.PXP_API_URL
+				gameIDs.map(async (gameID) => {
+					const resp = await fetch(url + gameID, {
+						method: 'GET',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+					}).then(async (result) => {
+						const resp = (await result.json()) as PXPAPIResponse
+
+						const game = await gameCreate({
+							data: {
+								id: gameID,
+								response: JSON.stringify(resp),
+							},
+						})
+						await timeout(5)
+						if (!game) {
+							console.log(`Something went wrong creating: ${gameID}`)
+						} else {
+							console.log(`${gameID} ✔`)
+						}
+					})
+				})
+			},
 		},
-		// webhookUsage: async (env: string, callback: any) => {
-		// 	// const endpoint = 'webhooks/usage'
-		// 	// const XTOPIC = 'MONTHLY_USAGE'
-		// 	// const url = env === 'production' ? process.env.ONEREVIEW_PROD_URL : process.env.ONEREVIEW_DEV_URL
-		// 	// const body = JSON.stringify({})
-		// 	// const signature = createSignature(body)
-		// 	// await fetch(url + endpoint, {
-		// 	// 	method: 'POST',
-		// 	// 	headers: {
-		// 	// 		'Content-Type': 'application/json',
-		// 	// 		'X-Topic': XTOPIC,
-		// 	// 		'X-Hmac-SHA256': signature,
-		// 	// 	},
-		// 	// 	body: body,
-		// 	// }).then((result) => {
-		// 	// 	console.log(result)
-		// 	// 	if (result.ok) {
-		// 	// 		sendSlackMessage(`${env} ✓`, 'webhooks/usage')
-		// 	// 	} else {
-		// 	// 		sendSlackMessage(`${env} X`, 'webhooks/usage')
-		// 	// 	}
-		// 	// })
-		// },
 	}
 
 	// /////////////////
@@ -65,9 +73,9 @@ export async function nodeResque() {
 	// SCHEDULER             //
 	// ////////////////////////
 
-	const scheduler = new Scheduler({ connection: connectionDetails })
-	await scheduler.connect()
-	scheduler.start()
+	// const scheduler = new Scheduler({ connection: connectionDetails })
+	// await scheduler.connect()
+	// scheduler.start()
 
 	worker.on('start', () => {
 		console.log('worker started')
@@ -100,62 +108,64 @@ export async function nodeResque() {
 		console.log('worker paused')
 	})
 
-	scheduler.on('start', () => {
-		console.log('scheduler started')
-	})
-	scheduler.on('end', () => {
-		console.log('scheduler ended')
-	})
-	scheduler.on('poll', () => {
-		console.log('scheduler polling')
-	})
-	scheduler.on('leader', () => {
-		console.log('scheduler became leader')
-	})
-	scheduler.on('error', (error) => {
-		console.log(`scheduler error >> ${error}`)
-	})
-	scheduler.on('cleanStuckWorker', (workerName, errorPayload, delta) => {
-		console.log(`failing ${workerName} (stuck for ${delta}s) and failing job ${errorPayload}`)
-	})
-	scheduler.on('workingTimestamp', (timestamp) => {
-		console.log(`scheduler working timestamp ${timestamp}`)
-	})
-	scheduler.on('transferredJob', (timestamp, job) => {
-		console.log(`scheduler enquing job ${timestamp} >> ${JSON.stringify(job)}`)
-	})
+	// scheduler.on('start', () => {
+	// 	console.log('scheduler started')
+	// })
+	// scheduler.on('end', () => {
+	// 	console.log('scheduler ended')
+	// })
+	// scheduler.on('poll', () => {
+	// 	console.log('scheduler polling')
+	// })
+	// scheduler.on('leader', () => {
+	// 	console.log('scheduler became leader')
+	// })
+	// scheduler.on('error', (error) => {
+	// 	console.log(`scheduler error >> ${error}`)
+	// })
+	// scheduler.on('cleanStuckWorker', (workerName, errorPayload, delta) => {
+	// 	console.log(`failing ${workerName} (stuck for ${delta}s) and failing job ${errorPayload}`)
+	// })
+	// scheduler.on('workingTimestamp', (timestamp) => {
+	// 	console.log(`scheduler working timestamp ${timestamp}`)
+	// })
+	// scheduler.on('transferredJob', (timestamp, job) => {
+	// 	console.log(`scheduler enquing job ${timestamp} >> ${JSON.stringify(job)}`)
+	// })
 
 	// //////////////
 	// DEFINE JOBS //
 	// //////////////
 
 	const queue = new Queue({ connection: connectionDetails }, jobs)
+
 	queue.on('error', function (error) {
 		console.log(error)
 	})
 	await queue.connect()
+	await queue.enqueue(process.env.REDIS_QUEUE, 'fetchAllPXP', [gameIDs])
 
 	// const midnight = new schedule.RecurrenceRule()
 	// midnight.hour = 0
 	// midnight.minute = 1
 	// midnight.tz = 'Canada/Eastern'
 
-	const test = new schedule.RecurrenceRule()
-	test.hour = 23
-	test.minute = 33
-	test.tz = 'Canada/Eastern'
+	// const test = new schedule.RecurrenceRule()
+	// test.hour = 23
+	// test.minute = 33
+	// test.tz = 'Canada/Eastern'
 
-	schedule.scheduleJob(test, async () => {
-		console.log('>>> enquing a job')
-		await queue.enqueue(process.env.REDIS_QUEUE, 'test')
-	})
+	// schedule.scheduleJob(test, async () => {
+	// 	console.log('>>> enquing a job')
+	// 	await queue.enqueue(process.env.REDIS_QUEUE, 'test')
+	// })
 
 	// ////////////////////
 	// SHUTDOWN HELPERS //
 	// ////////////////////
 
 	const shutdown = async () => {
-		await scheduler.end()
+		// await scheduler.end()
 		await worker.end()
 		console.log('bye.')
 		process.exit()

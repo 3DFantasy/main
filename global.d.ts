@@ -20,6 +20,7 @@ declare global {
 			TEAM_7_URL: string
 			TEAM_8_URL: string
 			TEAM_9_URL: string
+			PXP_API_URL: string
 		}
 	}
 }
