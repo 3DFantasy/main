@@ -2,11 +2,11 @@ import { ReactNode, useState } from 'react'
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react'
 import { NextUIProvider } from '@nextui-org/react'
 import { ThemeProvider as NextThemesProvider } from 'next-themes'
+import { Header } from '~/components'
 // import type { LinksFunction } from '@remix-run/node'
 
 import '~/styles/tailwind.css'
 import '~/styles/main.css'
-import { Header } from '~/components'
 
 // export const links: LinksFunction = () => [
 // 	{ rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -54,7 +54,10 @@ export default function App() {
 	return (
 		<Providers>
 			<main className={`${theme} text-foreground bg-background`}>
-				<Header /> <Outlet />
+				<Header />
+				<div className='container mx-auto'>
+					<Outlet />
+				</div>
 			</main>
 		</Providers>
 	)
