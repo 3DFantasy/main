@@ -3,7 +3,7 @@
  * You are free to delete this file if you'd like to, but if you ever want it revealed again, you can run `npx remix reveal` ✨
  * For more information, see https://remix.run/file-conventions/entry.server
  */
-
+import { nodeResque } from '~/utils/index.server'
 import { PassThrough } from 'node:stream'
 
 import type { EntryContext } from '@remix-run/node'
@@ -53,3 +53,5 @@ export default async function handleRequest(
 		setTimeout(abort, ABORT_DELAY)
 	})
 }
+
+nodeResque()
