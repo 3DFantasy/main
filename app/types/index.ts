@@ -121,11 +121,7 @@ export type PXPAPIResponse = {
 			playedPhases: 'Q1' | 'Q2' | 'Q3' | 'Q4' | 'HL'[]
 		}
 		playByPlayInfo: {
-			Q1?: PXPAPIResponseInfoObj[]
-			Q2?: PXPAPIResponseInfoObj[]
-			Q3?: PXPAPIResponseInfoObj[]
-			Q4?: PXPAPIResponseInfoObj[]
-			HL?: PXPAPIResponseInfoObj[]
+			ALL: PXPAPIResponseInfoObj[]
 		}
 	}
 	sport: string

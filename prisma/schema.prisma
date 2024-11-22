@@ -18,7 +18,7 @@ model Account {
 
 model Team {
   id             Int              @id @default(autoincrement())
-  geniusTeamId   String           @unique
+  geniusTeamId   String?          @unique
   depthChart     DepthChart[]
   DepthChartList DepthChartList[]
   Drives         Drive[]

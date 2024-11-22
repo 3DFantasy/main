@@ -1,3 +1,4 @@
+import { gameFindMany } from '~/dao/index.server'
 import { authenticator } from '~/utils/auth/auth.server'
 import { parsePlays } from '~/utils/parse/index.server'
 import {
@@ -11,8 +12,23 @@ import {
 	Team8Check,
 	Team9Check,
 } from '~/utils/puppeteer'
+
+import type { PXPAPIResponse } from '~/types'
+
 export const rootLoader = async (request: Request) => {
 	const account = await authenticator.isAuthenticated(request)
 
+	const games = await gameFindMany({
+		where: {
+			year: 2024,
+		},
+	})
+	for (const game of games) {
+		const parsedPlayArray = (await JSON.parse(game.response)) as PXPAPIResponse
+		const parsedPlays = await parsePlays({
+			gameId: game.id,
+			playArray: parsedPlayArray.data.playByPlayInfo.ALL,
+		})
+	}
 	return { account }
 }
