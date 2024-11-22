@@ -43,17 +43,46 @@ export type PXPAPIResponseTeam = {
 }
 
 export type PXPAPIResponseInfoObj = {
-	id: string
-	teamId: string
-	type: string
-	subType: string
+	id: string // DRIVE#-PLAY#
+	// REDBLACKS | ARGOS | ELKS | STAMPEDERS | BLUE BOMBERS | ROUGHRIDERS | ALOUETTES | TIGER-CATS | LIONS |
+	teamId:
+		| '88019'
+		| '122345'
+		| '114347'
+		| '112939'
+		| '110380'
+		| '106752'
+		| '86680'
+		| '83579'
+		| '93775'
+		| string
+	type:
+		| 'Pass'
+		| 'Sack'
+		| 'Punt'
+		| 'Run'
+		| 'Kickoff'
+		| 'FieldGoal'
+		| 'TwoPoints'
+		| 'ThreePoints'
+		| 'OnePoint'
+		| string
+	subType:
+		| 'CompletePass'
+		| 'IncompletePass'
+		| 'Touchdown'
+		| 'Penalty'
+		| 'Success'
+		| 'Failed'
+		| string
+		| null
 	description: string
-	clock: string
-	timestamp: number
-	phase: string
-	phaseQualifier: string
+	clock: string // MM:SS
+	timestamp: number // Unix timestamp in milliseconds
+	phase: 'Regular' | 'Overtime' | string
+	phaseQualifier: '1' | '2' | '3' | '4' | string
 	isScoring: boolean
-	playStartPosition: string
+	playStartPosition: string // DOWN & DISTANCE @ TEAM YRD-LINE (3rd & 8 at OTT 37)
 }
 
 export type PXPAPIResponse = {

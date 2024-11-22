@@ -1,7 +1,7 @@
 import bcryptjs from 'bcryptjs'
 import { Authenticator, AuthorizationError } from 'remix-auth'
 import { FormStrategy } from 'remix-auth-form'
-import { accountCreate, accountFindUniqueByEmail } from '~/dao'
+import { accountCreate, accountFindUniqueByEmail } from '~/dao/index.server'
 import { sessionStorage } from '~/utils/auth/sessionStorage.server'
 import { parseEmail } from '../parse'
 
