@@ -17,9 +17,12 @@ model Account {
 }
 
 model Team {
-  id             Int              @id @default(autoincrement()) 
+  id             Int              @id @default(autoincrement())
+  geniusTeamId   String?          @unique
   depthChart     DepthChart[]
   DepthChartList DepthChartList[]
+  Drives         Drive[]
+  Plays          Play[]
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
 }
@@ -29,7 +32,7 @@ model DepthChartList {
   teamId    Int
   value     String?
   year      Int
-  Team      Team     @relation(fields: [teamId], references: [id])
+  Team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -40,7 +43,7 @@ model DepthChart {
   title     String
   value     String
   year      Int
-  Team      Team     @relation(fields: [teamId], references: [id])
+  Team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -49,6 +52,45 @@ model Game {
   id        String   @id
   response  String
   year      Int      @default(2024)
+  Drives    Drive[]
+  Plays     Play[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Drive {
+  id           String   @id @default(uuid())
+  gameId       String
+  geniusTeamId String
+  number       Int
+  isScoring    Boolean  @default(false)
+  points       Int?
+  Plays        Play[]
+  Team         Team     @relation(fields: [geniusTeamId], references: [geniusTeamId], onDelete: Cascade)
+  Game         Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Play {
+  id             String   @id @default(uuid())
+  gameId         String
+  geniusTeamId   String
+  driveId        String
+  number         Int
+  type           String
+  subtype        String?
+  description    String
+  clock          String
+  timestamp      BigInt
+  phase          String
+  phaseQualifier String
+  isScoring      Boolean
+  startPosition  String
+  endPosition    String?
+  Drive          Drive    @relation(fields: [driveId], references: [id], onDelete: Cascade)
+  Team           Team     @relation(fields: [geniusTeamId], references: [geniusTeamId], onDelete: Cascade)
+  Game           Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }

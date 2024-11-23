@@ -2,7 +2,7 @@ import puppeteer from 'puppeteer'
 import { checkAndUpdateDepthChart, saveAllDepthCharts } from '~/utils/db/index.server'
 
 import type { DepthChartObject } from '~/types'
-import { depthChartCreate } from '~/dao'
+import { depthChartCreate } from '~/dao/index.server'
 import { depthChartListCreate } from '~/dao/depthChartList.server'
 
 export async function Team1Check() {

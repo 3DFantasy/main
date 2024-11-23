@@ -1,4 +1,4 @@
-import { gameCreate } from '~/dao'
+import { gameCreate } from '~/dao/index.server'
 import { PXPAPIResponse } from '~/types'
 import { timeout } from '../timeout'
 

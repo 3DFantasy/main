@@ -23,3 +23,21 @@ GameCreateInput): Promise<typeof game> {
 	})
 	return game
 }
+
+export type GameFindManyInput = {
+	where: {
+		year?: number
+		id?: string
+	}
+}
+
+export async function gameFindMany({ where }: GameFindManyInput): Promise<typeof games> {
+	const games = await db.game.findMany({
+		where,
+		select: {
+			id: true,
+			response: true,
+		},
+	})
+	return games
+}

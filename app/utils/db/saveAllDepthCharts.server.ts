@@ -1,4 +1,4 @@
-import { depthChartCreate } from '~/dao'
+import { depthChartCreate } from '~/dao/index.server'
 import { depthChartListCreate } from '~/dao/depthChartList.server'
 
 import type { DepthChartObject } from '~/types'
