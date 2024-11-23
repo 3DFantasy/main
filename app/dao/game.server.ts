@@ -26,7 +26,8 @@ GameCreateInput): Promise<typeof game> {
 
 export type GameFindManyInput = {
 	where: {
-		year: number
+		year?: number
+		id?: string
 	}
 }
 

@@ -10,15 +10,20 @@ export async function parsePlays({ gameId, playArray }: ParsePlaysInput) {
 	const processedDrives = new Map<string, any>()
 	let previousPlay: { id: string } | null = null
 
+	console.log('playArray.length', playArray.length)
+
 	for (const play of playArray) {
 		if (play.type === 'Kickoff') {
 			previousPlay = null
-			return
+			continue
 		}
 
 		const [driveNumber, playNumber] = play.id.split('-')
+		console.log('driveNumber', driveNumber)
+		console.log('playNumber', playNumber)
 
 		let thisDrive = await processedDrives.get(driveNumber)
+		console.log('thisDrive', thisDrive)
 
 		if (!thisDrive) {
 			thisDrive = await driveCreate({
@@ -31,6 +36,7 @@ export async function parsePlays({ gameId, playArray }: ParsePlaysInput) {
 
 			processedDrives.set(driveNumber, thisDrive) // Cache the drive
 		}
+		console.log('processedDrives', processedDrives)
 
 		const createdPlay = await playCreate({
 			data: {
@@ -49,6 +55,7 @@ export async function parsePlays({ gameId, playArray }: ParsePlaysInput) {
 				type: play.type,
 			},
 		})
+		console.log('previousPlay', previousPlay)
 
 		if (previousPlay) {
 			await playUpdate({
@@ -57,6 +64,7 @@ export async function parsePlays({ gameId, playArray }: ParsePlaysInput) {
 			})
 		}
 
+		console.log('isScoring', play.isScoring)
 		if (play.isScoring) {
 			const points =
 				play.subType === 'Touchdown'
@@ -69,7 +77,7 @@ export async function parsePlays({ gameId, playArray }: ParsePlaysInput) {
 					? 1
 					: null
 
-			await driveUpdate({
+			const updatedDrive = await driveUpdate({
 				where: {
 					id: thisDrive.id,
 				},
@@ -78,6 +86,8 @@ export async function parsePlays({ gameId, playArray }: ParsePlaysInput) {
 					points: points,
 				},
 			})
+
+			console.log('updatedDrive', updatedDrive)
 		}
 
 		previousPlay = createdPlay
@@ -85,6 +95,8 @@ export async function parsePlays({ gameId, playArray }: ParsePlaysInput) {
 		const isLastPlayOfDrive =
 			playArray.indexOf(play) === playArray.length - 1 ||
 			playArray[playArray.indexOf(play) + 1].id.split('-')[0] !== driveNumber
+
+		console.log('isLastPlayOfDrive', isLastPlayOfDrive)
 
 		if (isLastPlayOfDrive) {
 			previousPlay = null

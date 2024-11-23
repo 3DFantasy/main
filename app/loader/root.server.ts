@@ -20,14 +20,14 @@ export const rootLoader = async (request: Request) => {
 
 	const games = await gameFindMany({
 		where: {
-			year: 2024,
+			year: 2023,
 		},
 	})
 	for (const game of games) {
 		const parsedPlayArray = (await JSON.parse(game.response)) as PXPAPIResponse
 		const parsedPlays = await parsePlays({
 			gameId: game.id,
-			playArray: parsedPlayArray.data.playByPlayInfo.ALL,
+			playArray: parsedPlayArray.data.playByPlayInfo.ALL.reverse(),
 		})
 	}
 	return { account }
