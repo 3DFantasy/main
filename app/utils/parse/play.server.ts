@@ -67,13 +67,15 @@ export async function parsePlays({ gameId, playArray }: ParsePlaysInput) {
 		console.log('isScoring', play.isScoring)
 		if (play.isScoring) {
 			const points =
-				play.subType === 'Touchdown'
+				play.type === 'OnePoint' && play.subType === 'Success'
 					? 7
-					: play.type === 'FieldGoal'
+					: play.subType === 'Touchdown'
+					? 6
+					: play.type === 'FieldGoal' && play.subType === 'Success'
 					? 3
-					: play.type === 'TwoPoint'
-					? 2
-					: play.type === 'OnePoint'
+					: play.type === 'TwoPoints' && play.subType === 'Success'
+					? 8
+					: play.subType === 'Single'
 					? 1
 					: null
 
