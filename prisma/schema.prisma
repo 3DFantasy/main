@@ -74,7 +74,7 @@ model Drive {
 }
 
 model Play {
-  id             String   @id @default(uuid())
+  id             String  @id @default(uuid())
   gameId         String
   geniusTeamId   String
   driveId        String
@@ -92,9 +92,18 @@ model Play {
   down           Int?
   distance       String?
   yardLine       Int?
-  Drive          Drive    @relation(fields: [driveId], references: [id], onDelete: Cascade)
-  Team           Team     @relation(fields: [geniusTeamId], references: [geniusTeamId], onDelete: Cascade)
-  Game           Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  kicker         String?
+  passer         String?
+  rusher         String?
+  receiver       String?
+  defense        String?
+  yardsGained    Int?
+  puntYards      Int?
+  returnYards    Int?
+  epa       Float?
+  Drive     Drive    @relation(fields: [driveId], references: [id], onDelete: Cascade)
+  Team      Team     @relation(fields: [geniusTeamId], references: [geniusTeamId], onDelete: Cascade)
+  Game      Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

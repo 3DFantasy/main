@@ -1,6 +1,7 @@
 app/data/2024gameIDs.ts
 app/data/2022gameIDs.ts
 app/data/2023gameIDs.ts
+app/data/teamArray.ts
 
 # Logs
 logs
