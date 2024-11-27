@@ -43,5 +43,11 @@ export async function Team4Check() {
 
 	await saveAllDepthCharts({ result, teamId: 4, year: 2024 })
 
+	// // compare w db
+
+	// if (updateDepthChartResp.value.code === 200) {
+	// 	// trigger email
+	// }
+
 	return true
 }

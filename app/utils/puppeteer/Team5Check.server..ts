@@ -1,5 +1,6 @@
 import puppeteer from 'puppeteer'
 import { saveAllDepthCharts } from '~/utils/index.server'
+
 import type { DepthChartObject } from '~/types'
 
 export async function Team5Check() {
@@ -44,6 +45,12 @@ export async function Team5Check() {
 	await browser.close()
 
 	await saveAllDepthCharts({ result, teamId: 5, year: 2024 })
+
+	// // compare w db
+
+	// if (updateDepthChartResp.value.code === 200) {
+	// 	// trigger email
+	// }
 
 	return true
 }

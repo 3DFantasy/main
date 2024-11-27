@@ -24,6 +24,7 @@ export async function saveAllDepthCharts({
 		result.map(async (chart: DepthChartObject) => {
 			return await depthChartCreate({
 				data: {
+					depthChartListId: depthChartList.id,
 					teamId: teamId,
 					title: chart.title,
 					value: chart.href,

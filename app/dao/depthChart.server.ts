@@ -50,6 +50,7 @@ export async function depthChartFindUnique({
 
 export type DepthChartCreateInput = {
 	data: {
+		depthChartListId: string
 		teamId: number
 		value: string
 		year: number

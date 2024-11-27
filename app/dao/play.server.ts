@@ -97,10 +97,10 @@ export type PlayFindManyInput = {
 	}
 }
 
-export async function playFindMany({ where }: PlayFindManyInput): Promise<typeof play> {
+export async function playFindMany({ where }: PlayFindManyInput): Promise<typeof plays> {
 	const { yardLine, ...otherConditions } = where
 
-	const play = await db.play.findMany({
+	const plays = await db.play.findMany({
 		where: {
 			...otherConditions,
 			yardLine: Array.isArray(yardLine) ? { in: yardLine } : yardLine,
@@ -119,33 +119,20 @@ export async function playFindMany({ where }: PlayFindManyInput): Promise<typeof
 			},
 		},
 	})
-	return play
+	return plays
 }
 
 export type PlayFindUniqueInput = {
 	where: {
-		driveId: string
-		number: number
+		id: string
+		driveId?: string
+		number?: number
 	}
 }
 
 export async function playFindUnique({ where }: PlayFindUniqueInput): Promise<typeof play> {
-	const play = await db.play.findMany({
+	const play = await db.play.findUnique({
 		where,
-		select: {
-			id: true,
-			number: true,
-			description: true,
-			startPosition: true,
-			yardsGained: true,
-			endPosition: true,
-			Drive: {
-				select: {
-					id: true,
-					nextPointOutcome: true,
-				},
-			},
-		},
 	})
 	return play
 }

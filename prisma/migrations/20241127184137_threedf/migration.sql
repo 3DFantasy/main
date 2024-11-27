@@ -36,6 +36,7 @@ CREATE TABLE "DepthChartList" (
 CREATE TABLE "DepthChart" (
     "id" TEXT NOT NULL,
     "teamId" INTEGER NOT NULL,
+    "depthChartListId" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "value" TEXT NOT NULL,
     "year" INTEGER NOT NULL,
@@ -64,6 +65,7 @@ CREATE TABLE "Drive" (
     "number" INTEGER NOT NULL,
     "isScoring" BOOLEAN NOT NULL DEFAULT false,
     "points" INTEGER,
+    "nextPointOutcome" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -87,10 +89,34 @@ CREATE TABLE "Play" (
     "isScoring" BOOLEAN NOT NULL,
     "startPosition" TEXT NOT NULL,
     "endPosition" TEXT,
+    "down" INTEGER,
+    "distance" TEXT,
+    "yardLine" INTEGER,
+    "kicker" TEXT,
+    "passer" TEXT,
+    "rusher" TEXT,
+    "receiver" TEXT,
+    "defense" TEXT,
+    "yardsGained" INTEGER,
+    "puntYards" INTEGER,
+    "returnYards" INTEGER,
+    "epa" DOUBLE PRECISION,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Play_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "ExpectedPoints" (
+    "id" TEXT NOT NULL,
+    "down" INTEGER NOT NULL,
+    "distance" TEXT NOT NULL,
+    "value" DOUBLE PRECISION NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "ExpectedPoints_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -104,6 +130,9 @@ ALTER TABLE "DepthChartList" ADD CONSTRAINT "DepthChartList_teamId_fkey" FOREIGN
 
 -- AddForeignKey
 ALTER TABLE "DepthChart" ADD CONSTRAINT "DepthChart_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "Team"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "DepthChart" ADD CONSTRAINT "DepthChart_depthChartListId_fkey" FOREIGN KEY ("depthChartListId") REFERENCES "DepthChartList"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Drive" ADD CONSTRAINT "Drive_geniusTeamId_fkey" FOREIGN KEY ("geniusTeamId") REFERENCES "Team"("geniusTeamId") ON DELETE CASCADE ON UPDATE CASCADE;
