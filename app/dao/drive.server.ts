@@ -28,6 +28,7 @@ export type DriveUpdateInput = {
 		number?: number
 		isScoring?: boolean
 		points?: number | null
+		nextPointOutcome?: number | null
 	}
 }
 
@@ -38,6 +39,19 @@ export async function driveUpdate({ where, data }: DriveUpdateInput): Promise<ty
 		select: {
 			id: true,
 		},
+	})
+	return drive
+}
+
+export type DriveFindUniqueInput = {
+	where: {
+		id: string
+	}
+}
+
+export async function driveFindUnique({ where }: DriveFindUniqueInput): Promise<typeof drive> {
+	const drive = await db.drive.findUnique({
+		where: where,
 	})
 	return drive
 }
