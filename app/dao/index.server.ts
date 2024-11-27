@@ -2,5 +2,5 @@ export { depthChartUpdate, depthChartFindUnique, depthChartCreate } from './dept
 export { teamFindUnique } from './team.server'
 export { accountCreate, accountFindUniqueByEmail } from './account.server'
 export { gameCreate, gameFindMany } from './game.server'
-export { driveCreate, driveUpdate } from './drive.server'
-export { playCreate, playUpdate } from './play.server'
+export { driveCreate, driveUpdate, driveFindUnique } from './drive.server'
+export { playCreate, playUpdate, playFindMany, playFindUnique } from './play.server'
