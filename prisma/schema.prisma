@@ -59,17 +59,18 @@ model Game {
 }
 
 model Drive {
-  id           String   @id @default(uuid())
-  gameId       String
-  geniusTeamId String
-  number       Int
-  isScoring    Boolean  @default(false)
-  points       Int?
-  Plays        Play[]
-  Team         Team     @relation(fields: [geniusTeamId], references: [geniusTeamId], onDelete: Cascade)
-  Game         Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id               String   @id @default(uuid())
+  gameId           String
+  geniusTeamId     String
+  number           Int
+  isScoring        Boolean  @default(false)
+  points           Int?
+  nextPointOutcome Int?
+  Plays            Play[]
+  Team             Team     @relation(fields: [geniusTeamId], references: [geniusTeamId], onDelete: Cascade)
+  Game             Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }
 
 model Play {
@@ -88,9 +89,30 @@ model Play {
   isScoring      Boolean
   startPosition  String
   endPosition    String?
+  down           Int?
+  distance       String?
+  yardLine       Int?
+  kicker         String?
+  passer         String?
+  rusher         String?
+  receiver       String?
+  defense        String?
+  yardsGained    Int?
+  puntYards      Int?
+  returnYards    Int?
+  epa            Float?
   Drive          Drive    @relation(fields: [driveId], references: [id], onDelete: Cascade)
   Team           Team     @relation(fields: [geniusTeamId], references: [geniusTeamId], onDelete: Cascade)
   Game           Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+}
+
+model ExpectedPoints {
+  id        String   @id @default(uuid())
+  down      Int
+  distance  String
+  value     Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
