@@ -1,10 +1,5 @@
-import { authenticator } from '~/utils/auth/auth.server'
 
 export const rootLoader = async (request: Request) => {
-	const account = await authenticator.isAuthenticated(request, {
-		failureRedirect: '/auth/login',
-	})
-
 	// const points: number[] = []
 
 	// const plays = await playFindMany({
@@ -34,5 +29,5 @@ export const rootLoader = async (request: Request) => {
 	// // 		playArray: parsedPlayArray.data.playByPlayInfo.ALL.reverse(),
 	// // 	})
 	// // }
-	return { account }
+	return {}
 }

@@ -11,6 +11,6 @@ export const homeLoader = async (request: Request) => {
 	})
 
 	return {
-		account,
+		account
 	}
 }
