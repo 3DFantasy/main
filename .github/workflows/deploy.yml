@@ -1,4 +1,4 @@
-name: deploy
+name: deploy 3DF/main
 on:
   push:
     branches:
@@ -7,8 +7,35 @@ on:
 
 jobs:
   build:
-    name: build app 3DF/main
+    name: build app
     runs-on: self-hosted
 
     steps:
-      - uses: actions/checkout@v4
+      - name: checkout latest code
+        uses: actions/checkout@v4
+          
+      - name: install dependencies
+        run: npm install
+        
+      - name: build app
+        run: npm run build
+        
+      - name: deploy to 3DF folder
+        run: |
+
+          cp -R build/* /home/wilbir/3DF/main
+          
+          chmod -R 755 /home/wilbir/3DF/main
+          
+          echo "deployment complete"
+      
+      - name: start application
+        run: |
+          cd /home/wilbir/3DF/main
+          npm install --production
+          
+          pkill -f "remix-serve" || true
+          
+          nohup npm start > app.log 2>&1 &
+          
+          echo "application started"
