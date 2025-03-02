@@ -1,0 +1,13 @@
+services:
+  remix-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=production
+    network_mode: 'host'
+    volumes:
+      - ./.env:/app/.env

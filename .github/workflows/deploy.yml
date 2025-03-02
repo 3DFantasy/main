@@ -17,22 +17,10 @@ jobs:
       - name: copy .env
         run: cp ${{ secrets.ENV_FILE_PATH }} .
           
-      - name: install dependencies
+      - name: deploy with docker-compose
         run: |
-          npm install
-
-          /usr/bin/npm install -g pm2 || true
-        
-      - name: build app
-        run: npm run build
-      
-      - name: start application
-        run: | 
-          pm2 delete 3df || true
-        
-          pm2 start "npm run start" --name "3df"
-
-          pm2 save
-
-          sleep 3
-        
+          docker-compose down || true
+          
+          docker-compose up -d --build
+          
+          docker image prune -f
