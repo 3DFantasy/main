@@ -14,8 +14,8 @@ jobs:
       - name: checkout latest 
         uses: actions/checkout@v4
 
-      - name: copy environment
-        run: cp /home/wilbir/3DF/.env .
+      - name: copy .env
+        run: cp ${{ secrets.ENV_FILE_PATH }} .
           
       - name: install dependencies
         run: npm install
@@ -24,5 +24,5 @@ jobs:
         run: npm run build
       
       - name: start application
-        run: npm run start
+        run: npm run start &
         
