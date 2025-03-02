@@ -19,6 +19,12 @@ jobs:
         
       - name: build app
         run: npm run build
+
+      - name: remove and initialize new app folder
+        run: |
+          rm -rf /home/wilbir/3DF/main
+          
+          mkdir -p /home/wilbir/3DF/main
         
       - name: deploy to 3DF folder
         run: |
@@ -30,6 +36,6 @@ jobs:
       
       - name: start application
         run: |
-          remix-serve /home/wilbir/3DF/main/server/index.js
+          npx remix-serve /home/wilbir/3DF/main/server/index.js
           
           echo "application started"
