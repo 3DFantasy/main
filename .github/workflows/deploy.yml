@@ -17,8 +17,15 @@ jobs:
       - name: copy .env
         run: cp ${{ secrets.ENV_FILE_PATH }} .
           
-      - name: install dependencies
+      - name: deploy with docker-compose
         run: |
+<<<<<<< HEAD
+          docker-compose down || true
+          
+          docker-compose up -d --build
+          
+          docker image prune -f
+=======
           npm install
 
           npm install -g pm2 -y
@@ -36,3 +43,4 @@ jobs:
 
           sleep 3
         
+>>>>>>> main
