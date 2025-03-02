@@ -1,5 +1,6 @@
 services:
   remix-app:
+    container_name: 3df
     build:
       context: .
       dockerfile: Dockerfile
