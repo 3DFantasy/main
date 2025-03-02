@@ -4,6 +4,7 @@ app/data/2023gameIDs.ts
 app/data/2024gameIDs.ts
 app/data/ep
 app/data/teamArray.ts
+*.dump
 
 # Logs
 logs
