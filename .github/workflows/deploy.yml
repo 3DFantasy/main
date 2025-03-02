@@ -22,7 +22,6 @@ jobs:
         
       - name: deploy to 3DF folder
         run: |
-
           cp -R build/* /home/wilbir/3DF/main
           
           chmod -R 755 /home/wilbir/3DF/main
@@ -31,11 +30,6 @@ jobs:
       
       - name: start application
         run: |
-          cd /home/wilbir/3DF/main
-          npm install --production
-          
-          pkill -f "remix-serve" || true
-          
-          nohup npm start > app.log 2>&1 &
+          remix-serve /home/wilbir/3DF/main/server/index.js
           
           echo "application started"
