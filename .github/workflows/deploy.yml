@@ -21,7 +21,7 @@ jobs:
         run: |
           npm install
 
-          /usr/bin/npm install -g pm2 || true
+          npm install -g pm2 -y
         
       - name: build app
         run: npm run build
