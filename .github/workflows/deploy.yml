@@ -19,8 +19,28 @@ jobs:
           
       - name: deploy with docker-compose
         run: |
+<<<<<<< HEAD
           docker-compose down || true
           
           docker-compose up -d --build
           
           docker image prune -f
+=======
+          npm install
+
+          npm install -g pm2 -y
+        
+      - name: build app
+        run: npm run build
+      
+      - name: start application
+        run: | 
+          pm2 delete 3df || true
+        
+          pm2 start "npm run start" --name "3df"
+
+          pm2 save
+
+          sleep 3
+        
+>>>>>>> main
