@@ -22,19 +22,7 @@ jobs:
         
       - name: build app
         run: npm run build
-
-      - name: remove old and initialize new app folder
-        run: |
-          rm -rf /home/wilbir/3DF/main
-          
-          mkdir -p /home/wilbir/3DF/main
-        
-      - name: deploy to 3DF folder
-        run: |
-          cp -R build/* /home/wilbir/3DF/main
-          
-          chmod -R 755 /home/wilbir/3DF/main
       
       - name: start application
-        run: npx remix-serve /home/wilbir/3DF/main/server/index.js
+        run: npm run start
         
