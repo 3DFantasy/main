@@ -7,12 +7,15 @@ on:
 
 jobs:
   build:
-    name: build app
+    name: build & deploy
     runs-on: self-hosted
 
     steps:
-      - name: checkout latest code
+      - name: checkout latest 
         uses: actions/checkout@v4
+
+      - name: copy environment
+        run: cp /home/wilbir/3DF/.env .
           
       - name: install dependencies
         run: npm install
@@ -20,7 +23,7 @@ jobs:
       - name: build app
         run: npm run build
 
-      - name: remove and initialize new app folder
+      - name: remove old and initialize new app folder
         run: |
           rm -rf /home/wilbir/3DF/main
           
@@ -31,11 +34,7 @@ jobs:
           cp -R build/* /home/wilbir/3DF/main
           
           chmod -R 755 /home/wilbir/3DF/main
-          
-          echo "deployment complete"
       
       - name: start application
-        run: |
-          npx remix-serve /home/wilbir/3DF/main/server/index.js
-          
-          echo "application started"
+        run: npx remix-serve /home/wilbir/3DF/main/server/index.js
+        

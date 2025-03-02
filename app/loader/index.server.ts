@@ -8,5 +8,5 @@ export const indexLoader = async (request: Request) => {
 
 	// return redirect('/home')
 
-	// return { account }
+	return {  }
 }
