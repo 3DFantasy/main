@@ -25,9 +25,11 @@ jobs:
       
       - name: start application
         run: | 
-          pkill -f "remix-serve" || true
+          pm2 delete 3df || true
         
-          nohup npm run start > app.log 2>&1 &
+          pm2 start "npm run start" --name "3df"
+
+          pm2 save
 
           sleep 3
         
