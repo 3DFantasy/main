@@ -1,6 +1,6 @@
 import { useLoaderData, useOutletContext } from '@remix-run/react'
-import { homeLoader, HomeLoaderData } from '~/loader/home.server'
 import { useEffect } from 'react'
+import { homeLoader, HomeLoaderData } from '~/loader/home.server'
 
 import type { LoaderFunction, MetaFunction } from '@remix-run/node'
 import type { RootContext } from '~/root'
