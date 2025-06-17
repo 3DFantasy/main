@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Button, Input } from '@nextui-org/react'
+import { Button, Input } from "@heroui/react"
 import { authSignupLoader } from '~/loader/auth.signup.server'
 import { authSignupAction } from '~/actions/auth.signup.server'
 import { Form, useActionData, useFetcher, useLoaderData, useOutletContext } from '@remix-run/react'

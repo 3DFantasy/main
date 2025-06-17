@@ -7,7 +7,7 @@ export const authLoginLoader = async (request: Request) => {
 		successRedirect: '/home',
 	})
 
-	console.log("account")
+	// console.log("account")
 
-	return{account}
+	return { account }
 }

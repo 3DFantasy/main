@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@nextui-org/navbar'
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from '@heroui/navbar'
 import {
 	Avatar,
 	Button,
@@ -8,14 +7,13 @@ import {
 	DropdownMenu,
 	DropdownTrigger,
 	Link,
-} from '@nextui-org/react'
-
-import type { Account } from '@prisma/client'
+} from '@heroui/react'
+import type { RootContextAccount } from '~/root'
 
 export type MenuItem = { label: string; key: string; to: any }
 
 export type HeaderInput = {
-	account: Account | null
+	account: RootContextAccount | null
 }
 
 export function Header({ account }: HeaderInput) {
