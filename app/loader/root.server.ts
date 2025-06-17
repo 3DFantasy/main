@@ -1,3 +1,4 @@
+import { initWorker } from '~/resque/worker.server'
 
 export const rootLoader = async (request: Request) => {
 	// const points: number[] = []
@@ -29,5 +30,9 @@ export const rootLoader = async (request: Request) => {
 	// // 		playArray: parsedPlayArray.data.playByPlayInfo.ALL.reverse(),
 	// // 	})
 	// // }
+	await initWorker({
+		scheduler: true,
+		team1: false,
+	})
 	return {}
 }
