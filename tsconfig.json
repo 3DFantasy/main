@@ -1,5 +1,12 @@
 {
-	"include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx", "tailwind.config.js"],
+	"include": [
+		"remix.env.d.ts",
+		"**/*.ts",
+		"**/*.tsx",
+		"tailwind.config.js",
+		"vite.config.ts",
+		"postcss.config.cts"
+	],
 	"compilerOptions": {
 		"paths": {
 			"~/*": ["./app/*"]

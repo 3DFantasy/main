@@ -1,6 +1,6 @@
 import { useLoaderData, useOutletContext } from '@remix-run/react'
-import { homeLoader, HomeLoaderData } from '~/loader/home.server'
 import { useEffect } from 'react'
+import { homeLoader, HomeLoaderData } from '~/loader/home.server'
 
 import type { LoaderFunction, MetaFunction } from '@remix-run/node'
 import type { RootContext } from '~/root'
@@ -19,7 +19,11 @@ export default function Home() {
 
 	useEffect(() => {
 		if (account) {
-			setAccount(account)
+			setAccount({
+				id: account.id,
+				email: account.email,
+				role: account.role,
+			})
 			setToast({
 				message: `Authenticated: ${account.email}`,
 				error: false,

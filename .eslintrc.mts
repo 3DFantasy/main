@@ -39,6 +39,7 @@ module.exports = {
 				react: {
 					version: 'detect',
 				},
+
 				formComponents: ['Form'],
 				linkComponents: [
 					{ name: 'Link', linkAttribute: 'to' },
@@ -48,11 +49,15 @@ module.exports = {
 					typescript: {},
 				},
 			},
+			rules: {
+				'no-mixed-spaces-and-tabs': 'off', // This disables the rule globally
+			},
 		},
 
 		// Typescript
 		{
 			files: ['**/*.{ts,tsx}'],
+
 			plugins: ['@typescript-eslint', 'import'],
 			parser: '@typescript-eslint/parser',
 			settings: {

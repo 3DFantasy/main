@@ -1,20 +1,25 @@
-import { ReactNode, useEffect, useState } from 'react'
+import { HeroUIProvider } from '@heroui/react'
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, useNavigate } from '@remix-run/react'
-import { NextUIProvider } from '@nextui-org/react'
 import { ThemeProvider as NextThemesProvider } from 'next-themes'
+import { ReactNode, useEffect, useState } from 'react'
 import { Header, Toast } from '~/components'
-import { rootLoader } from './loader/root.server'
+import { rootLoader } from '~/loader/root.server'
 
 import type { LoaderFunction } from '@remix-run/node'
-import type { Account } from '@prisma/client'
 
-import '~/styles/tailwind.css'
-import '~/styles/main.css'
 import 'remixicon/fonts/remixicon.css'
+import '~/styles/main.css'
+import '~/styles/tailwind.css'
+
+export type RootContextAccount = {
+	id: string
+	email: string
+	role: string
+}
 
 export type RootContext = {
 	setToast: React.Dispatch<React.SetStateAction<{ message: null | string; error?: boolean }>>
-	setAccount: React.Dispatch<React.SetStateAction<Account | null>>
+	setAccount: React.Dispatch<React.SetStateAction<RootContextAccount | null>>
 }
 
 // export const links: LinksFunction = () => [
@@ -55,16 +60,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export function Providers({ children }: { children: ReactNode }) {
 	const navigate = useNavigate()
 	return (
-		<NextUIProvider navigate={navigate}>
+		<HeroUIProvider navigate={navigate}>
 			<NextThemesProvider attribute='class' defaultTheme='dark'>
 				{children}
 			</NextThemesProvider>
-		</NextUIProvider>
+		</HeroUIProvider>
 	)
 }
 
 export default function App() {
-	const [account, setAccount] = useState<Account | null>(null)
+	const [account, setAccount] = useState<RootContextAccount | null>(null)
 	const [theme, setTheme] = useState('dark')
 	const [toast, setToast] = useState<{
 		message: null | string
@@ -89,7 +94,17 @@ export default function App() {
 	return (
 		<Providers>
 			<main className={`${theme} text-foreground bg-background`}>
-				<Header account={account} />
+				<Header
+					account={
+						account
+							? {
+									email: account.email,
+									id: account.id,
+									role: account.role,
+							  }
+							: null
+					}
+				/>
 				<div className='container mx-auto'>
 					<Outlet context={rootContext} />
 					<Toast message={toast.message} error={toast.error} setToast={setToast} />
