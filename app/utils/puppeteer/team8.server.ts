@@ -1,17 +1,15 @@
 import puppeteer from 'puppeteer'
-import { checkAndUpdateDepthChart, saveAllDepthCharts } from '~/utils/db/index.server'
+import { viewport } from '~/utils/puppeteer/index.server'
 
 import type { DepthChartObject } from '~/types'
-import { depthChartCreate } from '~/dao/index.server'
-import { depthChartListCreate } from '~/dao/depthChartList.server'
 
-export async function Team1Check() {
+export async function team8(): Promise<DepthChartObject[]> {
 	const browser = await puppeteer.launch()
 	const page = await browser.newPage()
 
-	await page.goto(process.env.TEAM_1_URL)
+	await page.goto(process.env.TEAM_8_URL)
 
-	await page.setViewport({ width: 1080, height: 1024 })
+	await page.setViewport(viewport)
 
 	const result = await page.evaluate(() => {
 		const tbodies = document.querySelectorAll('table tbody')
@@ -30,6 +28,7 @@ export async function Team1Check() {
 							tds[index - 1].innerText,
 						].join(', ')
 
+						// Push the combined string and href as an object
 						resultArray.push({
 							title: precedingText,
 							href: link.href,
@@ -40,15 +39,8 @@ export async function Team1Check() {
 		})
 		return resultArray
 	})
+
 	await browser.close()
 
-	await saveAllDepthCharts({ result, teamId: 1, year: 2024 })
-
-	// // compare w db
-
-	// if (updateDepthChartResp.value.code === 200) {
-	// 	// trigger email
-	// }
-
-	return {}
+	return result
 }

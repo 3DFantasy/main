@@ -2,11 +2,14 @@ import { Queue } from 'node-resque'
 import { jobs } from '~/resque/jobs.server'
 import { queueTitles } from '~/resque/worker.server'
 
-export type Team1JobProps = ''
+export type TeamCheckJobProps = {
+	teamId: number
+	teamCheckFuncName: string
+}
 
 export type ResqueTaskInput = {
-	job: 'team1'
-	team1Props?: Team1JobProps
+	job: 'teamCheck'
+	teamCheckProps?: TeamCheckJobProps
 }
 
 // ///////////////////////////
@@ -22,11 +25,11 @@ export const connectionDetails = {
 	database: 0,
 }
 
-export async function resqueTask({ job, team1Props }: ResqueTaskInput) {
+export async function resqueTask({ job, teamCheckProps }: ResqueTaskInput) {
 	const jobDetails = {
-		team1: {
-			queue: queueTitles['team1'].queue,
-			props: team1Props,
+		teamCheck: {
+			queue: queueTitles['teamCheck'].queue,
+			props: teamCheckProps,
 		},
 	}
 	const props = jobDetails[job].props

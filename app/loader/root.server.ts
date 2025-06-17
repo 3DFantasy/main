@@ -1,4 +1,12 @@
 export const rootLoader = async (request: Request) => {
+	// resqueTask({
+	// 	job: 'teamCheck',
+	// 	teamCheckProps: {
+	// 		teamCheckFuncName: 'team1',
+	// 		teamId: 1,
+	// 	},
+	// })
+
 	// const points: number[] = []
 
 	// const plays = await playFindMany({

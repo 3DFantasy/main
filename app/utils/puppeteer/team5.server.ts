@@ -1,15 +1,15 @@
 import puppeteer from 'puppeteer'
-import { saveAllDepthCharts } from '~/utils/index.server'
+import { viewport } from '~/utils/puppeteer/index.server'
 
 import type { DepthChartObject } from '~/types'
 
-export async function Team6Check() {
+export async function team5(): Promise<DepthChartObject[]> {
 	const browser = await puppeteer.launch()
 	const page = await browser.newPage()
 
-	await page.goto(process.env.TEAM_6_URL)
+	await page.goto(process.env.TEAM_5_URL)
 
-	await page.setViewport({ width: 1080, height: 1024 })
+	await page.setViewport(viewport)
 
 	const result = await page.evaluate(() => {
 		const tbodies = document.querySelectorAll('table tbody')
@@ -44,7 +44,5 @@ export async function Team6Check() {
 
 	await browser.close()
 
-	await saveAllDepthCharts({ result, teamId: 6, year: 2024 })
-
-	return true
+	return result
 }

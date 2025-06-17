@@ -1,9 +1,8 @@
 import puppeteer from 'puppeteer'
-import { saveAllDepthCharts } from '~/utils/index.server'
 
 import type { DepthChartObject } from '~/types'
 
-export async function Team7Check() {
+export async function team7(): Promise<DepthChartObject[]> {
 	const browser = await puppeteer.launch()
 	const page = await browser.newPage()
 
@@ -45,7 +44,5 @@ export async function Team7Check() {
 
 	await browser.close()
 
-	await saveAllDepthCharts({ result, teamId: 7, year: 2024 })
-
-	return true
+	return result
 }

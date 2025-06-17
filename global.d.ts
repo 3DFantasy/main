@@ -11,6 +11,7 @@ declare global {
 			REDIS_USERNAME: string
 			REDIS_QUEUE: string
 			DATABASE_URL: string
+			LEAGUE_YEAR: string
 			TEAM_1_URL: string
 			TEAM_2_URL: string
 			TEAM_3_URL: string
