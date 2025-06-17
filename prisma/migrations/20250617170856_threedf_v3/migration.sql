@@ -1,6 +1,7 @@
 -- CreateTable
 CREATE TABLE "Account" (
-    "id" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
+    "uuid" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "role" TEXT NOT NULL DEFAULT 'USER',
@@ -13,6 +14,7 @@ CREATE TABLE "Account" (
 -- CreateTable
 CREATE TABLE "Team" (
     "id" SERIAL NOT NULL,
+    "uuid" TEXT NOT NULL,
     "geniusTeamId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -22,7 +24,8 @@ CREATE TABLE "Team" (
 
 -- CreateTable
 CREATE TABLE "DepthChartList" (
-    "id" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
+    "uuid" TEXT NOT NULL,
     "teamId" INTEGER NOT NULL,
     "value" TEXT,
     "year" INTEGER NOT NULL,
@@ -34,7 +37,8 @@ CREATE TABLE "DepthChartList" (
 
 -- CreateTable
 CREATE TABLE "DepthChart" (
-    "id" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
+    "uuid" TEXT NOT NULL,
     "teamId" INTEGER NOT NULL,
     "title" TEXT NOT NULL,
     "value" TEXT NOT NULL,
@@ -47,7 +51,8 @@ CREATE TABLE "DepthChart" (
 
 -- CreateTable
 CREATE TABLE "Game" (
-    "id" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
+    "uuid" TEXT NOT NULL,
     "response" TEXT NOT NULL,
     "year" INTEGER NOT NULL DEFAULT 2024,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -58,12 +63,14 @@ CREATE TABLE "Game" (
 
 -- CreateTable
 CREATE TABLE "Drive" (
-    "id" TEXT NOT NULL,
-    "gameId" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
+    "uuid" TEXT NOT NULL,
+    "gameId" INTEGER NOT NULL,
     "geniusTeamId" TEXT NOT NULL,
     "number" INTEGER NOT NULL,
     "isScoring" BOOLEAN NOT NULL DEFAULT false,
     "points" INTEGER,
+    "nextPointOutcome" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -72,10 +79,11 @@ CREATE TABLE "Drive" (
 
 -- CreateTable
 CREATE TABLE "Play" (
-    "id" TEXT NOT NULL,
-    "gameId" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
+    "uuid" TEXT NOT NULL,
+    "gameId" INTEGER NOT NULL,
     "geniusTeamId" TEXT NOT NULL,
-    "driveId" TEXT NOT NULL,
+    "driveId" INTEGER NOT NULL,
     "number" INTEGER NOT NULL,
     "type" TEXT NOT NULL,
     "subtype" TEXT,
@@ -87,6 +95,18 @@ CREATE TABLE "Play" (
     "isScoring" BOOLEAN NOT NULL,
     "startPosition" TEXT NOT NULL,
     "endPosition" TEXT,
+    "down" INTEGER,
+    "distance" TEXT,
+    "yardLine" INTEGER,
+    "kicker" TEXT,
+    "passer" TEXT,
+    "rusher" TEXT,
+    "receiver" TEXT,
+    "defense" TEXT,
+    "yardsGained" INTEGER,
+    "puntYards" INTEGER,
+    "returnYards" INTEGER,
+    "epa" DOUBLE PRECISION,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -94,10 +114,31 @@ CREATE TABLE "Play" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Account_uuid_key" ON "Account"("uuid");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Account_email_key" ON "Account"("email");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Team_uuid_key" ON "Team"("uuid");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Team_geniusTeamId_key" ON "Team"("geniusTeamId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "DepthChartList_uuid_key" ON "DepthChartList"("uuid");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "DepthChart_uuid_key" ON "DepthChart"("uuid");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Game_uuid_key" ON "Game"("uuid");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Drive_uuid_key" ON "Drive"("uuid");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Play_uuid_key" ON "Play"("uuid");
 
 -- AddForeignKey
 ALTER TABLE "DepthChartList" ADD CONSTRAINT "DepthChartList_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "Team"("id") ON DELETE CASCADE ON UPDATE CASCADE;
