@@ -1,25 +1,30 @@
 import puppeteer from 'puppeteer'
-import { saveAllDepthCharts } from '~/utils/index.server'
+
 import type { DepthChartObject } from '~/types'
 
-export async function Team8Check() {
+export async function team9(): Promise<DepthChartObject[]> {
 	const browser = await puppeteer.launch()
 	const page = await browser.newPage()
 
-	await page.goto(process.env.TEAM_8_URL)
+	await page.goto(process.env.TEAM_9_URL)
 
 	await page.setViewport({ width: 1080, height: 1024 })
 
+	// Extract hrefs from <td> tags with <a> elements
 	const result = await page.evaluate(() => {
+		// Select all <tbody> elements in the document
 		const tbodies = document.querySelectorAll('table tbody')
 		if (!tbodies.length) return []
 
+		// Initialize an array to store all hrefs
 		const resultArray: DepthChartObject[] = []
 
+		// Loop through each <tbody> and collect hrefs
 		tbodies.forEach((tbody) => {
 			tbody.querySelectorAll('td').forEach((td, index, tds) => {
 				const link = td.querySelector('a')
 				if (link && link.href) {
+					// Check for three preceding <td> elements
 					if (index >= 3) {
 						const precedingText = [
 							tds[index - 3].innerText,
@@ -41,7 +46,5 @@ export async function Team8Check() {
 
 	await browser.close()
 
-	await saveAllDepthCharts({ result, teamId: 8, year: 2024 })
-
-	return true
+	return result
 }

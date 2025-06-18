@@ -2,7 +2,7 @@ import { db } from '~/lib/db.server'
 
 export type DriveCreateInput = {
 	data: {
-		gameId: string
+		gameId: number
 		geniusTeamId: string
 		number: number
 	}
@@ -20,10 +20,10 @@ export async function driveCreate({ data }: DriveCreateInput): Promise<typeof dr
 
 export type DriveUpdateInput = {
 	where: {
-		id: string
+		id: number
 	}
 	data: {
-		gameId?: string
+		gameId?: number
 		geniusTeamId?: string
 		number?: number
 		isScoring?: boolean
@@ -45,7 +45,7 @@ export async function driveUpdate({ where, data }: DriveUpdateInput): Promise<ty
 
 export type DriveFindUniqueInput = {
 	where: {
-		id: string
+		id: number
 	}
 }
 

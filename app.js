@@ -7,8 +7,8 @@ import { initWorker } from '~/resque/worker.server.js'
 installGlobals()
 
 initWorker({
-	scheduler: true,
-	team1: false,
+	schedule: false,
+	team: true,
 })
 
 async function startServer() {

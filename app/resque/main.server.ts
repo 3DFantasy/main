@@ -2,11 +2,19 @@ import { Queue } from 'node-resque'
 import { jobs } from '~/resque/jobs.server'
 import { queueTitles } from '~/resque/worker.server'
 
-export type Team1JobProps = ''
+export type TeamCheckJobProps = {
+	teamId: number
+	teamCheckFuncName: string
+}
+export type SaveAllDepthChartsJobProps = {
+	teamId: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+	year: number
+}
 
 export type ResqueTaskInput = {
-	job: 'team1'
-	team1Props?: Team1JobProps
+	job: 'teamCheck' | 'saveAllDepthCharts'
+	teamCheckProps?: TeamCheckJobProps
+	saveAllDepthChartsProps?: SaveAllDepthChartsJobProps
 }
 
 // ///////////////////////////
@@ -22,11 +30,15 @@ export const connectionDetails = {
 	database: 0,
 }
 
-export async function resqueTask({ job, team1Props }: ResqueTaskInput) {
+export async function resqueTask({ job, teamCheckProps, saveAllDepthChartsProps }: ResqueTaskInput) {
 	const jobDetails = {
-		team1: {
-			queue: queueTitles['team1'].queue,
-			props: team1Props,
+		teamCheck: {
+			queue: queueTitles['team'].queue,
+			props: teamCheckProps,
+		},
+		saveAllDepthCharts: {
+			queue: queueTitles['team'].queue,
+			props: saveAllDepthChartsProps,
 		},
 	}
 	const props = jobDetails[job].props

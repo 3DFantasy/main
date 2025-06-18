@@ -2,10 +2,10 @@ import { db } from '~/lib/db.server'
 
 export type PlayCreateInput = {
 	data: {
-		gameId: string
+		gameId: number
 		geniusTeamId: string
 		number: number
-		driveId: string
+		driveId: number
 		type: string
 		subtype: string | null
 		description: string
@@ -42,13 +42,13 @@ export async function playCreate({ data }: PlayCreateInput): Promise<typeof play
 
 export type PlayUpdateInput = {
 	where: {
-		id: string
+		id: number
 	}
 	data: {
-		gameId?: string
+		gameId?: number
 		geniusTeamId?: string
 		number?: number
-		driveId?: string
+		driveId?: number
 		type?: string
 		subtype?: string | null
 		description?: string
@@ -124,7 +124,7 @@ export async function playFindMany({ where }: PlayFindManyInput): Promise<typeof
 
 export type PlayFindUniqueInput = {
 	where: {
-		driveId: string
+		driveId: number
 		number: number
 	}
 }

@@ -1,4 +1,11 @@
 export const rootLoader = async (request: Request) => {
+	// resqueTask({
+	// 	job: 'saveAllDepthCharts',
+	// 	saveAllDepthChartsProps: {
+	// 		teamId: 9,
+	// 		year: 2025,
+	// 	},
+	// })
 	// const points: number[] = []
 
 	// const plays = await playFindMany({
