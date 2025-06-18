@@ -79,7 +79,7 @@ export async function nodeScheduler() {
 	schedule.scheduleJob(everySunday, async () => {
 		if (scheduler.leader) {
 			console.log('>>> enquing {} job')
-			await queue.enqueue(queueTitles.scheduler.queue, '{}', [])
+			await queue.enqueue(queueTitles.schedule.queue, '{}', [])
 		}
 	})
 

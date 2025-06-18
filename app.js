@@ -8,7 +8,7 @@ installGlobals()
 
 initWorker({
 	schedule: false,
-	teamCheck: true,
+	team: true,
 })
 
 async function startServer() {

@@ -4,26 +4,26 @@ import { connectionDetails } from '~/resque/main.server'
 
 export type InitWorkerProps = {
 	schedule: boolean
-	teamCheck: boolean
+	team: boolean
 }
 
 export const queueTitles = {
 	schedule: {
 		queue: `${process.env.REDIS_QUEUE}-schedule`,
 	},
-	teamCheck: {
-		queue: `${process.env.REDIS_QUEUE}-team-check`,
+	team: {
+		queue: `${process.env.REDIS_QUEUE}-team`,
 	},
 }
 
 const globalWorkerRegistry: Record<string, Worker> = {}
 
-export const initWorker = async ({ schedule, teamCheck }: InitWorkerProps) => {
+export const initWorker = async ({ schedule, team }: InitWorkerProps) => {
 	const activeWorkers: Worker[] = []
 
 	const queues: InitWorkerProps = {
 		schedule,
-		teamCheck,
+		team,
 	}
 
 	for (const [jobType, isEnabled] of Object.entries(queues)) {

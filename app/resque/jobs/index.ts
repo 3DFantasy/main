@@ -1,1 +1,2 @@
-export { TeamCheck } from './TeamCheck.server'
+export { saveAllDepthCharts } from './saveAllDepthCharts.server'
+export { teamCheck } from './teamCheck.server'

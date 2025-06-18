@@ -6,10 +6,15 @@ export type TeamCheckJobProps = {
 	teamId: number
 	teamCheckFuncName: string
 }
+export type SaveAllDepthChartsJobProps = {
+	teamId: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+	year: number
+}
 
 export type ResqueTaskInput = {
-	job: 'teamCheck'
+	job: 'teamCheck' | 'saveAllDepthCharts'
 	teamCheckProps?: TeamCheckJobProps
+	saveAllDepthChartsProps?: SaveAllDepthChartsJobProps
 }
 
 // ///////////////////////////
@@ -25,11 +30,15 @@ export const connectionDetails = {
 	database: 0,
 }
 
-export async function resqueTask({ job, teamCheckProps }: ResqueTaskInput) {
+export async function resqueTask({ job, teamCheckProps, saveAllDepthChartsProps }: ResqueTaskInput) {
 	const jobDetails = {
 		teamCheck: {
-			queue: queueTitles['teamCheck'].queue,
+			queue: queueTitles['team'].queue,
 			props: teamCheckProps,
+		},
+		saveAllDepthCharts: {
+			queue: queueTitles['team'].queue,
+			props: saveAllDepthChartsProps,
 		},
 	}
 	const props = jobDetails[job].props
