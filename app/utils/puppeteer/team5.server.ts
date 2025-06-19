@@ -26,7 +26,7 @@ export async function team5(): Promise<DepthChartObject[]> {
 					const text = [cells[0].innerText, cells[1].innerText, cells[2].innerText].join(', ')
 
 					// Get the href from the fifth <td> element
-					const link = cells[4].querySelector('a')
+					const link = cells[5].querySelector('a')
 					const href = link ? link.href : null
 
 					// Add the result to the array only if a valid href is found

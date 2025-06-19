@@ -16,23 +16,34 @@ export async function teamCheck({ teamId }: { teamId: number }) {
 		throw new Error(`Something went wrong fetching depth charts for teamId: ${teamId}`)
 	}
 
-	const depthChartList = await compareDepthChartList({
+	const compareDepthChartListResp = await compareDepthChartList({
 		teamId,
 		year,
 		value: result,
 	})
 
-	if (depthChartList.isErr) {
-		throw new Error(depthChartList.error.message)
+	if (compareDepthChartListResp.isErr) {
+		throw new Error(compareDepthChartListResp.error.message)
 	}
 
-	if (depthChartList.value.newDepthChart) {
+	if (compareDepthChartListResp.value.newDepthChart) {
+		// create new chart
 		await db.depthChart.create({
 			data: {
 				teamId,
-				title: depthChartList.value.newDepthChart.title,
-				value: depthChartList.value.newDepthChart.href,
+				title: compareDepthChartListResp.value.newDepthChart.title,
+				value: compareDepthChartListResp.value.newDepthChart.href,
 				year,
+			},
+		})
+
+		// update existing list
+		await db.depthChartList.update({
+			where: {
+				id: compareDepthChartListResp.value.depthChartList.id,
+			},
+			data: {
+				value: JSON.stringify(result),
 			},
 		})
 		// send email
