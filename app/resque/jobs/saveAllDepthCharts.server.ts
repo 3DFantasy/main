@@ -3,13 +3,8 @@ import { teamHandlers } from '~/utils/puppeteer/index.server'
 
 import type { DepthChartObject } from '~/types'
 
-export async function saveAllDepthCharts({
-	teamId,
-	year,
-}: {
-	teamId: number
-	year: number
-}): Promise<boolean> {
+export async function saveAllDepthCharts({ teamId }: { teamId: number }): Promise<boolean> {
+	const year = Number(process.env.LEAGUE_YEAR)
 	let result: DepthChartObject[] | null = null
 	if (teamHandlers[teamId as keyof typeof teamHandlers]) {
 		result = await teamHandlers[teamId as keyof typeof teamHandlers]()

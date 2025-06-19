@@ -2,13 +2,13 @@ import { Queue } from 'node-resque'
 import { jobs } from '~/resque/jobs.server'
 import { queueTitles } from '~/resque/worker.server'
 
+import type { TeamId } from '~/types'
+
 export type TeamCheckJobProps = {
-	teamId: number
-	teamCheckFuncName: string
+	teamId: TeamId
 }
 export type SaveAllDepthChartsJobProps = {
-	teamId: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
-	year: number
+	teamId: TeamId
 }
 
 export type ResqueTaskInput = {

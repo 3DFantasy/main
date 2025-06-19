@@ -8,6 +8,8 @@ export type Error = {
 	message: string
 }
 
+export type TeamId = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+
 export type PXPAPIResponseTeam = {
 	fullName: string
 	competitorId: string

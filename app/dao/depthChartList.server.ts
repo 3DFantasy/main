@@ -1,7 +1,8 @@
 import Result, { err, ok } from 'true-myth/result'
-import { db, DepthChartList } from '~/lib/db.server'
+import { db } from '~/lib/db.server'
 
-import { DepthChartObject, Error } from '~/types'
+import type { DepthChartList as DepthChartListPrisma } from '~/lib/db.server'
+import type { DepthChartObject, Error } from '~/types'
 
 export type CheckAndUpdateDepthChartInput = {
 	teamId: number
@@ -9,9 +10,19 @@ export type CheckAndUpdateDepthChartInput = {
 	value: DepthChartObject[]
 }
 
+export type DepthChartList = {
+	id: number
+	uuid: string
+	teamId: number
+	value: DepthChartObject[]
+	year: number
+	createdAt: Date
+	updatedAt: Date
+}
+
 export type CheckAndUpdateDepthChartOutput = {
 	depthChartList: DepthChartList
-	newDepthChart: null | DepthChartObject
+	newDepthChart: DepthChartObject | null
 }
 
 export async function compareDepthChartList({
@@ -20,7 +31,7 @@ export async function compareDepthChartList({
 	value,
 }: CheckAndUpdateDepthChartInput): Promise<Result<CheckAndUpdateDepthChartOutput, Error>> {
 	let depthChartList: DepthChartList | null = null
-	let newDepthChart: null | DepthChartObject = null
+	let newDepthChart: DepthChartObject | null = null
 
 	const currentDepthChartList = await db.depthChartList.findMany({
 		where: {
@@ -30,13 +41,15 @@ export async function compareDepthChartList({
 	})
 
 	if (currentDepthChartList.length === 0) {
-		depthChartList = await db.depthChartList.create({
+		console.log(`No depth chart list for year ${year}, teamId ${teamId} created yet, creating now..`)
+		const createdDepthChartList = await db.depthChartList.create({
 			data: {
 				year,
 				teamId,
 				value: JSON.stringify(value),
 			},
 		})
+		depthChartList = parseDepthChartList({ depthChartList: createdDepthChartList })
 		newDepthChart = value[value.length - 1]
 
 		return ok({ depthChartList, newDepthChart })
@@ -46,29 +59,31 @@ export async function compareDepthChartList({
 			code: 500,
 		})
 	} else {
-		depthChartList = currentDepthChartList[0]
+		console.log(`DepthChartList retrieved for ${year}, teamId ${teamId}`)
+		depthChartList = parseDepthChartList({ depthChartList: currentDepthChartList[0] })
 	}
 
-	try {
-		if (typeof depthChartList.value === 'string') {
-			const existingDepthChartList: DepthChartObject[] = JSON.parse(depthChartList.value)
-			if (existingDepthChartList.length === value.length) {
-				console.log(`No new depth chart found: ${year} & teamId:${teamId}`)
-			} else {
-				newDepthChart = value[value.length - 1]
-				console.log('new depth chart:', newDepthChart)
-			}
-			return ok({ depthChartList, newDepthChart })
-		} else {
-			return err({
-				message: `depthChartList value is null: ${year} & teamId:${teamId}`,
-				code: 500,
-			})
+	if (depthChartList.value.length === value.length) {
+		console.log(`No new depth chart found: ${year} & teamId:${teamId}`)
+	} else {
+		newDepthChart = value[value.length - 1]
+		console.log('new depth chart:', newDepthChart)
+	}
+	return ok({ depthChartList, newDepthChart })
+}
+
+export function parseDepthChartList({
+	depthChartList,
+}: {
+	depthChartList: DepthChartListPrisma
+}): DepthChartList {
+	if (typeof depthChartList.value === 'string') {
+		const depthChartListFinal = {
+			...depthChartList,
+			value: JSON.parse(depthChartList.value) as DepthChartObject[],
 		}
-	} catch (e) {
-		return err({
-			message: `${e}: ${year} & teamId:${teamId}`,
-			code: 500,
-		})
+		return depthChartListFinal
+	} else {
+		throw new Error(`depthChartList value is null, could not parse`)
 	}
 }

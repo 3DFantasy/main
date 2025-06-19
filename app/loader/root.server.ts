@@ -1,9 +1,8 @@
 export const rootLoader = async (request: Request) => {
 	// resqueTask({
-	// 	job: 'saveAllDepthCharts',
-	// 	saveAllDepthChartsProps: {
-	// 		teamId: 9,
-	// 		year: 2025,
+	// 	job: 'teamCheck',
+	// 	teamCheckProps: {
+	// 		teamId: 3,
 	// 	},
 	// })
 	// const points: number[] = []
