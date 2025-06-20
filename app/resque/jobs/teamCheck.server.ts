@@ -3,6 +3,7 @@ import { db } from '~/lib/db.server'
 import { teamHandlers } from '~/utils/puppeteer/index.server'
 
 import type { DepthChartObject } from '~/types'
+import { sendMail } from '~/utils/index.server'
 
 export async function teamCheck({ teamId }: { teamId: number }) {
 	const year = Number(process.env.LEAGUE_YEAR)
@@ -46,7 +47,28 @@ export async function teamCheck({ teamId }: { teamId: number }) {
 				value: JSON.stringify(result),
 			},
 		})
+
 		// send email
+		const sendMailResp = await sendMail({
+			message: {
+				subject: 'Test email',
+				body: {
+					content: 'Test email from 3df',
+					contentType: 'Text',
+				},
+				toRecipients: [
+					{
+						emailAddress: {
+							address: 'wilsonbirch@gmail.com',
+						},
+					},
+				],
+			},
+			saveToSentItems: 'true',
+		})
+		if (sendMailResp.isErr) {
+			throw new Error(sendMailResp.error.message)
+		}
 	}
 
 	console.log(`Team${teamId}Check complete`)

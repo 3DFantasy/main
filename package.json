@@ -11,7 +11,9 @@
 		"typecheck": "tsc"
 	},
 	"dependencies": {
+		"@azure/identity": "^4.10.1",
 		"@heroui/react": "2.7.10",
+		"@microsoft/microsoft-graph-client": "^3.0.7",
 		"@prisma/client": "^5.22.0",
 		"@remix-run/css-bundle": "^2.14.0",
 		"@remix-run/node": "^2.14.0",

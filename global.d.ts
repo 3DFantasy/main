@@ -22,6 +22,13 @@ declare global {
 			TEAM_8_URL: string
 			TEAM_9_URL: string
 			PXP_API_URL: string
+			MICROSOFT_GRAPH_ENDPOINT: string
+			MICROSOFT_APP_CLIENT_ID: string
+			MICROSOFT_APP_OBJ_ID: string
+			MICROSOFT_APP_TENANT_ID: string
+			MICROSOFT_CLIENT_SECRET: string
+			MICROSOFT_CLIENT_SECRET_ID: string
+			MICROSOFT_3DFANTASY_FROM_EMAIL: string
 		}
 	}
 }

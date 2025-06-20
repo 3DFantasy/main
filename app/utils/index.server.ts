@@ -1,4 +1,5 @@
 export { createSignature } from './createSignature.server.'
+export { sendMail } from './fetch/sendMail.server'
 export {
 	team1,
 	team2,
