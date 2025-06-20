@@ -51,17 +51,37 @@ export async function teamCheck({ teamId }: { teamId: number }) {
 		})
 
 		const notificationField = `team${teamId}Notification` as keyof typeof db.account.fields
+		let allAccountsToMail: {
+			id: number
+			uuid: string
+			email: string
+		}[] = []
+		let skip = 0
+		const take = 50
+		let hasMore = true
 
-		const accountsToMail = await db.account.findMany({
-			where: {
-				[notificationField]: true,
-			},
-			select: {
-				id: true,
-				uuid: true,
-				email: true,
-			},
-		})
+		while (hasMore) {
+			const accountsBatch = await db.account.findMany({
+				where: {
+					[notificationField]: true,
+				},
+				select: {
+					id: true,
+					uuid: true,
+					email: true,
+				},
+				take,
+				skip,
+			})
+
+			allAccountsToMail = [...allAccountsToMail, ...accountsBatch]
+
+			if (accountsBatch.length < take) {
+				hasMore = false
+			} else {
+				skip += take // Move to the next batch
+			}
+		}
 
 		const teamTitle = process.env[`TEAM_${teamId}_TITLE`] as string
 		const emailTitle = `New Depth Chart Posted: ${teamTitle}`
@@ -80,7 +100,7 @@ export async function teamCheck({ teamId }: { teamId: number }) {
 					}),
 					contentType: 'HTML',
 				},
-				bccRecipients: accountsToMail.map((account) => {
+				bccRecipients: allAccountsToMail.map((account) => {
 					return {
 						emailAddress: {
 							address: account.email,
