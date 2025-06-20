@@ -16,8 +16,9 @@ export type SendMailInput = {
 			contentType: 'Text' | 'HTML'
 			content: string
 		}
-		toRecipients: EmailAddressObj[]
+		toRecipients?: EmailAddressObj[]
 		ccRecipients?: EmailAddressObj[]
+		bccRecipients?: EmailAddressObj[]
 	}
 	saveToSentItems: 'false' | 'true'
 }

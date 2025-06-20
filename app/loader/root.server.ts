@@ -1,38 +1,12 @@
-import { sendMail } from '~/utils/index.server'
-import { getEmailTemplate } from '~/utils/m365/emailTemplate.server'
+import { resqueTask } from '~/resque/main.server'
 
 export const rootLoader = async (request: Request) => {
-	const emailTitle = `New Depth Chart Posted: ${process.env.TEAM_1_TITLE}`
-
-	const sendMailResp = await sendMail({
-		message: {
-			subject: `3DF - ${emailTitle}`,
-			body: {
-				content: getEmailTemplate({
-					title: emailTitle,
-					depthChartTitle: 'DepthChart',
-					link: 'google.com',
-					team: process.env.TEAM_1_TITLE,
-					template: 'newDepthChart',
-				}),
-				contentType: 'HTML',
-			},
-			toRecipients: [
-				{
-					emailAddress: {
-						address: 'wilsonbirch@gmail.com',
-					},
-				},
-			],
+	resqueTask({
+		job: 'teamCheck',
+		teamCheckProps: {
+			teamId: 9,
 		},
-		saveToSentItems: 'true',
 	})
-	// resqueTask({
-	// 	job: 'teamCheck',
-	// 	teamCheckProps: {
-	// 		teamId: 3,
-	// 	},
-	// })
 	// const points: number[] = []
 
 	// const plays = await playFindMany({

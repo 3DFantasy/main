@@ -98,7 +98,7 @@ export const getEmailTemplate = ({
 
           <!-- Footer with links -->
           <div class="footer">
-            <a href="https://3dfantasy.ca>Visit Our Website</a>
+            <a href="https://3dfantasy.ca">Website</a>
             <a href="mailto:wilson@3dfantasy.ca">Contact Us</a>
             <a href="https://3dfantasy.ca/unsubscribe?email=%%EMAIL%%">Unsubscribe</a>
           </div>

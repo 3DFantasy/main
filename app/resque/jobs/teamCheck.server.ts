@@ -49,7 +49,21 @@ export async function teamCheck({ teamId }: { teamId: number }) {
 			},
 		})
 
-		const emailTitle = `New Depth Chart Posted: ${process.env.TEAM_1_TITLE}`
+		const notificationField = `team${teamId}Notification` as keyof typeof db.account.fields
+
+		const accountsToMail = await db.account.findMany({
+			where: {
+				[notificationField]: true,
+			},
+			select: {
+				id: true,
+				uuid: true,
+				email: true,
+			},
+		})
+
+		const teamTitle = process.env[`TEAM_${teamId}_TITLE`] as string
+		const emailTitle = `New Depth Chart Posted: ${teamTitle}`
 
 		// send email
 		const sendMailResp = await sendMail({
@@ -60,18 +74,18 @@ export async function teamCheck({ teamId }: { teamId: number }) {
 						title: emailTitle,
 						depthChartTitle: compareDepthChartListResp.value.newDepthChart.title,
 						link: compareDepthChartListResp.value.newDepthChart.href,
-						team: process.env.TEAM_1_TITLE,
+						team: teamTitle,
 						template: 'newDepthChart',
 					}),
 					contentType: 'HTML',
 				},
-				toRecipients: [
-					{
+				bccRecipients: accountsToMail.map((account) => {
+					return {
 						emailAddress: {
-							address: 'wilsonbirch@gmail.com',
+							address: account.email,
 						},
-					},
-				],
+					}
+				}),
 			},
 			saveToSentItems: 'true',
 		})
