@@ -46,7 +46,6 @@ export async function sendMail({
 	}
 
 	try {
-		// Don't await here since we're handling the Promise with then/catch
 		await client.api(`users/${process.env.MICROSOFT_3DFANTASY_FROM_EMAIL}/sendMail`).post(sendMail)
 
 		return ok({ success: true })

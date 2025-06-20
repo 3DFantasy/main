@@ -4,6 +4,7 @@ import { teamHandlers } from '~/utils/puppeteer/index.server'
 
 import type { DepthChartObject } from '~/types'
 import { sendMail } from '~/utils/index.server'
+import { getEmailTemplate } from '~/utils/m365/emailTemplate.server'
 
 export async function teamCheck({ teamId }: { teamId: number }) {
 	const year = Number(process.env.LEAGUE_YEAR)
@@ -48,13 +49,21 @@ export async function teamCheck({ teamId }: { teamId: number }) {
 			},
 		})
 
+		const emailTitle = `New Depth Chart Posted: ${process.env.TEAM_1_TITLE}`
+
 		// send email
 		const sendMailResp = await sendMail({
 			message: {
-				subject: 'Test email',
+				subject: `3DF - ${emailTitle}`,
 				body: {
-					content: 'Test email from 3df',
-					contentType: 'Text',
+					content: getEmailTemplate({
+						title: emailTitle,
+						depthChartTitle: compareDepthChartListResp.value.newDepthChart.title,
+						link: compareDepthChartListResp.value.newDepthChart.href,
+						team: process.env.TEAM_1_TITLE,
+						template: 'newDepthChart',
+					}),
+					contentType: 'HTML',
 				},
 				toRecipients: [
 					{
