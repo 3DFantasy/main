@@ -14,7 +14,7 @@ export async function saveAllDepthCharts({ teamId }: { teamId: number }): Promis
 		throw new Error(`Something went wrong fetching depth charts for teamId: ${teamId}`)
 	}
 
-	await db.depthChartList.create({
+	const newDepthChartList = await db.depthChartList.create({
 		data: {
 			teamId: teamId,
 			value: JSON.stringify(result),
@@ -38,6 +38,7 @@ export async function saveAllDepthCharts({ teamId }: { teamId: number }): Promis
 					title: chart.title,
 					value: chart.href,
 					year: year,
+					depthChartListId: newDepthChartList.id,
 				},
 				select: {
 					id: true,

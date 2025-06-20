@@ -39,26 +39,29 @@ model Team {
 }
 
 model DepthChartList {
-  id        Int      @id @default(autoincrement())
-  uuid      String   @unique @default(uuid())
-  teamId    Int
-  value     String?
-  year      Int
-  Team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         Int          @id @default(autoincrement())
+  uuid       String       @unique @default(uuid())
+  teamId     Int
+  value      String?
+  year       Int
+  Team       Team         @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  DepthChart DepthChart[]
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
 }
 
 model DepthChart {
-  id        Int      @id @default(autoincrement())
-  uuid      String   @unique @default(uuid())
-  teamId    Int
-  title     String
-  value     String
-  year      Int
-  Team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id               Int            @id @default(autoincrement())
+  uuid             String         @unique @default(uuid())
+  teamId           Int
+  depthChartListId Int
+  title            String
+  value            String
+  year             Int
+  Team             Team           @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  DepthChartList   DepthChartList @relation(fields: [depthChartListId], references: [id], onDelete: Cascade)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
 }
 
 model Game {
