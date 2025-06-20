@@ -36,6 +36,7 @@ export async function teamCheck({ teamId }: { teamId: number }) {
 				title: compareDepthChartListResp.value.newDepthChart.title,
 				value: compareDepthChartListResp.value.newDepthChart.href,
 				year,
+				depthChartListId: compareDepthChartListResp.value.depthChartList.id,
 			},
 		})
 
