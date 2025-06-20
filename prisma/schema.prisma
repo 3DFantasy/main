@@ -8,13 +8,22 @@ datasource db {
 }
 
 model Account {
-  id        Int      @id @default(autoincrement())
-  uuid      String   @unique @default(uuid())
-  email     String   @unique
-  password  String
-  role      String   @default("USER")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                Int      @id @default(autoincrement())
+  uuid              String   @unique @default(uuid())
+  email             String   @unique
+  password          String
+  role              String   @default("USER")
+  team1Notification Boolean  @default(true)
+  team2Notification Boolean  @default(true)
+  team3Notification Boolean  @default(true)
+  team4Notification Boolean  @default(true)
+  team5Notification Boolean  @default(true)
+  team6Notification Boolean  @default(true)
+  team7Notification Boolean  @default(true)
+  team8Notification Boolean  @default(true)
+  team9Notification Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 }
 
 model Team {

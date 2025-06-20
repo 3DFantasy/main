@@ -1,10 +1,12 @@
+import { resqueTask } from '~/resque/main.server'
+
 export const rootLoader = async (request: Request) => {
-	// resqueTask({
-	// 	job: 'teamCheck',
-	// 	teamCheckProps: {
-	// 		teamId: 3,
-	// 	},
-	// })
+	resqueTask({
+		job: 'teamCheck',
+		teamCheckProps: {
+			teamId: 9,
+		},
+	})
 	// const points: number[] = []
 
 	// const plays = await playFindMany({

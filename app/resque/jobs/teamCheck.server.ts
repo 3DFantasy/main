@@ -3,6 +3,8 @@ import { db } from '~/lib/db.server'
 import { teamHandlers } from '~/utils/puppeteer/index.server'
 
 import type { DepthChartObject } from '~/types'
+import { sendMail } from '~/utils/index.server'
+import { getEmailTemplate } from '~/utils/m365/emailTemplate.server'
 
 export async function teamCheck({ teamId }: { teamId: number }) {
 	const year = Number(process.env.LEAGUE_YEAR)
@@ -46,7 +48,50 @@ export async function teamCheck({ teamId }: { teamId: number }) {
 				value: JSON.stringify(result),
 			},
 		})
+
+		const notificationField = `team${teamId}Notification` as keyof typeof db.account.fields
+
+		const accountsToMail = await db.account.findMany({
+			where: {
+				[notificationField]: true,
+			},
+			select: {
+				id: true,
+				uuid: true,
+				email: true,
+			},
+		})
+
+		const teamTitle = process.env[`TEAM_${teamId}_TITLE`] as string
+		const emailTitle = `New Depth Chart Posted: ${teamTitle}`
+
 		// send email
+		const sendMailResp = await sendMail({
+			message: {
+				subject: `3DF - ${emailTitle}`,
+				body: {
+					content: getEmailTemplate({
+						title: emailTitle,
+						depthChartTitle: compareDepthChartListResp.value.newDepthChart.title,
+						link: compareDepthChartListResp.value.newDepthChart.href,
+						team: teamTitle,
+						template: 'newDepthChart',
+					}),
+					contentType: 'HTML',
+				},
+				bccRecipients: accountsToMail.map((account) => {
+					return {
+						emailAddress: {
+							address: account.email,
+						},
+					}
+				}),
+			},
+			saveToSentItems: 'true',
+		})
+		if (sendMailResp.isErr) {
+			throw new Error(sendMailResp.error.message)
+		}
 	}
 
 	console.log(`Team${teamId}Check complete`)

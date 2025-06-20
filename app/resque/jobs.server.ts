@@ -33,7 +33,6 @@ export const jobs: any = {
 		perform: async (saveAllDepthChartsProps: SaveAllDepthChartsJobProps) => {
 			return await saveAllDepthCharts({
 				teamId: saveAllDepthChartsProps.teamId,
-				year: saveAllDepthChartsProps.year,
 			})
 		},
 	},
