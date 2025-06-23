@@ -1,25 +1,24 @@
-import { HeroUIProvider } from '@heroui/react'
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, useNavigate } from '@remix-run/react'
-import { ThemeProvider as NextThemesProvider } from 'next-themes'
-import { ReactNode, useEffect, useState } from 'react'
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from '@remix-run/react'
+import { useState } from 'react'
 import { Header, Toast } from '~/components'
 import { rootLoader } from '~/loader/root.server'
+import { Providers } from '~/providers'
 
 import type { LoaderFunction } from '@remix-run/node'
+import type { LoaderData } from '~/loader/root.server'
 
 import 'remixicon/fonts/remixicon.css'
 import '~/styles/main.css'
 import '~/styles/tailwind.css'
 
 export type RootContextAccount = {
-	id: string
+	id: number
 	email: string
 	role: string
 }
 
 export type RootContext = {
 	setToast: React.Dispatch<React.SetStateAction<{ message: null | string; error?: boolean }>>
-	setAccount: React.Dispatch<React.SetStateAction<RootContextAccount | null>>
 }
 
 // export const links: LinksFunction = () => [
@@ -57,19 +56,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
 	)
 }
 
-export function Providers({ children }: { children: ReactNode }) {
-	const navigate = useNavigate()
-	return (
-		<HeroUIProvider navigate={navigate}>
-			<NextThemesProvider attribute='class' defaultTheme='dark'>
-				{children}
-			</NextThemesProvider>
-		</HeroUIProvider>
-	)
-}
-
 export default function App() {
-	const [account, setAccount] = useState<RootContextAccount | null>(null)
+	const { account } = useLoaderData<LoaderData>()
 	const [theme, setTheme] = useState('dark')
 	const [toast, setToast] = useState<{
 		message: null | string
@@ -79,32 +67,12 @@ export default function App() {
 		error: false,
 	})
 
-	const rootContext: RootContext = { setToast, setAccount }
-
-	useEffect(() => {
-		if (account) {
-			setAccount(account)
-			setToast({
-				message: `Authenticated: ${account.email}`,
-				error: false,
-			})
-		}
-	}, [account])
+	const rootContext: RootContext = { setToast }
 
 	return (
-		<Providers>
+		<Providers rootAccount={account} setToast={setToast}>
 			<main className={`${theme} text-foreground bg-background`}>
-				<Header
-					account={
-						account
-							? {
-									email: account.email,
-									id: account.id,
-									role: account.role,
-							  }
-							: null
-					}
-				/>
+				<Header setToast={setToast} />
 				<div className='container mx-auto'>
 					<Outlet context={rootContext} />
 					<Toast message={toast.message} error={toast.error} setToast={setToast} />

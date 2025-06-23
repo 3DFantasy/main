@@ -9,7 +9,7 @@ export type LoaderData = {
 export const authSignupLoader = async (request: Request) => {
 	const url = new URL(request.url)
 	const error = url.searchParams.get('error')
-	const account = await authenticator.isAuthenticated(request, {
+	const account: Account | null = await authenticator.isAuthenticated(request, {
 		successRedirect: '/home',
 	})
 

@@ -1,6 +1,7 @@
 import { useLoaderData, useOutletContext } from '@remix-run/react'
 import { useEffect } from 'react'
-import { homeLoader, HomeLoaderData } from '~/loader/home.server'
+import { homeLoader, LoaderData } from '~/loader/home.server'
+import { useAuth } from '~/providers'
 
 import type { LoaderFunction, MetaFunction } from '@remix-run/node'
 import type { RootContext } from '~/root'
@@ -14,11 +15,12 @@ export const loader: LoaderFunction = async ({ request }) => {
 }
 
 export default function Home() {
-	const { setAccount, setToast } = useOutletContext<RootContext>()
-	const { account } = useLoaderData<HomeLoaderData>()
+	const { setToast } = useOutletContext<RootContext>()
+	const { account } = useLoaderData<LoaderData>()
+	const { account: authAccount, setAccount } = useAuth()
 
 	useEffect(() => {
-		if (account) {
+		if (!authAccount) {
 			setAccount({
 				id: account.id,
 				email: account.email,
@@ -26,7 +28,6 @@ export default function Home() {
 			})
 			setToast({
 				message: `Authenticated: ${account.email}`,
-				error: false,
 			})
 		}
 	}, [account])

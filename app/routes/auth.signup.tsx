@@ -1,12 +1,12 @@
+import { Button, Input } from '@heroui/react'
+import { Form, useActionData, useFetcher, useOutletContext } from '@remix-run/react'
 import { useEffect, useState } from 'react'
-import { Button, Input } from "@heroui/react"
-import { authSignupLoader } from '~/loader/auth.signup.server'
 import { authSignupAction } from '~/actions/auth.signup.server'
-import { Form, useActionData, useFetcher, useLoaderData, useOutletContext } from '@remix-run/react'
+import { authSignupLoader } from '~/loader/auth.signup.server'
 
 import type { ActionFunctionArgs, LoaderFunction, MetaFunction } from '@remix-run/node'
-import type { RootContext } from '~/root'
 import type { ActionData } from '~/actions/auth.signup.server'
+import type { RootContext } from '~/root'
 
 export const meta: MetaFunction = () => {
 	return [{ title: 'Signup | 3DF' }, { name: '3DF Signup', content: '3DF signup page' }]
@@ -26,7 +26,7 @@ export default function Signup() {
 	const actionData = useActionData<ActionData>()
 
 	// const loaderData = useLoaderData<LoaderData>()
-	const { setToast, setAccount } = useOutletContext<RootContext>()
+	const { setToast } = useOutletContext<RootContext>()
 	const fetcher = useFetcher<{ message: string; code: number }>()
 	const [formData, setFormData] = useState<{
 		email: string
@@ -47,9 +47,9 @@ export default function Signup() {
 		password: false,
 	})
 
-	useEffect(() => {
-		setAccount(null)
-	}, [])
+	// useEffect(() => {
+	// 	setAccount(null)
+	// }, [])
 
 	useEffect(() => {
 		if (actionData) {

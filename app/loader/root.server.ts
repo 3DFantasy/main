@@ -1,6 +1,13 @@
-// import { resqueTask } from '~/resque/main.server'
+import { Account } from '@prisma/client'
+import { authenticator } from '~/utils/auth/auth.server'
+
+export type LoaderData = {
+	account: Account | null
+}
 
 export const rootLoader = async (request: Request) => {
+	const account: Account | null = await authenticator.isAuthenticated(request, {})
+
 	// resqueTask({
 	// 	job: 'teamCheck',
 	// 	teamCheckProps: {
@@ -37,5 +44,5 @@ export const rootLoader = async (request: Request) => {
 	// // 	})
 	// // }
 
-	return {}
+	return { account }
 }

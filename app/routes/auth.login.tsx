@@ -24,7 +24,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function Login() {
 	const actionData = useActionData<ActionData>()
-	const { setAccount, setToast } = useOutletContext<RootContext>()
+	const { setToast } = useOutletContext<RootContext>()
 	const { account } = useLoaderData<typeof loader>()
 	const [formData, setFormData] = useState({
 		email: '',
@@ -37,10 +37,6 @@ export default function Login() {
 	})
 
 	const inputClass = 'my-2'
-
-	useEffect(() => {
-		setAccount(null)
-	}, [])
 
 	useEffect(() => {
 		if (actionData) {

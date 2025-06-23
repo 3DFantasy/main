@@ -1,13 +1,17 @@
+import { Account } from '@prisma/client'
 import { authenticator } from '~/utils/auth/auth.server'
+
+export type LoaderData = {
+	account: Account
+	error: boolean
+}
 
 export const authLoginLoader = async (request: Request) => {
 	const url = new URL(request.url)
 	const error = url.searchParams.get('error')
-	const account = await authenticator.isAuthenticated(request, {
+	const account: Account | null = await authenticator.isAuthenticated(request, {
 		successRedirect: '/home',
 	})
 
-	// console.log("account")
-
-	return { account }
+	return { account, error: error === 'true' ? true : false }
 }
