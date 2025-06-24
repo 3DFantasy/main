@@ -1,4 +1,3 @@
-export { accountCreate, accountFindUniqueByEmail } from './account.server'
 export { depthChartFindUnique } from './depthChart.server'
 export { driveCreate, driveFindUnique, driveUpdate } from './drive.server'
 export { gameCreate, gameFindMany } from './game.server'

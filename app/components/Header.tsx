@@ -8,18 +8,13 @@ import {
 	DropdownTrigger,
 	Link,
 } from '@heroui/react'
-import { useNavigate } from '@remix-run/react'
 import { useAuth } from '~/providers'
 
 export type MenuItem = { label: string; key: string; to: any }
 
-export function Header({
-	setToast,
-}: {
-	setToast: React.Dispatch<React.SetStateAction<{ message: null | string; error?: boolean }>>
-}) {
-	const navigate = useNavigate()
-	const { account, setAccount } = useAuth()
+export function Header() {
+	// const navigate = useNavigate()
+	const { account, logout } = useAuth()
 	const loggedOutMenuItems: MenuItem[] = [
 		{ label: 'Sign Up', key: 'sign-up', to: '/auth/signup' },
 		{ label: 'Log In', key: 'log-in', to: '/auth/login' },
@@ -85,11 +80,7 @@ export function Header({
 									className='w-full'
 									color={'danger'}
 									onClick={() => {
-										setAccount(null)
-										setToast({
-											message: `Signed out: ${account.email}`,
-										})
-										navigate('/auth/logout')
+										logout()
 									}}
 								>
 									{'Log Out'}

@@ -1,9 +1,17 @@
-import bcryptjs from 'bcryptjs'
+import { default as bcrypt, default as bcryptjs } from 'bcryptjs'
 import { Authenticator, AuthorizationError } from 'remix-auth'
 import { FormStrategy } from 'remix-auth-form'
-import { accountCreate, accountFindUniqueByEmail } from '~/dao/index.server'
+
+import { db } from '~/lib/db.server'
 import { sessionStorage } from '~/utils/auth/sessionStorage.server'
 import { parseEmail } from '../parse'
+
+export type AuthAccount = {
+	id: number
+	uuid: string
+	email: string
+	role: 'ADMIN' | 'USER'
+}
 
 const sessionSecret = process.env.SESSION_SECRET
 
@@ -17,7 +25,9 @@ const loginFormStrategy = new FormStrategy(async ({ form }) => {
 	const email = form.get('email') as string
 	const password = form.get('password') as string
 
-	const account = await accountFindUniqueByEmail(email)
+	const account = await db.account.findUnique({
+		where: { email: email },
+	})
 	if (!account) {
 		// credentials not found
 		throw new AuthorizationError('Incorrect credentials, please try again')
@@ -28,7 +38,12 @@ const loginFormStrategy = new FormStrategy(async ({ form }) => {
 		// incorrect password
 		throw new AuthorizationError('Incorrect credentials, please try again')
 	}
-	return account
+	return {
+		id: account.id,
+		uuid: account.uuid,
+		email: account.email,
+		role: account.role,
+	} as AuthAccount
 })
 
 authenticator.use(loginFormStrategy, 'login')
@@ -37,7 +52,15 @@ const signUpFormStrategy = new FormStrategy(async ({ form }) => {
 	const email = form.get('email') as string
 	const password = form.get('password') as string
 
-	const existingAccount = await accountFindUniqueByEmail(email)
+	const existingAccount = await db.account.findUnique({
+		where: { email: email },
+		select: {
+			id: true,
+			email: true,
+			uuid: true,
+			role: true,
+		},
+	})
 
 	if (existingAccount) {
 		// existing email
@@ -56,14 +79,26 @@ const signUpFormStrategy = new FormStrategy(async ({ form }) => {
 		throw new AuthorizationError('Password must be 8 characters in length')
 	}
 
-	const account = await accountCreate(email, password)
+	const salt = bcrypt.genSaltSync(10)
+	const passwordHash = bcrypt.hashSync(password, salt)
+	const account = await db.account.create({
+		data: {
+			email: email,
+			password: passwordHash,
+		},
+	})
 
 	if (!account) {
 		// server error during signup
 		throw new AuthorizationError('Something went wrong creating account')
 	}
 
-	return account
+	return {
+		id: account.id,
+		uuid: account.uuid,
+		email: account.email,
+		role: account.role,
+	} as AuthAccount
 })
 
 authenticator.use(signUpFormStrategy, 'signup')

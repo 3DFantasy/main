@@ -1,11 +1,11 @@
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from '@remix-run/react'
 import { useState } from 'react'
-import { Header, Toast } from '~/components'
+import { Header } from '~/components'
 import { rootLoader } from '~/loader/root.server'
 import { Providers } from '~/providers'
 
 import type { LoaderFunction } from '@remix-run/node'
-import type { LoaderData } from '~/loader/root.server'
+// import type { LoaderData } from '~/loader/root.server'
 
 import 'remixicon/fonts/remixicon.css'
 import '~/styles/main.css'
@@ -57,25 +57,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-	const { account } = useLoaderData<LoaderData>()
+	const { account } = useLoaderData<{ account: RootContextAccount | null }>()
 	const [theme, setTheme] = useState('dark')
-	const [toast, setToast] = useState<{
-		message: null | string
-		error?: boolean
-	}>({
-		message: null,
-		error: false,
-	})
-
-	const rootContext: RootContext = { setToast }
 
 	return (
-		<Providers rootAccount={account} setToast={setToast}>
+		<Providers initialAccount={account}>
 			<main className={`${theme} text-foreground bg-background`}>
-				<Header setToast={setToast} />
+				<Header />
 				<div className='container mx-auto'>
-					<Outlet context={rootContext} />
-					<Toast message={toast.message} error={toast.error} setToast={setToast} />
+					<Outlet />
 				</div>
 			</main>
 		</Providers>

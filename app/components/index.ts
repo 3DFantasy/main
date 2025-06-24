@@ -1,3 +1,2 @@
-export { Header } from './Navbar'
-export { Toast } from './Toast'
+export { Header } from './Header'
 // export { ThemeSwitcher } from './themeSwitcher'

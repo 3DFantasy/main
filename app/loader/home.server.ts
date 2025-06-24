@@ -1,12 +1,11 @@
-import { Account } from '@prisma/client'
-import { authenticator } from '~/utils/auth/auth.server'
+import { AuthAccount, authenticator } from '~/utils/auth/auth.server'
 
 export type LoaderData = {
-	account: Account
+	account: AuthAccount
 }
 
 export const homeLoader = async (request: Request) => {
-	const account: Account = await authenticator.isAuthenticated(request, {
+	const account = await authenticator.isAuthenticated(request, {
 		failureRedirect: '/auth/login',
 	})
 
