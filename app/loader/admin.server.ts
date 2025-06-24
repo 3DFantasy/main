@@ -3,7 +3,10 @@ import { redirect } from '@remix-run/node'
 import { authenticator } from '~/utils/auth/auth.server'
 
 export type LoaderData = {
-	account: Account
+	teamCheckBoxes: {
+		value: string
+		title: string
+	}[]
 }
 
 export const adminLoader = async (request: Request) => {
@@ -15,7 +18,15 @@ export const adminLoader = async (request: Request) => {
 		return redirect('/home')
 	}
 
+	const teamCheckBoxes = Array.from({ length: 9 }, (_, i) => {
+		const teamNumber = i + 1
+		return {
+			value: `team${teamNumber}`,
+			title: process.env[`TEAM_${teamNumber}_TITLE`],
+		}
+	})
+
 	return {
-		account,
+		teamCheckBoxes,
 	}
 }
