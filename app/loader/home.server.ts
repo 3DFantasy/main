@@ -1,8 +1,7 @@
-import { Account } from '@prisma/client'
-import { authenticator } from '~/utils/auth/auth.server'
+import { AuthAccount, authenticator } from '~/utils/auth/auth.server'
 
-export type HomeLoaderData = {
-	account: Account
+export type LoaderData = {
+	account: AuthAccount
 }
 
 export const homeLoader = async (request: Request) => {
@@ -11,6 +10,6 @@ export const homeLoader = async (request: Request) => {
 	})
 
 	return {
-		account
+		account,
 	}
 }

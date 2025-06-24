@@ -8,31 +8,25 @@ import {
 	DropdownTrigger,
 	Link,
 } from '@heroui/react'
-import type { RootContextAccount } from '~/root'
+import { useAuth } from '~/providers'
 
 export type MenuItem = { label: string; key: string; to: any }
 
-export type HeaderInput = {
-	account: RootContextAccount | null
-}
-
-export function Header({ account }: HeaderInput) {
+export function Header() {
+	// const navigate = useNavigate()
+	const { account, logout } = useAuth()
 	const loggedOutMenuItems: MenuItem[] = [
 		{ label: 'Sign Up', key: 'sign-up', to: '/auth/signup' },
 		{ label: 'Log In', key: 'log-in', to: '/auth/login' },
-	]
-
-	const loggedInMenuItems: MenuItem[] = [
-		// { label: 'Profile', key: 'profile', to: '/profile' },
-		// { label: 'Dashboard', key: 'dashboard', to: '/dashboard' },
-		{ label: 'Log Out', key: 'log-out', to: '/auth/logout' },
 	]
 
 	return (
 		<Navbar isBordered>
 			<NavbarContent>
 				<NavbarBrand>
-					<p className='font-bold text-inherit'>3DF</p>
+					<Link className='font-bold text-inherit' href='/home'>
+						3DF
+					</Link>
 				</NavbarBrand>
 			</NavbarContent>
 
@@ -69,20 +63,29 @@ export function Header({ account }: HeaderInput) {
 						</DropdownTrigger>
 
 						<DropdownMenu aria-label='Profile Actions' variant='flat'>
-							{loggedInMenuItems.map((item, i) => {
-								return (
-									<DropdownItem key={item.key}>
-										{' '}
-										<Link
-											className='w-full'
-											color={item.key === 'log-out' ? 'danger' : 'primary'}
-											href={item.to}
-										>
-											{item.label}
-										</Link>
-									</DropdownItem>
-								)
-							})}
+							{account.role === 'ADMIN' ? (
+								<DropdownItem key={'admin'}>
+									{' '}
+									<Link className='w-full' color={'primary'} href={'/admin'}>
+										{'Admin'}
+									</Link>
+								</DropdownItem>
+							) : (
+								<></>
+							)}
+							<DropdownItem key={'log-out'}>
+								{' '}
+								<Link
+									as={'button'}
+									className='w-full'
+									color={'danger'}
+									onClick={() => {
+										logout()
+									}}
+								>
+									{'Log Out'}
+								</Link>
+							</DropdownItem>
 						</DropdownMenu>
 					</Dropdown>
 				) : (

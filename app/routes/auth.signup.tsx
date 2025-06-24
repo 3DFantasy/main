@@ -1,11 +1,10 @@
+import { addToast, Button, Input } from '@heroui/react'
+import { Form, useActionData } from '@remix-run/react'
 import { useEffect, useState } from 'react'
-import { Button, Input } from "@heroui/react"
-import { authSignupLoader } from '~/loader/auth.signup.server'
 import { authSignupAction } from '~/actions/auth.signup.server'
-import { Form, useActionData, useFetcher, useLoaderData, useOutletContext } from '@remix-run/react'
+import { authSignupLoader } from '~/loader/auth.signup.server'
 
 import type { ActionFunctionArgs, LoaderFunction, MetaFunction } from '@remix-run/node'
-import type { RootContext } from '~/root'
 import type { ActionData } from '~/actions/auth.signup.server'
 
 export const meta: MetaFunction = () => {
@@ -24,10 +23,8 @@ const inputClass = 'my-2'
 
 export default function Signup() {
 	const actionData = useActionData<ActionData>()
-
 	// const loaderData = useLoaderData<LoaderData>()
-	const { setToast, setAccount } = useOutletContext<RootContext>()
-	const fetcher = useFetcher<{ message: string; code: number }>()
+	// const fetcher = useFetcher<{ message: string; code: number }>()
 	const [formData, setFormData] = useState<{
 		email: string
 		password: string
@@ -48,16 +45,14 @@ export default function Signup() {
 	})
 
 	useEffect(() => {
-		setAccount(null)
-	}, [])
-
-	useEffect(() => {
 		if (actionData) {
 			if (actionData.message) {
-				setToast({
-					error: true,
-					message: actionData.message,
+				addToast({
+					title: actionData.message,
+					description: `${formData.email}`,
+					color: 'danger',
 				})
+
 				if (actionData.message.includes('characters')) {
 					setError({
 						email: false,

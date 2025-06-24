@@ -1,9 +1,9 @@
-import { useLoaderData, useOutletContext } from '@remix-run/react'
-import { useEffect } from 'react'
-import { homeLoader, HomeLoaderData } from '~/loader/home.server'
+import { useLoaderData } from '@remix-run/react'
+import { homeLoader, LoaderData } from '~/loader/home.server'
+import { useAuth } from '~/providers'
 
 import type { LoaderFunction, MetaFunction } from '@remix-run/node'
-import type { RootContext } from '~/root'
+import { useEffect } from 'react'
 
 export const meta: MetaFunction = () => {
 	return [{ title: '3DF - Home' }, { name: 'description', content: 'Welcome to Remix!' }]
@@ -14,22 +14,18 @@ export const loader: LoaderFunction = async ({ request }) => {
 }
 
 export default function Home() {
-	const { setAccount, setToast } = useOutletContext<RootContext>()
-	const { account } = useLoaderData<HomeLoaderData>()
+	const { account } = useLoaderData<LoaderData>()
+	const { account: authAccount, setAccount } = useAuth()
 
 	useEffect(() => {
-		if (account) {
+		if (!authAccount) {
 			setAccount({
 				id: account.id,
 				email: account.email,
 				role: account.role,
 			})
-			setToast({
-				message: `Authenticated: ${account.email}`,
-				error: false,
-			})
 		}
-	}, [account])
+	}, [])
 
 	return <p>Home</p>
 }

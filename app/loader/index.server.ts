@@ -1,12 +1,16 @@
-import { redirect } from '@remix-run/node'
+import { Account } from '@prisma/client'
 import { authenticator } from '~/utils/auth/auth.server'
 
+export type LoaderData = {
+	account: Account | null
+}
+
 export const indexLoader = async (request: Request) => {
-	// await authenticator.isAuthenticated(request, {
-	// 	failureRedirect: '/auth/login',
-	// })
+	const account: Account = await authenticator.isAuthenticated(request, {
+		failureRedirect: '/auth/login',
+	})
 
-	// return redirect('/home')
-
-	return {  }
+	return {
+		account,
+	}
 }

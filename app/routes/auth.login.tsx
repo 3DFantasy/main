@@ -1,9 +1,8 @@
-import { Button, Input } from '@heroui/react'
-import { Form, useActionData, useLoaderData, useOutletContext } from '@remix-run/react'
+import { addToast, Button, Input } from '@heroui/react'
+import { Form, useActionData, useNavigation } from '@remix-run/react'
 import { useEffect, useState } from 'react'
 import { ActionData, authLoginAction } from '~/actions/auth.login.server'
 import { authLoginLoader } from '~/loader/auth.login.server'
-import { RootContext } from '~/root'
 
 import type { ActionFunction, LoaderFunction, MetaFunction } from '@remix-run/node'
 
@@ -23,9 +22,8 @@ export const action: ActionFunction = async ({ request }) => {
 }
 
 export default function Login() {
+	const navigation = useNavigation()
 	const actionData = useActionData<ActionData>()
-	const { setAccount, setToast } = useOutletContext<RootContext>()
-	const { account } = useLoaderData<typeof loader>()
 	const [formData, setFormData] = useState({
 		email: '',
 		password: '',
@@ -39,19 +37,17 @@ export default function Login() {
 	const inputClass = 'my-2'
 
 	useEffect(() => {
-		setAccount(null)
-	}, [])
-
-	useEffect(() => {
 		if (actionData) {
+			console.log(actionData)
 			if (actionData.message) {
 				setError({
 					email: true,
 					password: true,
 				})
-				setToast({
-					message: actionData.message,
-					error: true,
+				addToast({
+					title: actionData.message,
+					description: `${formData.email}`,
+					color: 'danger',
 				})
 			}
 		}
@@ -105,7 +101,16 @@ export default function Login() {
 					}
 				/>
 				<div className='mx-auto w-fit'>
-					<Button color='default' type='submit'>
+					<Button
+						color='default'
+						isDisabled={
+							navigation.state !== 'idle' ||
+							formData.password.length === 0 ||
+							formData.email.length === 0
+						}
+						isLoading={navigation.state !== 'idle'}
+						type='submit'
+					>
 						Sign in
 					</Button>
 				</div>
