@@ -39,3 +39,18 @@ export function parseFormData(
 		return err({ message: `Form data variable: ${variable}`, code: 500, name: 'parseFormData' })
 	}
 }
+
+export function parseFormDataBool(
+	value: FormDataEntryValue | null,
+	variable: string
+): Result<boolean, Error> {
+	if (value === 'true') {
+		return ok(true as boolean)
+	} else if (value === 'false') {
+		return ok(false as boolean)
+	} else if (value === null) {
+		return ok(false as boolean)
+	} else {
+		return err({ message: `Form data bool variable: ${variable}`, code: 500 })
+	}
+}

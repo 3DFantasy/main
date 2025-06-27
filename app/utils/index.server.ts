@@ -1,6 +1,8 @@
 export { createSignature } from './createSignature.server.'
+export { getTeamCheckBoxes } from './getTeamCheckBoxes.server'
 export { sendMail } from './m365/sendMail.server'
 export {
+	browserConfig,
 	team1,
 	team2,
 	team3,
