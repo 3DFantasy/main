@@ -22,12 +22,12 @@ const globalWorkerRegistry: Record<string, Worker> = {}
 async function cleanupStaleWorkers(queueName: string) {
 	try {
 		const redis = new Redis(connectionDetails.host)
-
+		let staleKeys = 0
 		// Find and remove stale worker entries for this queue
 		const workerKeys = await redis.keys(`resque:worker:*:${queueName}*`)
 
 		if (workerKeys.length > 0) {
-			console.log(`Found ${workerKeys.length} stale worker entries for ${queueName}`)
+			staleKeys += workerKeys.length
 
 			// Remove each stale worker entry
 			for (const key of workerKeys) {
@@ -39,18 +39,19 @@ async function cleanupStaleWorkers(queueName: string) {
 			for (const key of statKeys) {
 				await redis.del(key)
 			}
-
-			// Clean up entries in the resque:workers SET
-			const workers = await redis.smembers('resque:workers')
-			const staleWorkers = workers.filter((worker) => worker.includes(`:${queueName}`))
-
-			if (staleWorkers.length > 0) {
-				console.log(`Removing ${staleWorkers.length} stale workers from resque:workers SET`)
-				await redis.srem('resque:workers', ...staleWorkers)
-			}
-
-			console.log(`Worker cleanup complete for ${queueName} queue`)
 		}
+
+		// Clean up entries in the resque:workers SET
+		const workers = await redis.smembers('resque:workers')
+		const staleWorkers = workers.filter((worker) => worker.includes(`:${queueName}`))
+
+		if (staleWorkers.length > 0) {
+			staleKeys += staleWorkers.length
+
+			await redis.srem('resque:workers', ...staleWorkers)
+		}
+
+		console.log(`Worker cleanup complete for ${queueName} queue, stale keys:${staleKeys}`)
 
 		// Close the Redis connection
 		await redis.quit()

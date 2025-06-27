@@ -4,10 +4,11 @@ import { parseApiTeamCheckAction } from '~/utils/parse/actions/api.teamCheck.ser
 import type { ActionFunctionArgs } from '@remix-run/node'
 import type { TeamId } from '~/types'
 
-export type ActionData = {
+export type TeamCheckActionData = {
 	message?: string
 	code?: number
 	count: number
+	api: 'teamCheck'
 }
 
 export const apiTeamCheckAction = async (request: Request, params: ActionFunctionArgs['params']) => {
@@ -22,6 +23,7 @@ export const apiTeamCheckAction = async (request: Request, params: ActionFunctio
 			message: form.error.message,
 			code: form.error.code,
 			count,
+			api: 'teamCheck',
 		}
 	}
 
@@ -40,5 +42,6 @@ export const apiTeamCheckAction = async (request: Request, params: ActionFunctio
 
 	return {
 		count,
+		api: 'teamCheck',
 	}
 }
