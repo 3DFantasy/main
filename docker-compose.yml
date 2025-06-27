@@ -9,6 +9,11 @@ services:
       - '3000:3000'
     environment:
       - NODE_ENV=production
+    cap_add:
+      - SYS_ADMIN
+    security_opt:
+      - seccomp=unconfined
+    init: true
     network_mode: 'host'
     volumes:
       - ./.env:/app/.env
