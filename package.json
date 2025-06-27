@@ -4,10 +4,10 @@
 	"sideEffects": false,
 	"type": "module",
 	"scripts": {
-		"build": "vite build && vite build --ssr",
-		"dev": "tsx ./app.js",
 		"lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
-		"start": "VITE_CJS_IGNORE_WARNING=true remix-serve ./build/server/app.js",
+		"dev": "remix vite:dev",
+		"build": "remix vite:build",
+		"start": "VITE_CJS_IGNORE_WARNING=true remix-serve ./build/server/index.js",
 		"typecheck": "tsc"
 	},
 	"dependencies": {
