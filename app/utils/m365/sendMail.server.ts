@@ -6,6 +6,7 @@ import type { Error } from '~/types'
 type EmailAddressObj = {
 	emailAddress: {
 		address: string
+		name?: string
 	}
 }
 
@@ -16,6 +17,7 @@ export type SendMailInput = {
 			contentType: 'Text' | 'HTML'
 			content: string
 		}
+		from?: EmailAddressObj
 		toRecipients?: EmailAddressObj[]
 		ccRecipients?: EmailAddressObj[]
 		bccRecipients?: EmailAddressObj[]

@@ -29,12 +29,13 @@ export async function teamCheck({ teamId }: { teamId: number }) {
 	}
 
 	if (compareDepthChartListResp.value.newDepthChart) {
+		const newDepthChartObj = compareDepthChartListResp.value.newDepthChart
 		// create new chart
-		await db.depthChart.create({
+		const newDepthChart = await db.depthChart.create({
 			data: {
 				teamId,
-				title: compareDepthChartListResp.value.newDepthChart.title,
-				value: compareDepthChartListResp.value.newDepthChart.href,
+				title: newDepthChartObj.title,
+				value: newDepthChartObj.href,
 				year,
 				depthChartListId: compareDepthChartListResp.value.depthChartList.id,
 			},
@@ -86,33 +87,34 @@ export async function teamCheck({ teamId }: { teamId: number }) {
 		const teamTitle = process.env[`TEAM_${teamId}_TITLE`] as string
 		const emailTitle = `New Depth Chart Posted: ${teamTitle}`
 
-		// send email
-		const sendMailResp = await sendMail({
-			message: {
-				subject: `3DF - ${emailTitle}`,
-				body: {
-					content: getEmailTemplate({
-						title: emailTitle,
-						depthChartTitle: compareDepthChartListResp.value.newDepthChart.title,
-						link: compareDepthChartListResp.value.newDepthChart.href,
-						team: teamTitle,
-						template: 'newDepthChart',
-					}),
-					contentType: 'HTML',
-				},
-				bccRecipients: allAccountsToMail.map((account) => {
-					return {
-						emailAddress: {
-							address: account.email,
+		// send emails
+		await Promise.all(
+			allAccountsToMail.map(async (account) => {
+				const sendMailResp = await sendMail({
+					message: {
+						subject: `3DF - ${emailTitle}`,
+						body: {
+							content: getEmailTemplate({
+								title: emailTitle,
+								account: {
+									uuid: account.uuid,
+								},
+								depthChart: { title: newDepthChartObj.title, uuid: newDepthChart.uuid },
+								link: newDepthChartObj.href,
+								team: teamTitle,
+								template: 'newDepthChart',
+							}),
+							contentType: 'HTML',
 						},
-					}
-				}),
-			},
-			saveToSentItems: 'true',
-		})
-		if (sendMailResp.isErr) {
-			throw new Error(sendMailResp.error.message)
-		}
+						toRecipients: [{ emailAddress: { address: account.email } }],
+					},
+					saveToSentItems: 'true',
+				})
+				if (sendMailResp.isErr) {
+					throw new Error(sendMailResp.error.message)
+				}
+			})
+		)
 	}
 
 	console.log(`Team${teamId}Check complete`)
