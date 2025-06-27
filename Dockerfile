@@ -33,6 +33,9 @@ COPY --from=build /app/.env ./
 COPY prisma .
 RUN npx prisma generate
 
+# playwright install
+RUN playwright install --with-deps
+
 # Copy build artifacts from build stage
 COPY --from=build /app/build ./build
 COPY --from=build /app/public ./public
