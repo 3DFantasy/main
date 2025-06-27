@@ -125,7 +125,7 @@ ENV PORT=3000
 
 # Explicitly tell Puppeteer to use the installed Chrome
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/firefox
 
 # Expose the port
 EXPOSE 3000
