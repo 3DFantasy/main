@@ -17,7 +17,7 @@ export type LoaderData = {
 
 export const unsubscribeLoader = async (request: Request, params: LoaderFunctionArgs['params']) => {
 	const authAccount: AuthAccount = await authenticator.isAuthenticated(request, {
-		failureRedirect: `/auth/login?nextUrl=unsubscribe/${params.account}/${params.depthChart}`,
+		failureRedirect: `/auth/login?nextUrl=/unsubscribe/${params.account}/${params.depthChart}`,
 	})
 
 	const parsedParams = await parseUnsubscribeLoader({

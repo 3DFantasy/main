@@ -1,4 +1,3 @@
-import { redirect } from '@remix-run/node'
 import { AuthorizationError } from 'remix-auth'
 import { authenticator } from '~/utils/auth/auth.server'
 
@@ -8,9 +7,12 @@ export type ActionData = {
 }
 
 export const authSignupAction = async (request: Request) => {
+	const url = new URL(request.url)
+	const nextUrl = url.searchParams.get('nextUrl')
+
 	try {
 		return await authenticator.authenticate('signup', request, {
-			successRedirect: '/home',
+			successRedirect: `/home${nextUrl ? `?nextUrl=${nextUrl}` : ''}`,
 			throwOnError: true,
 		})
 	} catch (exception) {

@@ -1,15 +1,15 @@
 import { authenticator } from '~/utils/auth/auth.server'
 
 export type LoaderData = {
-	error: boolean
+	nextUrl?: string
 }
 
 export const authLoginLoader = async (request: Request) => {
 	const url = new URL(request.url)
-	const error = url.searchParams.get('error')
+	const nextUrl = url.searchParams.get('nextUrl')
 	await authenticator.isAuthenticated(request, {
 		successRedirect: '/home',
 	})
 
-	return { error: error === 'true' ? true : false }
+	return { nextUrl }
 }
