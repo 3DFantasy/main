@@ -2,7 +2,13 @@ export type GetEmailTemplateInput = {
 	template: 'newDepthChart'
 	title: string
 	team: string
-	depthChartTitle: string
+	account: {
+		uuid: string
+	}
+	depthChart: {
+		title: string
+		uuid: string
+	}
 	link: string
 }
 
@@ -10,7 +16,8 @@ export const getEmailTemplate = ({
 	template,
 	title,
 	team,
-	depthChartTitle,
+	account,
+	depthChart,
 	link,
 }: GetEmailTemplateInput) => {
 	const logo = 'https://3dfantasy.ca/img/logo.svg'
@@ -89,7 +96,7 @@ export const getEmailTemplate = ({
               ${team}
             </p>
             <p>
-              ${depthChartTitle}
+              ${depthChart.title}
             </p>
             <a href=${link}>
               Click here to view
@@ -100,7 +107,7 @@ export const getEmailTemplate = ({
           <div class="footer">
             <a href="https://3dfantasy.ca">Website</a>
             <a href="mailto:wilson@3dfantasy.ca">Contact Us</a>
-            <a href="https://3dfantasy.ca/unsubscribe?email=%%EMAIL%%">Unsubscribe</a>
+            <a href="https://3dfantasy.ca/unsubscribe/${account.uuid}/${depthChart.uuid}">Unsubscribe</a>
           </div>
         </div>
       </body>

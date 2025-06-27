@@ -14,8 +14,15 @@ export type ParseApiTeamCheckActionOutput = {
 	team9: boolean
 }
 
-export const parseApiTeamCheckAction = ({ formData }: { formData: FormData }): Result<any, Error> => {
-	const teamCheck = Array.from({ length: 9 }, (_, i) => `team${i + 1}`).reduce((acc: any, team) => {
+export const parseApiTeamCheckAction = ({
+	formData,
+}: {
+	formData: FormData
+}): Result<{ teamCheck: ParseApiTeamCheckActionOutput }, Error> => {
+	const teamCheck: ParseApiTeamCheckActionOutput = Array.from(
+		{ length: 9 },
+		(_, i) => `team${i + 1}`
+	).reduce((acc: any, team) => {
 		acc[team] = false
 		return acc
 	}, {})
@@ -25,7 +32,7 @@ export const parseApiTeamCheckAction = ({ formData }: { formData: FormData }): R
 		const teamValue = formData.get(teamKey)
 
 		if (typeof teamValue === 'string' && teamValue === 'true') {
-			teamCheck[teamKey] = true
+			teamCheck[teamKey as keyof typeof teamCheck] = true
 		}
 	}
 

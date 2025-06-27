@@ -1,15 +1,16 @@
 import { addToast, Button, Input } from '@heroui/react'
-import { Form, useActionData, useNavigation } from '@remix-run/react'
+import { Form, useActionData, useLoaderData, useNavigation } from '@remix-run/react'
 import { useEffect, useState } from 'react'
 import { ActionData, authLoginAction } from '~/actions/auth.login.server'
 import { authLoginLoader } from '~/loader/auth.login.server'
 
 import type { ActionFunction, LoaderFunction, MetaFunction } from '@remix-run/node'
+import type { LoaderData } from '~/loader/auth.login.server'
 
 export const meta: MetaFunction = () => {
 	return [
-		{ title: 'Login | 3DF' },
-		{ name: '3DF Login screen', content: 'Provide password and authenticate to continue' },
+		{ title: '3DF - Login' },
+		{ name: '3DF/auth/login', content: 'Login page for 3DFantasy application' },
 	]
 }
 
@@ -23,6 +24,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function Login() {
 	const navigation = useNavigation()
+	const { nextUrl } = useLoaderData<LoaderData>()
 	const actionData = useActionData<ActionData>()
 	const [formData, setFormData] = useState({
 		email: '',
@@ -38,7 +40,6 @@ export default function Login() {
 
 	useEffect(() => {
 		if (actionData) {
-			console.log(actionData)
 			if (actionData.message) {
 				setError({
 					email: true,
@@ -64,7 +65,7 @@ export default function Login() {
 	return (
 		<div className='mt-40 mx-auto max-w-80'>
 			<h1 className='mx-auto w-fit'>Login</h1>
-			<Form method='post'>
+			<Form method='post' action={`/auth/login${nextUrl ? `?nextUrl=${nextUrl}` : ''}`}>
 				<Input
 					className={inputClass}
 					type='email'

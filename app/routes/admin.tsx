@@ -16,7 +16,10 @@ import type { LoaderFunction, MetaFunction } from '@remix-run/node'
 import type { LoaderData } from '~/loader/admin.server'
 
 export const meta: MetaFunction = () => {
-	return [{ title: '3DF - Admin' }, { name: 'Admin dashboard for 3DF' }]
+	return [
+		{ title: '3DF - Admin' },
+		{ name: '3DF/admin', content: 'Admin dashboard for 3DFantasy application' },
+	]
 }
 
 export const loader: LoaderFunction = async ({ request }) => {

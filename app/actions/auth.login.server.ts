@@ -1,3 +1,4 @@
+import { ActionFunctionArgs } from '@remix-run/node'
 import { AuthorizationError } from 'remix-auth'
 import { authenticator } from '~/utils/auth/auth.server'
 
@@ -6,10 +7,13 @@ export type ActionData = {
 	code: number
 }
 
-export const authLoginAction = async (request: Request) => {
+export const authLoginAction = async (request: Request, params?: ActionFunctionArgs['params']) => {
+	const url = new URL(request.url)
+	const nextUrl = url.searchParams.get('nextUrl')
+
 	try {
 		await authenticator.authenticate('login', request, {
-			successRedirect: '/home',
+			successRedirect: `/home${nextUrl ? `?nextUrl=${nextUrl}` : ''}`,
 			throwOnError: true,
 		})
 	} catch (exception) {

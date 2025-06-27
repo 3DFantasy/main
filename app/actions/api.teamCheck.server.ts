@@ -27,7 +27,7 @@ export const apiTeamCheckAction = async (request: Request, params: ActionFunctio
 
 	for (let i = 1; i <= 9; i++) {
 		const teamKey = `team${i}`
-		if (form.value.teamCheck[teamKey]) {
+		if (form.value.teamCheck[teamKey as keyof typeof form.value.teamCheck]) {
 			count++
 			resqueTask({
 				job: 'teamCheck',

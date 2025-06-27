@@ -1,12 +1,13 @@
-import { Account } from '@prisma/client'
 import { authenticator } from '~/utils/auth/auth.server'
 
+import type { AuthAccount } from '~/utils/auth/auth.server'
+
 export type LoaderData = {
-	account: Account | null
+	account: AuthAccount | null
 }
 
 export const rootLoader = async (request: Request) => {
-	const account: Account | null = await authenticator.isAuthenticated(request, {})
+	const account: AuthAccount | null = await authenticator.isAuthenticated(request, {})
 
 	// resqueTask({
 	// 	job: 'teamCheck',
