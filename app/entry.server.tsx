@@ -3,13 +3,21 @@
  * You are free to delete this file if you'd like to, but if you ever want it revealed again, you can run `npx remix reveal` ✨
  * For more information, see https://remix.run/file-conventions/entry.server
  */
-import { createReadableStreamFromReadable } from '@remix-run/node'
+import { createReadableStreamFromReadable, installGlobals } from '@remix-run/node'
 import { RemixServer } from '@remix-run/react'
 import { isbot } from 'isbot'
 import { PassThrough } from 'node:stream'
 import { renderToPipeableStream } from 'react-dom/server'
+import { initWorker } from '~/resque/worker.server.js'
 
 import type { EntryContext } from '@remix-run/node'
+
+installGlobals()
+
+initWorker({
+	schedule: false,
+	team: true,
+})
 
 const ABORT_DELAY = 5000
 
