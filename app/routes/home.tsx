@@ -6,7 +6,7 @@ import type { LoaderFunction, MetaFunction } from '@remix-run/node'
 import { useEffect } from 'react'
 
 export const meta: MetaFunction = () => {
-	return [{ title: '3DF - Home' }, { name: 'description', content: 'Welcome to Remix!' }]
+	return [{ title: '3DF - Home' }, { name: '3DF/home', content: 'Home page for 3DFantasy application' }]
 }
 
 export const loader: LoaderFunction = async ({ request }) => {

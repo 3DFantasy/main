@@ -8,7 +8,10 @@ import type { ActionFunctionArgs, LoaderFunction, MetaFunction } from '@remix-ru
 import type { ActionData } from '~/actions/auth.signup.server'
 
 export const meta: MetaFunction = () => {
-	return [{ title: 'Signup | 3DF' }, { name: '3DF Signup', content: '3DF signup page' }]
+	return [
+		{ title: '3DF - Signup' },
+		{ name: '3DF/auth/signup', content: 'Signup page for 3DFantasy application' },
+	]
 }
 
 export const loader: LoaderFunction = async ({ request }) => {

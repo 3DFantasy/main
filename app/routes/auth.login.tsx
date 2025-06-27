@@ -8,8 +8,8 @@ import type { ActionFunction, LoaderFunction, MetaFunction } from '@remix-run/no
 
 export const meta: MetaFunction = () => {
 	return [
-		{ title: 'Login | 3DF' },
-		{ name: '3DF Login screen', content: 'Provide password and authenticate to continue' },
+		{ title: '3DF - Login' },
+		{ name: '3DF/auth/login', content: 'Login page for 3DFantasy application' },
 	]
 }
 
