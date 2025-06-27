@@ -55,8 +55,12 @@ export default function Admin() {
 			<Accordion defaultExpandedKeys={['team-check']}>
 				<AccordionItem key='team-check' aria-label='Team Checks Accordion section 1' title='Team Checks'>
 					<CheckboxGroup defaultValue={[]} value={selected} onValueChange={setSelected}>
-						{teamCheckBoxes.map((team) => {
-							return <Checkbox value={team.value}>{team.title}</Checkbox>
+						{teamCheckBoxes.map((team, i) => {
+							return (
+								<Checkbox key={i} value={team.value}>
+									{team.title}
+								</Checkbox>
+							)
 						})}
 					</CheckboxGroup>
 					<ButtonGroup className='my-4'>

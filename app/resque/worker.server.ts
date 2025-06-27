@@ -1,3 +1,4 @@
+import Redis from 'ioredis'
 import { Worker } from 'node-resque'
 import { jobs } from '~/resque/jobs.server'
 import { connectionDetails } from '~/resque/main.server'
@@ -18,6 +19,46 @@ export const queueTitles = {
 
 const globalWorkerRegistry: Record<string, Worker> = {}
 
+async function cleanupStaleWorkers(queueName: string) {
+	try {
+		const redis = new Redis(connectionDetails.host)
+
+		// Find and remove stale worker entries for this queue
+		const workerKeys = await redis.keys(`resque:worker:*:${queueName}*`)
+
+		if (workerKeys.length > 0) {
+			console.log(`Found ${workerKeys.length} stale worker entries for ${queueName}`)
+
+			// Remove each stale worker entry
+			for (const key of workerKeys) {
+				await redis.del(key)
+			}
+
+			// Also clean up any stats for these workers
+			const statKeys = await redis.keys(`resque:stat:*:${queueName}*`)
+			for (const key of statKeys) {
+				await redis.del(key)
+			}
+
+			// Clean up entries in the resque:workers SET
+			const workers = await redis.smembers('resque:workers')
+			const staleWorkers = workers.filter((worker) => worker.includes(`:${queueName}`))
+
+			if (staleWorkers.length > 0) {
+				console.log(`Removing ${staleWorkers.length} stale workers from resque:workers SET`)
+				await redis.srem('resque:workers', ...staleWorkers)
+			}
+
+			console.log(`Worker cleanup complete for ${queueName} queue`)
+		}
+
+		// Close the Redis connection
+		await redis.quit()
+	} catch (error) {
+		console.error(`Error cleaning up stale workers for ${queueName}:`, error)
+	}
+}
+
 export const initWorker = async ({ schedule, team }: InitWorkerProps) => {
 	const activeWorkers: Worker[] = []
 
@@ -34,6 +75,8 @@ export const initWorker = async ({ schedule, team }: InitWorkerProps) => {
 				console.error(`Invalid job type: ${jobType}`)
 				continue
 			}
+
+			await cleanupStaleWorkers(queueTitle)
 
 			// Check if a worker for this queue already exists
 			if (globalWorkerRegistry[queueTitle]) {
