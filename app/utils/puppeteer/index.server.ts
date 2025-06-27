@@ -9,6 +9,19 @@ import { team8 } from './team8.server'
 import { team9 } from './team9.server'
 
 export const viewport = { width: 1080, height: 1024 }
+export const browserConfig = {
+	headless: true,
+	args: [
+		'--no-sandbox',
+		'--disable-setuid-sandbox',
+		'--disable-dev-shm-usage',
+		'--disable-accelerated-2d-canvas',
+		'--no-first-run',
+		'--no-zygote',
+		'--single-process',
+		'--disable-gpu',
+	],
+}
 
 export { team1 } from './team1.server'
 export { team2 } from './team2.server'

@@ -1,14 +1,15 @@
 import puppeteer from 'puppeteer'
+import { browserConfig, viewport } from '~/utils/puppeteer/index.server'
 
 import type { DepthChartObject } from '~/types'
 
 export async function team9(): Promise<DepthChartObject[]> {
-	const browser = await puppeteer.launch()
+	const browser = await puppeteer.launch(browserConfig)
 	const page = await browser.newPage()
 
 	await page.goto(process.env.TEAM_9_URL)
 
-	await page.setViewport({ width: 1080, height: 1024 })
+	await page.setViewport(viewport)
 
 	// Extract hrefs from <td> tags with <a> elements
 	const result = await page.evaluate(() => {
