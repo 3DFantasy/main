@@ -1,10 +1,10 @@
 import puppeteer from 'puppeteer'
-import { viewport } from '~/utils/puppeteer/index.server'
+import { browserConfig, viewport } from '~/utils/puppeteer/index.server'
 
 import type { DepthChartObject } from '~/types'
 
 export async function team4(): Promise<DepthChartObject[]> {
-	const browser = await puppeteer.launch()
+	const browser = await puppeteer.launch(browserConfig)
 	const page = await browser.newPage()
 
 	await page.goto(process.env.TEAM_4_URL)
