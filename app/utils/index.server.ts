@@ -1,4 +1,5 @@
 export { createSignature } from './createSignature.server.'
+export { generatePassword } from './generatePassword.server'
 export { getTeamCheckBoxes } from './getTeamCheckBoxes.server'
 export { sendMail } from './m365/sendMail.server'
 export {

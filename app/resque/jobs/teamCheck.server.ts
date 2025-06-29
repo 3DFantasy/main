@@ -95,14 +95,15 @@ export async function teamCheck({ teamId }: { teamId: number }) {
 						subject: `3DF - ${emailTitle}`,
 						body: {
 							content: getEmailTemplate({
-								title: emailTitle,
-								account: {
-									uuid: account.uuid,
+								newDepthChartProps: {
+									title: emailTitle,
+									account: {
+										uuid: account.uuid,
+									},
+									depthChart: { title: newDepthChartObj.title, uuid: newDepthChart.uuid },
+									link: newDepthChartObj.href,
+									team: teamTitle,
 								},
-								depthChart: { title: newDepthChartObj.title, uuid: newDepthChart.uuid },
-								link: newDepthChartObj.href,
-								team: teamTitle,
-								template: 'newDepthChart',
 							}),
 							contentType: 'HTML',
 						},
