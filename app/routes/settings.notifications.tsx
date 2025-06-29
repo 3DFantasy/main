@@ -63,9 +63,10 @@ export default function SettingsNotifications() {
 
 	return (
 		<div>
-			<p className='mb-4'>
+			<h1 className='mb-4'>Email Depth Chart Notifications</h1>
+			<p className='mb-2'>
 				Select the teams that you would like to continue to receive new depth chart email notifications
-				for
+				for:
 			</p>
 			<CheckboxGroup defaultValue={[]} value={selected} onValueChange={setSelected}>
 				{teamCheckBoxes.map((team) => {

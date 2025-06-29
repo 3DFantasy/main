@@ -1,5 +1,6 @@
 // import { settingsAccountLoader } from '~/loader/settings.server'
 
+import { Divider } from '@heroui/react'
 import type { MetaFunction } from '@remix-run/node'
 
 export const meta: MetaFunction = () => {
@@ -14,5 +15,12 @@ export const meta: MetaFunction = () => {
 // }
 
 export default function SettingsAccount() {
-	return <p>account</p>
+	return (
+		<div>
+			<h3 className='mb-4'>Profile</h3>
+			<p>(coming soon)</p>
+			<Divider className='my-4' />
+			<h3 className='mb-4'>Account</h3>
+		</div>
+	)
 }
