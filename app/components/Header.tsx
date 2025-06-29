@@ -73,6 +73,12 @@ export function Header() {
 							) : (
 								<></>
 							)}
+							<DropdownItem key={'settings'}>
+								{' '}
+								<Link className='w-full' color={'primary'} href={'/settings'}>
+									{'Settings'}
+								</Link>
+							</DropdownItem>
 							<DropdownItem key={'log-out'}>
 								{' '}
 								<Link

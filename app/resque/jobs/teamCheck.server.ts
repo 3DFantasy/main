@@ -92,7 +92,7 @@ export async function teamCheck({ teamId }: { teamId: number }) {
 			allAccountsToMail.map(async (account) => {
 				const sendMailResp = await sendMail({
 					message: {
-						subject: `3DF - ${emailTitle}`,
+						subject: emailTitle,
 						body: {
 							content: getEmailTemplate({
 								newDepthChartProps: {
