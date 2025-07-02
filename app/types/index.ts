@@ -137,3 +137,5 @@ export type PXPAPIResponse = {
 		playByPlay: boolean
 	}
 }
+
+export type { Account } from './account'

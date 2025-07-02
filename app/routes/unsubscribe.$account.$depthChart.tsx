@@ -12,7 +12,7 @@ import { useFetcher, useLoaderData, useNavigate, useNavigation } from '@remix-ru
 import { useEffect, useRef, useState } from 'react'
 import { unsubscribeLoader } from '~/loader/unsubscribe.server'
 
-import { ActionData } from '~/actions/unsubscribe.server'
+import type { ActionData } from '~/actions/unsubscribe.server'
 import type { LoaderData } from '~/loader/unsubscribe.server'
 
 export const meta: MetaFunction = () => {
@@ -32,7 +32,6 @@ export default function Unsubscribe() {
 	const fetcher = useFetcher<ActionData>()
 	const error = useRef(false)
 	const [selected, setSelected] = useState<string[]>([])
-
 	const { account, teamCheckBoxes, message, code } = useLoaderData<LoaderData>()
 
 	useEffect(() => {

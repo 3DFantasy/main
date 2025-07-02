@@ -42,7 +42,7 @@ export const apiCreateAccountAction = async (request: Request, params: ActionFun
 
 	const sendMailResp = await sendMail({
 		message: {
-			subject: `3DF - ${emailTitle}`,
+			subject: emailTitle,
 			body: {
 				content: getEmailTemplate({
 					createAccountProps: {

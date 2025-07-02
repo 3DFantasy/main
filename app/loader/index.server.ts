@@ -7,9 +7,7 @@ export type LoaderData = {
 }
 
 export const indexLoader = async (request: Request) => {
-	const account: AuthAccount = await authenticator.isAuthenticated(request, {
-		failureRedirect: '/auth/login',
-	})
+	const account: AuthAccount = await authenticator.isAuthenticated(request, {})
 
 	return {
 		account,

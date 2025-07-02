@@ -1,6 +1,8 @@
-import type { ActionFunctionArgs } from '@remix-run/node'
-import { Account, db } from '~/lib/db.server'
+import { db } from '~/lib/db.server'
 import { parseUnsubscribeAction } from '~/utils/parse/actions/unsubscribe.server'
+
+import type { ActionFunctionArgs } from '@remix-run/node'
+import type { Account } from '~/types'
 
 export type ActionData = {
 	account: Account
