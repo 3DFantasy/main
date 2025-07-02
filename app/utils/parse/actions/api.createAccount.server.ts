@@ -1,8 +1,8 @@
 import Result, { err, ok } from 'true-myth/result'
+import { db } from '~/lib/db.server'
 import { parseEmail } from '../email'
 import { parseFormData } from '../formData.server'
 
-import { db } from '~/lib/db.server'
 import type { Error } from '~/types'
 
 export type ParseApiTeamCheckActionOutput = {

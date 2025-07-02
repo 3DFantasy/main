@@ -1,10 +1,11 @@
 import { Listbox, ListboxItem } from '@heroui/react'
 import { Outlet, useLoaderData } from '@remix-run/react'
 import { useState } from 'react'
-import { LoaderData, settingsLoader } from '~/loader/settings.server'
+import { settingsLoader } from '~/loader/settings.server'
 
 import type { LoaderFunction, MetaFunction } from '@remix-run/node'
 import type { ReactElement } from 'react'
+import type { LoaderData } from '~/loader/settings.server'
 import type { Account } from '~/types'
 
 export const meta: MetaFunction = () => {
