@@ -1,17 +1,17 @@
+import { driveCreate, driveUpdate, playCreate, playUpdate } from '~/dao/index.server'
 import { teamArray } from '~/data/teamArray'
-import { driveCreate, driveFindUnique, driveUpdate, playCreate, playUpdate } from '~/dao/index.server'
 
 import type { PXPAPIResponseInfoObj } from '~/types'
 
 export type ParsePlaysInput = {
-	gameId: string
+	gameId: number
 	playArray: PXPAPIResponseInfoObj[]
 }
 
 export async function parsePlays({ gameId, playArray }: ParsePlaysInput) {
 	const processedDrives = new Map<string, any>()
-	let previousPlay: { id: string } | null = null
-	let nonScoringDriveArray: { teamAbr: string; id: string; phaseQualifier: string }[] = []
+	let previousPlay: { id: number } | null = null
+	let nonScoringDriveArray: { teamAbr: string; id: number; phaseQualifier: string }[] = []
 
 	for (const play of playArray) {
 		if (play.type === 'Kickoff') {
