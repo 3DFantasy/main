@@ -1,5 +1,7 @@
-import { driveCreate, driveUpdate, playCreate, playUpdate } from '~/dao/index.server'
-import { teamArray } from '~/data/teamArray'
+
+// import { driveCreate, driveUpdate, playCreate, playUpdate } from '~/dao/index.server'
+// import { teamArray } from '~/data/teamArray'
+
 
 import type { PXPAPIResponseInfoObj } from '~/types'
 
@@ -8,371 +10,372 @@ export type ParsePlaysInput = {
 	playArray: PXPAPIResponseInfoObj[]
 }
 
-export async function parsePlays({ gameId, playArray }: ParsePlaysInput) {
-	const processedDrives = new Map<string, any>()
-	let previousPlay: { id: number } | null = null
-	let nonScoringDriveArray: { teamAbr: string; id: number; phaseQualifier: string }[] = []
 
-	for (const play of playArray) {
-		if (play.type === 'Kickoff') {
-			previousPlay = null
-			continue
-		}
+// export async function parsePlays({ gameId, playArray }: ParsePlaysInput) {
+// 	const processedDrives = new Map<string, any>()
+// 	let previousPlay: { id: number } | null = null
+// 	let nonScoringDriveArray: { teamAbr: string; id: number; phaseQualifier: string }[] = []
 
-		const teamAbr = teamArray.filter((team) => {
-			if (team.geniusTeamId === play.teamId) return team.abr
-		})[0].abr
+// 	for (const play of playArray) {
+// 		if (play.type === 'Kickoff') {
+// 			previousPlay = null
+// 			continue
+// 		}
 
-		const [driveNumber, playNumber] = play.id.split('-')
+// 		const teamAbr = teamArray.filter((team) => {
+// 			if (team.geniusTeamId === play.teamId) return team.abr
+// 		})[0].abr
 
-		let thisDrive = await processedDrives.get(driveNumber)
+// 		const [driveNumber, playNumber] = play.id.split('-')
 
-		if (!thisDrive) {
-			thisDrive = await driveCreate({
-				data: {
-					gameId,
-					geniusTeamId: play.teamId,
-					number: Number(driveNumber),
-				},
-			})
-			nonScoringDriveArray.push({
-				teamAbr: teamAbr,
-				id: thisDrive.id,
-				phaseQualifier: play.phaseQualifier,
-			})
-			processedDrives.set(driveNumber, thisDrive)
-		}
+// 		let thisDrive = await processedDrives.get(driveNumber)
 
-		const down = Number(play.playStartPosition.charAt(0))
-			? Number(play.playStartPosition.charAt(0))
-			: null
+// 		if (!thisDrive) {
+// 			thisDrive = await driveCreate({
+// 				data: {
+// 					gameId,
+// 					geniusTeamId: play.teamId,
+// 					number: Number(driveNumber),
+// 				},
+// 			})
+// 			nonScoringDriveArray.push({
+// 				teamAbr: teamAbr,
+// 				id: thisDrive.id,
+// 				phaseQualifier: play.phaseQualifier,
+// 			})
+// 			processedDrives.set(driveNumber, thisDrive)
+// 		}
 
-		const distanceMatch = play.playStartPosition.match(/&\s(\d{1,2})(?:\s\w+)?/)
-		const distance = distanceMatch ? distanceMatch[1] : null
+// 		const down = Number(play.playStartPosition.charAt(0))
+// 			? Number(play.playStartPosition.charAt(0))
+// 			: null
 
-		const yardLineMatch = play.playStartPosition.match(/(\b[A-Z]{2,3}\s\d{1,2})$/)
-		let yardLineInt = null
-		if (yardLineMatch) {
-			const [playTeamAbr, yardLine] = yardLineMatch[1].split(' ')
-			if (playTeamAbr === teamAbr) {
-				yardLineInt = -Number(yardLine)
-			} else {
-				yardLineInt = Number(yardLine)
-			}
-		}
+// 		const distanceMatch = play.playStartPosition.match(/&\s(\d{1,2})(?:\s\w+)?/)
+// 		const distance = distanceMatch ? distanceMatch[1] : null
 
-		const createdPlay = await playCreate({
-			data: {
-				clock: play.clock,
-				description: play.description,
-				driveId: thisDrive.id,
-				number: Number(playNumber),
-				gameId,
-				geniusTeamId: play.teamId,
-				isScoring: play.isScoring,
-				phase: play.phase,
-				phaseQualifier: play.phaseQualifier,
-				startPosition: play.playStartPosition,
-				subtype: play.subType,
-				timestamp: play.timestamp,
-				type: play.type,
-				down: down,
-				distance: distance,
-				yardLine: yardLineInt,
-			},
-		})
+// 		const yardLineMatch = play.playStartPosition.match(/(\b[A-Z]{2,3}\s\d{1,2})$/)
+// 		let yardLineInt = null
+// 		if (yardLineMatch) {
+// 			const [playTeamAbr, yardLine] = yardLineMatch[1].split(' ')
+// 			if (playTeamAbr === teamAbr) {
+// 				yardLineInt = -Number(yardLine)
+// 			} else {
+// 				yardLineInt = Number(yardLine)
+// 			}
+// 		}
 
-		if (play.type === 'Run') {
-			const rusherMatch = play.description.match(/#\d+\s[A-Z]\.[A-Z][a-z]+(?:\s[A-Z][a-z]+)?/)
-			const rusher = rusherMatch ? rusherMatch[0] : null
+// 		const createdPlay = await playCreate({
+// 			data: {
+// 				clock: play.clock,
+// 				description: play.description,
+// 				driveId: thisDrive.id,
+// 				number: Number(playNumber),
+// 				gameId,
+// 				geniusTeamId: play.teamId,
+// 				isScoring: play.isScoring,
+// 				phase: play.phase,
+// 				phaseQualifier: play.phaseQualifier,
+// 				startPosition: play.playStartPosition,
+// 				subtype: play.subType,
+// 				timestamp: play.timestamp,
+// 				type: play.type,
+// 				down: down,
+// 				distance: distance,
+// 				yardLine: yardLineInt,
+// 			},
+// 		})
 
-			const yardsMatch = play.description.match(/(\d+)\s+yard(?:s)?\s+gain/)
-			const yardsGained = yardsMatch ? parseInt(yardsMatch[1], 10) : null
+// 		if (play.type === 'Run') {
+// 			const rusherMatch = play.description.match(/#\d+\s[A-Z]\.[A-Z][a-z]+(?:\s[A-Z][a-z]+)?/)
+// 			const rusher = rusherMatch ? rusherMatch[0] : null
 
-			const defenseMatch = play.description.match(/\(#\d+\s[A-Z][a-z]+\.[A-Z][a-z]+\)/)
-			const defense = defenseMatch ? defenseMatch[0].slice(1, -1) : null
+// 			const yardsMatch = play.description.match(/(\d+)\s+yard(?:s)?\s+gain/)
+// 			const yardsGained = yardsMatch ? parseInt(yardsMatch[1], 10) : null
 
-			// Code for handling no  play.playStartPosition
-			// const plays = await playFindMany({
-			//   where: {
-			//     type: 'Run',
-			//     down: null,
-			//     isScoring: false,
-			//     startPosition: '',
-			//   },
-			// })
+// 			const defenseMatch = play.description.match(/\(#\d+\s[A-Z][a-z]+\.[A-Z][a-z]+\)/)
+// 			const defense = defenseMatch ? defenseMatch[0].slice(1, -1) : null
 
-			// console.log(plays.length)
+// 			// Code for handling no  play.playStartPosition
+// 			// const plays = await playFindMany({
+// 			//   where: {
+// 			//     type: 'Run',
+// 			//     down: null,
+// 			//     isScoring: false,
+// 			//     startPosition: '',
+// 			//   },
+// 			// })
 
-			// plays.map(async (play) => {
-			// 	console.log('---------------------------')
-			// 	const teamAbr = teamArray.filter((team) => {
-			// 		return team.geniusTeamId === play.geniusTeamId
-			// 	})[0].abr
-			// 	// console.log(play.description)
-			// 	const previousPlay = await playFindUnique({
-			// 		where: {
-			// 			driveId: play.Drive.id,
-			// 			number: play.number - 1,
-			// 		},
-			// 	})
-			// 	const previousPlayYardLine = previousPlay[0].startPosition.slice(-2)
-			// 	const downNDistance = previousPlay[0].startPosition.includes('1st') ? '2nd & 1 at ' : '3rd & 1 at '
-			// 	if (previousPlay[0].startPosition.includes(teamAbr) && previousPlay[0].yardsGained) {
-			// 		const startPositionYardLine = Number(previousPlayYardLine) + previousPlay[0].yardsGained
-			// 		if (startPositionYardLine < 55) {
-			// 			const newStartPosition = downNDistance + teamAbr + ' ' + startPositionYardLine
-			// 			if (previousPlay[0].endPosition === '') {
-			// 				const previousPlayUpdates = await playUpdate({
-			// 					where: {
-			// 						id: previousPlay[0].id,
-			// 					},
-			// 					data: {
-			// 						endPosition: newStartPosition,
-			// 					},
-			// 				})
-			// 			}
+// 			// console.log(plays.length)
 
-			// 			const updatedPlay = await playUpdate({
-			// 				where: {
-			// 					id: play.id,
-			// 				},
-			// 				data: {
-			// 					startPosition: newStartPosition,
-			// 					down: previousPlay[0].startPosition.includes('1st') ? 2 : 3,
-			// 					distance: '1',
-			// 					yardLine: -startPositionYardLine,
-			// 				},
-			// 			})
-			// 			console.log(updatedPlay.id)
-			// 		}
-			// 	} else if (!previousPlay[0].startPosition.includes(teamAbr) && previousPlay[0].yardsGained) {
-			// 		const startPositionYardLine = Number(previousPlayYardLine) - previousPlay[0].yardsGained
-			// 		const part1 = previousPlay[0].startPosition.slice(0, 11)
-			// 		const part2 = previousPlay[0].startPosition.slice(-2)
+// 			// plays.map(async (play) => {
+// 			// 	console.log('---------------------------')
+// 			// 	const teamAbr = teamArray.filter((team) => {
+// 			// 		return team.geniusTeamId === play.geniusTeamId
+// 			// 	})[0].abr
+// 			// 	// console.log(play.description)
+// 			// 	const previousPlay = await playFindUnique({
+// 			// 		where: {
+// 			// 			driveId: play.Drive.id,
+// 			// 			number: play.number - 1,
+// 			// 		},
+// 			// 	})
+// 			// 	const previousPlayYardLine = previousPlay[0].startPosition.slice(-2)
+// 			// 	const downNDistance = previousPlay[0].startPosition.includes('1st') ? '2nd & 1 at ' : '3rd & 1 at '
+// 			// 	if (previousPlay[0].startPosition.includes(teamAbr) && previousPlay[0].yardsGained) {
+// 			// 		const startPositionYardLine = Number(previousPlayYardLine) + previousPlay[0].yardsGained
+// 			// 		if (startPositionYardLine < 55) {
+// 			// 			const newStartPosition = downNDistance + teamAbr + ' ' + startPositionYardLine
+// 			// 			if (previousPlay[0].endPosition === '') {
+// 			// 				const previousPlayUpdates = await playUpdate({
+// 			// 					where: {
+// 			// 						id: previousPlay[0].id,
+// 			// 					},
+// 			// 					data: {
+// 			// 						endPosition: newStartPosition,
+// 			// 					},
+// 			// 				})
+// 			// 			}
 
-			// 		const newStartPosition = previousPlay[0].startPosition
-			// 			.replace(part1, downNDistance)
-			// 			.replace(part2, startPositionYardLine.toString())
+// 			// 			const updatedPlay = await playUpdate({
+// 			// 				where: {
+// 			// 					id: play.id,
+// 			// 				},
+// 			// 				data: {
+// 			// 					startPosition: newStartPosition,
+// 			// 					down: previousPlay[0].startPosition.includes('1st') ? 2 : 3,
+// 			// 					distance: '1',
+// 			// 					yardLine: -startPositionYardLine,
+// 			// 				},
+// 			// 			})
+// 			// 			console.log(updatedPlay.id)
+// 			// 		}
+// 			// 	} else if (!previousPlay[0].startPosition.includes(teamAbr) && previousPlay[0].yardsGained) {
+// 			// 		const startPositionYardLine = Number(previousPlayYardLine) - previousPlay[0].yardsGained
+// 			// 		const part1 = previousPlay[0].startPosition.slice(0, 11)
+// 			// 		const part2 = previousPlay[0].startPosition.slice(-2)
 
-			// 		if (previousPlay[0].endPosition === '') {
-			// 			const previousPlayUpdates = await playUpdate({
-			// 				where: {
-			// 					id: previousPlay[0].id,
-			// 				},
-			// 				data: {
-			// 					endPosition: newStartPosition,
-			// 				},
-			// 			})
-			// 		}
+// 			// 		const newStartPosition = previousPlay[0].startPosition
+// 			// 			.replace(part1, downNDistance)
+// 			// 			.replace(part2, startPositionYardLine.toString())
 
-			// 		const updatedPlay = await playUpdate({
-			// 			where: {
-			// 				id: play.id,
-			// 			},
-			// 			data: {
-			// 				startPosition: newStartPosition,
-			// 				down: previousPlay[0].startPosition.includes('1st') ? 2 : 3,
-			// 				distance: '1',
-			// 				yardLine: startPositionYardLine,
-			// 			},
-			// 		})
-			// 		console.log(updatedPlay.id)
-			// 	}
-			// })
+// 			// 		if (previousPlay[0].endPosition === '') {
+// 			// 			const previousPlayUpdates = await playUpdate({
+// 			// 				where: {
+// 			// 					id: previousPlay[0].id,
+// 			// 				},
+// 			// 				data: {
+// 			// 					endPosition: newStartPosition,
+// 			// 				},
+// 			// 			})
+// 			// 		}
 
-			const updatedPlay = await playUpdate({
-				where: {
-					id: createdPlay.id,
-				},
-				data: {
-					rusher,
-					defense,
-					yardsGained,
-				},
-			})
-		}
+// 			// 		const updatedPlay = await playUpdate({
+// 			// 			where: {
+// 			// 				id: play.id,
+// 			// 			},
+// 			// 			data: {
+// 			// 				startPosition: newStartPosition,
+// 			// 				down: previousPlay[0].startPosition.includes('1st') ? 2 : 3,
+// 			// 				distance: '1',
+// 			// 				yardLine: startPositionYardLine,
+// 			// 			},
+// 			// 		})
+// 			// 		console.log(updatedPlay.id)
+// 			// 	}
+// 			// })
 
-		if (play.type === 'Pass') {
-			let passer = null
-			let receiver = null
-			let yardsGained = null
-			let defense = null
-			let returnYards = null
+// 			const updatedPlay = await playUpdate({
+// 				where: {
+// 					id: createdPlay.id,
+// 				},
+// 				data: {
+// 					rusher,
+// 					defense,
+// 					yardsGained,
+// 				},
+// 			})
+// 		}
 
-			const passerMatch = play.description.match(/#\d+\s[A-Z]\.[A-Za-z]+(?:\sJr\.)?/)
-			passer = passerMatch ? passerMatch[0] : null
+// 		if (play.type === 'Pass') {
+// 			let passer = null
+// 			let receiver = null
+// 			let yardsGained = null
+// 			let defense = null
+// 			let returnYards = null
 
-			const receiverMatch = play.description.match(/to\s(#\d+\s[A-Z]\.[A-Za-z]+)/)
-			receiver = receiverMatch ? receiverMatch[1] : null
+// 			const passerMatch = play.description.match(/#\d+\s[A-Z]\.[A-Za-z]+(?:\sJr\.)?/)
+// 			passer = passerMatch ? passerMatch[0] : null
 
-			if (play.subType === 'CompletePass') {
-				const yardsMatch = play.description.match(/\b(\d+)\s(?:yards|yard)\b/)
-				yardsGained = yardsMatch ? Number(yardsMatch[1]) : null
+// 			const receiverMatch = play.description.match(/to\s(#\d+\s[A-Z]\.[A-Za-z]+)/)
+// 			receiver = receiverMatch ? receiverMatch[1] : null
 
-				const defenderMatch = play.description.match(/\(#\d+\s[A-Z]\.[A-Za-z]+(?:\s[A-Za-z]+)?\)/)
-				defense = defenderMatch ? defenderMatch[0].slice(1, -1) : null
-			}
+// 			if (play.subType === 'CompletePass') {
+// 				const yardsMatch = play.description.match(/\b(\d+)\s(?:yards|yard)\b/)
+// 				yardsGained = yardsMatch ? Number(yardsMatch[1]) : null
 
-			if (play.subType === 'Interception') {
-				const interceptionMatch = play.description.match(/intercepted\sby\s(#\d+\s[A-Za-z]+\.[A-Za-z]+)/)
-				defense = interceptionMatch ? interceptionMatch[1] : null
+// 				const defenderMatch = play.description.match(/\(#\d+\s[A-Z]\.[A-Za-z]+(?:\s[A-Za-z]+)?\)/)
+// 				defense = defenderMatch ? defenderMatch[0].slice(1, -1) : null
+// 			}
 
-				const returnYardsMatch = play.description.match(/return\s(\d+)\syards/)
-				returnYards = returnYardsMatch ? Number(returnYardsMatch[1]) : null
-			}
+// 			if (play.subType === 'Interception') {
+// 				const interceptionMatch = play.description.match(/intercepted\sby\s(#\d+\s[A-Za-z]+\.[A-Za-z]+)/)
+// 				defense = interceptionMatch ? interceptionMatch[1] : null
 
-			const updatedPlay = await playUpdate({
-				where: {
-					id: createdPlay.id,
-				},
-				data: {
-					passer,
-					receiver,
-					defense,
-					yardsGained,
-					returnYards,
-				},
-			})
-		}
+// 				const returnYardsMatch = play.description.match(/return\s(\d+)\syards/)
+// 				returnYards = returnYardsMatch ? Number(returnYardsMatch[1]) : null
+// 			}
 
-		if (play.type === 'FieldGoal' || play.type === 'Punt') {
-			const kickerMatch = play.description.match(/#\d+\s[A-Za-z]+\.[A-Za-z]+/)
-			const kicker = kickerMatch ? kickerMatch[0] : null
+// 			const updatedPlay = await playUpdate({
+// 				where: {
+// 					id: createdPlay.id,
+// 				},
+// 				data: {
+// 					passer,
+// 					receiver,
+// 					defense,
+// 					yardsGained,
+// 					returnYards,
+// 				},
+// 			})
+// 		}
 
-			let returner = null
-			let returnYards = null
-			let defense = null
-			let puntYardage = null
+// 		if (play.type === 'FieldGoal' || play.type === 'Punt') {
+// 			const kickerMatch = play.description.match(/#\d+\s[A-Za-z]+\.[A-Za-z]+/)
+// 			const kicker = kickerMatch ? kickerMatch[0] : null
 
-			if (play.description.includes('NO GOOD') || play.type === 'Punt') {
-				const returnerMatch = play.description.match(/#\d+\s[A-Za-z]+\.[A-Za-z]+(?=\sreturn)/)
-				returner = returnerMatch ? returnerMatch[0] : null
+// 			let returner = null
+// 			let returnYards = null
+// 			let defense = null
+// 			let puntYardage = null
 
-				const returnYardsMatch = play.description.match(/return\s(\d+)\syards/)
-				returnYards = returnYardsMatch ? Number(returnYardsMatch[1]) : null
+// 			if (play.description.includes('NO GOOD') || play.type === 'Punt') {
+// 				const returnerMatch = play.description.match(/#\d+\s[A-Za-z]+\.[A-Za-z]+(?=\sreturn)/)
+// 				returner = returnerMatch ? returnerMatch[0] : null
 
-				const tacklerMatch = play.description.match(/\(#\d+\s[A-Za-z]+\.[A-Za-z]+\)/)
-				defense = tacklerMatch ? tacklerMatch[0].replace(/[()]/g, '') : null
+// 				const returnYardsMatch = play.description.match(/return\s(\d+)\syards/)
+// 				returnYards = returnYardsMatch ? Number(returnYardsMatch[1]) : null
 
-				if (play.type === 'Punt') {
-					const puntYardageMatch = play.description.match(/punt\s(\d+)\syards/)
-					puntYardage = puntYardageMatch ? Number(puntYardageMatch[1]) : null
-				}
-			}
+// 				const tacklerMatch = play.description.match(/\(#\d+\s[A-Za-z]+\.[A-Za-z]+\)/)
+// 				defense = tacklerMatch ? tacklerMatch[0].replace(/[()]/g, '') : null
 
-			const updatedPlay = await playUpdate({
-				where: {
-					id: createdPlay.id,
-				},
-				data: {
-					kicker,
-					defense,
-					receiver: returner,
-					returnYards: returnYards,
-					puntYards: puntYardage,
-				},
-			})
-		}
+// 				if (play.type === 'Punt') {
+// 					const puntYardageMatch = play.description.match(/punt\s(\d+)\syards/)
+// 					puntYardage = puntYardageMatch ? Number(puntYardageMatch[1]) : null
+// 				}
+// 			}
 
-		if (play.type === 'Sack') {
-			let passer = null
-			let defense = null
+// 			const updatedPlay = await playUpdate({
+// 				where: {
+// 					id: createdPlay.id,
+// 				},
+// 				data: {
+// 					kicker,
+// 					defense,
+// 					receiver: returner,
+// 					returnYards: returnYards,
+// 					puntYards: puntYardage,
+// 				},
+// 			})
+// 		}
 
-			const passerMatch = play.description.match(/#\d+\s[A-Z]\.[A-Za-z]+(?:\sJr\.)?/)
-			passer = passerMatch ? passerMatch[0] : null
+// 		if (play.type === 'Sack') {
+// 			let passer = null
+// 			let defense = null
 
-			const tacklerMatch = play.description.match(/\(#\d+\s[A-Za-z]+\.[A-Za-z]+\)/)
-			defense = tacklerMatch ? tacklerMatch[0].replace(/[()]/g, '') : null
+// 			const passerMatch = play.description.match(/#\d+\s[A-Z]\.[A-Za-z]+(?:\sJr\.)?/)
+// 			passer = passerMatch ? passerMatch[0] : null
 
-			const updatedPlay = await playUpdate({
-				where: {
-					id: createdPlay.id,
-				},
-				data: {
-					passer,
-					defense,
-				},
-			})
-		}
+// 			const tacklerMatch = play.description.match(/\(#\d+\s[A-Za-z]+\.[A-Za-z]+\)/)
+// 			defense = tacklerMatch ? tacklerMatch[0].replace(/[()]/g, '') : null
 
-		if (previousPlay) {
-			await playUpdate({
-				where: { id: previousPlay.id },
-				data: { endPosition: play.playStartPosition },
-			})
-		}
+// 			const updatedPlay = await playUpdate({
+// 				where: {
+// 					id: createdPlay.id,
+// 				},
+// 				data: {
+// 					passer,
+// 					defense,
+// 				},
+// 			})
+// 		}
 
-		if (play.isScoring) {
-			const points =
-				play.type === 'OnePoint' && play.subType === 'Success'
-					? 7
-					: play.subType === 'Touchdown'
-					? 6
-					: play.type === 'FieldGoal' && play.subType === 'Success'
-					? 3
-					: play.type === 'TwoPoints' && play.subType === 'Success'
-					? 8
-					: play.subType === 'Single'
-					? 1
-					: null
+// 		if (previousPlay) {
+// 			await playUpdate({
+// 				where: { id: previousPlay.id },
+// 				data: { endPosition: play.playStartPosition },
+// 			})
+// 		}
 
-			const updatedDrive = await driveUpdate({
-				where: {
-					id: thisDrive.id,
-				},
-				data: {
-					isScoring: true,
-					points: points,
-					nextPointOutcome: points,
-				},
-			})
-			nonScoringDriveArray = nonScoringDriveArray.filter((nonScoringDrive) => {
-				return nonScoringDrive.id !== updatedDrive.id
-			})
-			if (nonScoringDriveArray.length > 0) {
-				for (let i = 0; i < nonScoringDriveArray.length; i++) {
-					const nonScoringDrive = nonScoringDriveArray[i]
-					if (
-						play.phaseQualifier === '3' &&
-						(nonScoringDrive.phaseQualifier === '2' || nonScoringDrive.phaseQualifier === '1')
-					) {
-						nonScoringDriveArray.splice(i, 1)
-						i--
-						continue
-					}
+// 		if (play.isScoring) {
+// 			const points =
+// 				play.type === 'OnePoint' && play.subType === 'Success'
+// 					? 7
+// 					: play.subType === 'Touchdown'
+// 					? 6
+// 					: play.type === 'FieldGoal' && play.subType === 'Success'
+// 					? 3
+// 					: play.type === 'TwoPoints' && play.subType === 'Success'
+// 					? 8
+// 					: play.subType === 'Single'
+// 					? 1
+// 					: null
 
-					const nextPointOutcome = nonScoringDrive.teamAbr === teamAbr ? points : points ? -points : null
+// 			const updatedDrive = await driveUpdate({
+// 				where: {
+// 					id: thisDrive.id,
+// 				},
+// 				data: {
+// 					isScoring: true,
+// 					points: points,
+// 					nextPointOutcome: points,
+// 				},
+// 			})
+// 			nonScoringDriveArray = nonScoringDriveArray.filter((nonScoringDrive) => {
+// 				return nonScoringDrive.id !== updatedDrive.id
+// 			})
+// 			if (nonScoringDriveArray.length > 0) {
+// 				for (let i = 0; i < nonScoringDriveArray.length; i++) {
+// 					const nonScoringDrive = nonScoringDriveArray[i]
+// 					if (
+// 						play.phaseQualifier === '3' &&
+// 						(nonScoringDrive.phaseQualifier === '2' || nonScoringDrive.phaseQualifier === '1')
+// 					) {
+// 						nonScoringDriveArray.splice(i, 1)
+// 						i--
+// 						continue
+// 					}
 
-					await driveUpdate({
-						where: { id: nonScoringDrive.id },
-						data: { nextPointOutcome },
-					})
+// 					const nextPointOutcome = nonScoringDrive.teamAbr === teamAbr ? points : points ? -points : null
 
-					if (play.subType !== 'Touchdown') {
-						nonScoringDriveArray.splice(i, 1)
-						i--
-					}
-				}
-			}
-		}
+// 					await driveUpdate({
+// 						where: { id: nonScoringDrive.id },
+// 						data: { nextPointOutcome },
+// 					})
 
-		previousPlay = createdPlay
+// 					if (play.subType !== 'Touchdown') {
+// 						nonScoringDriveArray.splice(i, 1)
+// 						i--
+// 					}
+// 				}
+// 			}
+// 		}
 
-		const isLastPlayOfDrive =
-			playArray.indexOf(play) === playArray.length - 1 ||
-			playArray[playArray.indexOf(play) + 1].id.split('-')[0] !== driveNumber
+// 		previousPlay = createdPlay
 
-		if (
-			isLastPlayOfDrive &&
-			play.type !== 'Punt' &&
-			play.subType !== 'Interception' &&
-			!(play.type === 'FieldGoal' && play.description.includes('NO GOOD')) &&
-			!play.description.includes('fumble')
-		) {
-			previousPlay = null
-		}
-	}
+// 		const isLastPlayOfDrive =
+// 			playArray.indexOf(play) === playArray.length - 1 ||
+// 			playArray[playArray.indexOf(play) + 1].id.split('-')[0] !== driveNumber
 
-	console.log('completed')
-}
+// 		if (
+// 			isLastPlayOfDrive &&
+// 			play.type !== 'Punt' &&
+// 			play.subType !== 'Interception' &&
+// 			!(play.type === 'FieldGoal' && play.description.includes('NO GOOD')) &&
+// 			!play.description.includes('fumble')
+// 		) {
+// 			previousPlay = null
+// 		}
+// 	}
+
+// 	console.log('completed')
+// }
