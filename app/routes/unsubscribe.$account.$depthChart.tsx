@@ -10,10 +10,10 @@ import {
 import { LoaderFunction, MetaFunction } from '@remix-run/node'
 import { useFetcher, useLoaderData, useNavigate, useNavigation } from '@remix-run/react'
 import { useEffect, useRef, useState } from 'react'
-import { unsubscribeLoader } from '~/loader/unsubscribe.server'
+import { unsubscribeLoader } from '~/loader/unsubscribe.account.depthChart.server'
 
 import type { ActionData } from '~/actions/unsubscribe.server'
-import type { LoaderData } from '~/loader/unsubscribe.server'
+import type { LoaderData } from '~/loader/unsubscribe.account.depthChart.server'
 
 export const meta: MetaFunction = () => {
 	return [
@@ -85,7 +85,7 @@ export default function Unsubscribe() {
 				setSelected(newSelected)
 				addToast({
 					title: 'Updated',
-					description: 'Email notification subscription preferences have been updated',
+					description: `Email notification subscription preferences have been updated for ${account.email}`,
 					color: 'success',
 				})
 			}
