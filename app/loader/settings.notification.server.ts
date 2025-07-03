@@ -1,10 +1,10 @@
 import { authenticator } from '~/utils/auth/auth.server'
-import { getTeamCheckBoxes } from '~/utils/index.server'
+import { getTeamTitles } from '~/utils/index.server'
 
-import type { TeamCheckBoxObj } from '~/utils/getTeamCheckBoxes.server'
+import type { TeamTitleObj } from '~/utils/getTeamTitles.server'
 
 export type LoaderData = {
-	teamCheckBoxes: TeamCheckBoxObj[]
+	teamTitles: TeamTitleObj[]
 }
 
 export const settingsNotificationLoader = async (request: Request) => {
@@ -12,9 +12,9 @@ export const settingsNotificationLoader = async (request: Request) => {
 		failureRedirect: '/auth/login',
 	})
 
-	const teamCheckBoxes = getTeamCheckBoxes()
+	const teamTitles = getTeamTitles()
 
 	return {
-		teamCheckBoxes,
+		teamTitles,
 	}
 }

@@ -1,9 +1,9 @@
-export type TeamCheckBoxObj = {
+export type TeamTitleObj = {
 	value: string
 	title: string
 }
 
-export const getTeamCheckBoxes = (): TeamCheckBoxObj[] => {
+export const getTeamTitles = (): TeamTitleObj[] => {
 	return Array.from({ length: 9 }, (_, i) => {
 		const teamNumber = i + 1
 		return {

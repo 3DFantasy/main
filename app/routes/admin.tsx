@@ -33,7 +33,7 @@ const inputClass = 'my-2'
 export default function Admin() {
 	const navigation = useNavigation()
 	const fetcher = useFetcher<TeamCheckActionData | CreateAccountActionData>()
-	const { teamCheckBoxes } = useLoaderData<LoaderData>()
+	const { teamTitles } = useLoaderData<LoaderData>()
 	const [selected, setSelected] = useState<string[]>([])
 	const [formData, setFormData] = useState<{
 		email: string
@@ -97,7 +97,7 @@ export default function Admin() {
 			<Accordion defaultExpandedKeys={['team-check']} variant='light'>
 				<AccordionItem key='team-check' aria-label='Team Checks Accordion section 1' title='Team Checks'>
 					<CheckboxGroup defaultValue={[]} value={selected} onValueChange={setSelected}>
-						{teamCheckBoxes.map((team, i) => {
+						{teamTitles.map((team, i) => {
 							return (
 								<Checkbox key={i} value={team.value}>
 									{team.title}
@@ -121,9 +121,9 @@ export default function Admin() {
 							isLoading={navigation.state !== 'idle'}
 							isDisabled={navigation.state !== 'idle'}
 							onPress={() => {
-								if (selected.length < teamCheckBoxes.length) {
+								if (selected.length < teamTitles.length) {
 									setSelected(
-										teamCheckBoxes.map((team) => {
+										teamTitles.map((team) => {
 											return team.value
 										})
 									)

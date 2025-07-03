@@ -1,16 +1,16 @@
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { db } from '~/lib/db.server'
 import { authenticator } from '~/utils/auth/auth.server'
-import { getTeamCheckBoxes } from '~/utils/index.server'
+import { getTeamTitles } from '~/utils/index.server'
 import { parseUnsubscribeLoader } from '~/utils/parse/loaders/unsubscribe.server'
 
 import type { Account } from '@prisma/client'
 import type { AuthAccount } from '~/utils/auth/auth.server'
-import type { TeamCheckBoxObj } from '~/utils/getTeamCheckBoxes.server'
+import type { TeamTitleObj } from '~/utils/getTeamTitles.server'
 
 export type LoaderData = {
 	account: Account
-	teamCheckBoxes: TeamCheckBoxObj[]
+	teamTitles: TeamTitleObj[]
 	message?: string
 	code?: number
 }
@@ -25,13 +25,13 @@ export const unsubscribeLoader = async (request: Request, params: LoaderFunction
 		params,
 	})
 
-	const teamCheckBoxes = getTeamCheckBoxes()
+	const teamTitles = getTeamTitles()
 
 	if (parsedParams.isErr) {
 		return {
 			message: parsedParams.error.message,
 			code: parsedParams.error.code,
-			teamCheckBoxes,
+			teamTitles,
 		}
 	}
 
@@ -41,5 +41,5 @@ export const unsubscribeLoader = async (request: Request, params: LoaderFunction
 		},
 	})
 
-	return { account, teamCheckBoxes }
+	return { account, teamTitles }
 }

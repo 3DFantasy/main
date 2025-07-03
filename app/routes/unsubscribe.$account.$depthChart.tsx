@@ -32,7 +32,7 @@ export default function Unsubscribe() {
 	const fetcher = useFetcher<ActionData>()
 	const error = useRef(false)
 	const [selected, setSelected] = useState<string[]>([])
-	const { account, teamCheckBoxes, message, code } = useLoaderData<LoaderData>()
+	const { account, teamTitles, message, code } = useLoaderData<LoaderData>()
 
 	useEffect(() => {
 		if ((message || code) && !error.current) {
@@ -135,7 +135,7 @@ export default function Unsubscribe() {
 						notifications for
 					</p>
 					<CheckboxGroup defaultValue={[]} value={selected} onValueChange={setSelected}>
-						{teamCheckBoxes.map((team) => {
+						{teamTitles.map((team) => {
 							return <Checkbox value={team.value}>{team.title}</Checkbox>
 						})}
 					</CheckboxGroup>
@@ -155,9 +155,9 @@ export default function Unsubscribe() {
 							isLoading={navigation.state !== 'idle'}
 							isDisabled={navigation.state !== 'idle'}
 							onPress={() => {
-								if (selected.length < teamCheckBoxes.length) {
+								if (selected.length < teamTitles.length) {
 									setSelected(
-										teamCheckBoxes.map((team) => {
+										teamTitles.map((team) => {
 											return team.value
 										})
 									)

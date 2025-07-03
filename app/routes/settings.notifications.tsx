@@ -23,7 +23,7 @@ export default function SettingsNotifications() {
 	const fetcher = useFetcher<ActionData>()
 	const navigation = useNavigation()
 	const [selected, setSelected] = useState<string[]>([])
-	const { teamCheckBoxes } = useLoaderData<LoaderData>()
+	const { teamTitles } = useLoaderData<LoaderData>()
 	const { account } = useOutletContext<SettingsContext>()
 
 	useEffect(() => {
@@ -69,7 +69,7 @@ export default function SettingsNotifications() {
 				for:
 			</p>
 			<CheckboxGroup defaultValue={[]} value={selected} onValueChange={setSelected}>
-				{teamCheckBoxes.map((team) => {
+				{teamTitles.map((team) => {
 					return <Checkbox value={team.value}>{team.title}</Checkbox>
 				})}
 			</CheckboxGroup>
@@ -89,9 +89,9 @@ export default function SettingsNotifications() {
 					isLoading={navigation.state !== 'idle'}
 					isDisabled={navigation.state !== 'idle'}
 					onPress={() => {
-						if (selected.length < teamCheckBoxes.length) {
+						if (selected.length < teamTitles.length) {
 							setSelected(
-								teamCheckBoxes.map((team) => {
+								teamTitles.map((team) => {
 									return team.value
 								})
 							)
