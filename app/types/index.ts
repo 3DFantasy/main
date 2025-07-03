@@ -139,3 +139,4 @@ export type PXPAPIResponse = {
 }
 
 export type { Account } from './account'
+export type { Team } from './team'

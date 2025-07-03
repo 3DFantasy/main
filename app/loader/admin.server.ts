@@ -1,12 +1,12 @@
 import { redirect } from '@remix-run/node'
 import { authenticator } from '~/utils/auth/auth.server'
-import { getTeamCheckBoxes } from '~/utils/index.server'
+import { getTeamTitles } from '~/utils/index.server'
 
 import type { AuthAccount } from '~/utils/auth/auth.server'
-import type { TeamCheckBoxObj } from '~/utils/getTeamCheckBoxes.server'
+import type { TeamTitleObj } from '~/utils/getTeamTitles.server'
 
 export type LoaderData = {
-	teamCheckBoxes: TeamCheckBoxObj[]
+	teamTitles: TeamTitleObj[]
 }
 
 export const adminLoader = async (request: Request) => {
@@ -18,9 +18,9 @@ export const adminLoader = async (request: Request) => {
 		return redirect('/home')
 	}
 
-	const teamCheckBoxes = getTeamCheckBoxes()
+	const teamTitles = getTeamTitles()
 
 	return {
-		teamCheckBoxes,
+		teamTitles,
 	}
 }
