@@ -59,7 +59,7 @@ export default function App() {
 		<Providers initialAccount={account}>
 			<main className={`${theme} text-foreground bg-background`}>
 				<Header />
-				<div className='container mx-auto'>
+				<div className='container mx-auto md:px-0 px-2'>
 					<Outlet />
 				</div>
 			</main>
