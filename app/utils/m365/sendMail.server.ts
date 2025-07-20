@@ -52,7 +52,10 @@ export async function sendMail({
 		await client.api(`users/${process.env.MICROSOFT_3DFANTASY_FROM_EMAIL}/sendMail`).post(sendMail)
 
 		return ok({ success: true })
-	} catch (e) {
+	} catch (e: any) {
+		console.log('Status code:', e.statusCode)
+		console.log('Error message:', e.message)
+		console.log('Error body:', e.body)
 		return err({ message: `Something went wrong sending email: ${e}`, code: 500 })
 	}
 }

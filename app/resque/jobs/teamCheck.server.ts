@@ -5,6 +5,7 @@ import { getEmailTemplate } from '~/utils/m365/emailTemplate.server'
 import { teamHandlers } from '~/utils/puppeteer/index.server'
 
 import type { DepthChartObject } from '~/types'
+import { timeout } from '~/utils'
 
 export async function teamCheck({ teamId }: { teamId: number }) {
 	const year = Number(process.env.LEAGUE_YEAR)
@@ -88,34 +89,34 @@ export async function teamCheck({ teamId }: { teamId: number }) {
 		const emailTitle = `New Depth Chart Posted: ${teamTitle}`
 
 		// send emails
-		await Promise.all(
-			allAccountsToMail.map(async (account) => {
-				const sendMailResp = await sendMail({
-					message: {
-						subject: emailTitle,
-						body: {
-							content: getEmailTemplate({
-								newDepthChartProps: {
-									title: emailTitle,
-									account: {
-										uuid: account.uuid,
-									},
-									depthChart: { title: newDepthChartObj.title, uuid: newDepthChart.uuid },
-									link: newDepthChartObj.href,
-									team: teamTitle,
+		for (const account of allAccountsToMail) {
+			const sendMailResp = await sendMail({
+				message: {
+					subject: emailTitle,
+					body: {
+						content: getEmailTemplate({
+							newDepthChartProps: {
+								title: emailTitle,
+								account: {
+									uuid: account.uuid,
 								},
-							}),
-							contentType: 'HTML',
-						},
-						toRecipients: [{ emailAddress: { address: account.email } }],
+								depthChart: { title: newDepthChartObj.title, uuid: newDepthChart.uuid },
+								link: newDepthChartObj.href,
+								team: teamTitle,
+							},
+						}),
+						contentType: 'HTML',
 					},
-					saveToSentItems: 'true',
-				})
-				if (sendMailResp.isErr) {
-					throw new Error(sendMailResp.error.message)
-				}
+					toRecipients: [{ emailAddress: { address: account.email } }],
+				},
+				saveToSentItems: 'true',
 			})
-		)
+
+			if (sendMailResp.isErr) {
+				throw new Error(sendMailResp.error.message)
+			}
+			await timeout(1)
+		}
 	}
 
 	console.log(`Team${teamId}Check complete`)
