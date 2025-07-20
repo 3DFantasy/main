@@ -1,10 +1,10 @@
 import { compareDepthChartList } from '~/dao/depthChartList.server'
 import { db } from '~/lib/db.server'
+import { sendMail } from '~/utils/index.server'
+import { getEmailTemplate } from '~/utils/m365/emailTemplate.server'
 import { teamHandlers } from '~/utils/puppeteer/index.server'
 
 import type { DepthChartObject } from '~/types'
-import { sendMail } from '~/utils/index.server'
-import { getEmailTemplate } from '~/utils/m365/emailTemplate.server'
 
 export async function teamCheck({ teamId }: { teamId: number }) {
 	const year = Number(process.env.LEAGUE_YEAR)
