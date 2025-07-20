@@ -28,7 +28,7 @@ export async function teamCheck({ teamId }: { teamId: number }) {
 		throw new Error(compareDepthChartListResp.error.message)
 	}
 
-	if (compareDepthChartListResp.value.newDepthChart) {
+	if (compareDepthChartListResp.value.newDepthChart && process.env.NODE_ENV !== 'development') {
 		const newDepthChartObj = compareDepthChartListResp.value.newDepthChart
 		// create new chart
 		const newDepthChart = await db.depthChart.create({
