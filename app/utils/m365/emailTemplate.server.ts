@@ -136,5 +136,5 @@ export const getEmailTemplate = ({ newDepthChartProps, createAccountProps }: Get
 		return getBaseTemplate(createAccountProps.title, content, unsubscribeUrl)
 	}
 
-	return null
+	return 'null'
 }

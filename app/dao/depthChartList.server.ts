@@ -68,7 +68,7 @@ export async function compareDepthChartList({
 		logger.info(`No new depth chart found: ${year} & teamId:${teamId}`)
 	} else {
 		newDepthChart = value[value.length - 1]
-		logger.info(`new depth chart: ${newDepthChart}`)
+		logger.info(`New depth chart title: ${newDepthChart.title}; url: ${newDepthChart.href}`)
 	}
 	return ok({ depthChartList, newDepthChart })
 }
