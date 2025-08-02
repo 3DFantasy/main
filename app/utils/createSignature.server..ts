@@ -1,4 +1,5 @@
 import crypto from 'crypto'
+import { logger } from '~/utils/logger'
 
 export const createSignature = (body: string) => {
 	if (process.env.APP_SECRET) {
@@ -6,7 +7,7 @@ export const createSignature = (body: string) => {
 		const signature = crypto.createHmac('sha256', appSecret).update(body).digest('hex')
 		return signature
 	} else {
-		console.log('APP Secret not set')
+		logger.info('APP Secret not set')
 		return ''
 	}
 }

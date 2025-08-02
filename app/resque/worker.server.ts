@@ -2,6 +2,7 @@ import Redis from 'ioredis'
 import { Worker } from 'node-resque'
 import { jobs } from '~/resque/jobs.server'
 import { connectionDetails } from '~/resque/main.server'
+import { logger } from '~/utils/logger'
 
 export type InitWorkerProps = {
 	schedule: boolean
@@ -51,7 +52,7 @@ async function cleanupStaleWorkers(queueName: string) {
 			await redis.srem('resque:workers', ...staleWorkers)
 		}
 
-		console.log(`Worker cleanup complete for ${queueName} queue, stale keys:${staleKeys}`)
+		logger.info(`Worker cleanup complete for ${queueName} queue, stale keys:${staleKeys}`)
 
 		// Close the Redis connection
 		await redis.quit()
@@ -81,7 +82,7 @@ export const initWorker = async ({ schedule, team }: InitWorkerProps) => {
 
 			// Check if a worker for this queue already exists
 			if (globalWorkerRegistry[queueTitle]) {
-				console.log(`Worker for ${queueTitle} already exists, skipping initialization`)
+				logger.info(`Worker for ${queueTitle} already exists, skipping initialization`)
 				activeWorkers.push(globalWorkerRegistry[queueTitle])
 				continue
 			}
@@ -95,11 +96,11 @@ export const initWorker = async ({ schedule, team }: InitWorkerProps) => {
 			)
 
 			worker.on('start', () => {
-				console.log(`Worker started for ${queueTitle}`)
+				logger.info(`Worker started for ${queueTitle}`)
 			})
 
 			worker.on('end', () => {
-				console.log(`Worker ended for ${queueTitle}`)
+				logger.info(`Worker ended for ${queueTitle}`)
 				const index = activeWorkers.indexOf(worker)
 				if (index !== -1) {
 					activeWorkers.splice(index, 1)
@@ -110,15 +111,15 @@ export const initWorker = async ({ schedule, team }: InitWorkerProps) => {
 			})
 
 			worker.on('success', (queue, job, result, duration) => {
-				console.log(`Job success ${queue} ${JSON.stringify(job)} >> ${result} (${duration}ms)`)
+				logger.info(`Job success ${queue} ${JSON.stringify(job)} >> ${result} (${duration}ms)`)
 			})
 
 			worker.on('failure', (queue, job, failure, duration) => {
-				console.log(`Job failure ${queue} ${JSON.stringify(job)} >> ${failure} (${duration}ms)`)
+				logger.info(`Job failure ${queue} ${JSON.stringify(job)} >> ${failure} (${duration}ms)`)
 			})
 
 			worker.on('error', (error, queue, job) => {
-				console.log(`Error ${queue} ${JSON.stringify(job)} >> ${error}`)
+				logger.info(`Error ${queue} ${JSON.stringify(job)} >> ${error}`)
 			})
 
 			await worker.connect()
@@ -138,7 +139,7 @@ export const initWorker = async ({ schedule, team }: InitWorkerProps) => {
 }
 
 async function shutdown() {
-	console.log(`Shutting down ${Object.keys(globalWorkerRegistry).length} workers...`)
+	logger.info(`Shutting down ${Object.keys(globalWorkerRegistry).length} workers...`)
 
 	try {
 		await Promise.all(Object.values(globalWorkerRegistry).map((worker) => worker.end()))
