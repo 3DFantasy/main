@@ -136,5 +136,9 @@ export const getEmailTemplate = ({ newDepthChartProps, createAccountProps }: Get
 		return getBaseTemplate(createAccountProps.title, content, unsubscribeUrl)
 	}
 
-	return 'null'
+	return getBaseTemplate(
+		'NO EMAIL TEMPLATE MATCHED',
+		'null',
+		'https://3dfantasy.ca/settings/notifications'
+	)
 }
