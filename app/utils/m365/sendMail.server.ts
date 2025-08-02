@@ -51,7 +51,13 @@ export async function sendMail({
 
 	try {
 		await client.api(`users/${process.env.MICROSOFT_3DFANTASY_FROM_EMAIL}/sendMail`).post(sendMail)
-
+		logger.info(
+			`email sent ${message.toRecipients ? `TO: ${message.toRecipients.join(', ')}; ` : ''}${
+				message.bccRecipients ? `BCC: ${message.bccRecipients.join(', ')}; ` : ''
+			}${message.ccRecipients ? `CC: ${message.ccRecipients.join(', ')}; ` : ''}${
+				message.subject ? `SUBJECT: ${message.subject}; ` : ''
+			}`
+		)
 		return ok({ success: true })
 	} catch (e: any) {
 		logger.error(`Status code: ${e.statusCode}`)
