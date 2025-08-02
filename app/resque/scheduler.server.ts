@@ -3,6 +3,7 @@ import * as schedule from 'node-schedule'
 import { jobs } from '~/resque/jobs.server'
 import { connectionDetails } from '~/resque/main.server'
 import { queueTitles } from '~/resque/worker.server'
+import { logger } from '~/utils/logger'
 
 export async function nodeScheduler() {
 	// ////////////////////////
@@ -14,28 +15,28 @@ export async function nodeScheduler() {
 	scheduler.start()
 
 	scheduler.on('start', () => {
-		console.log('scheduler started')
+		logger.info('scheduler started')
 	})
 	scheduler.on('end', () => {
-		console.log('scheduler ended')
+		logger.info('scheduler ended')
 	})
 	scheduler.on('poll', () => {
-		console.log('scheduler polling')
+		logger.info('scheduler polling')
 	})
 	scheduler.on('leader', () => {
-		console.log('scheduler became leader')
+		logger.info('scheduler became leader')
 	})
 	scheduler.on('error', (error) => {
-		console.log(`scheduler error >> ${error}`)
+		logger.info(`scheduler error >> ${error}`)
 	})
 	scheduler.on('cleanStuckWorker', (workerName, errorPayload, delta) => {
-		console.log(`failing ${workerName} (stuck for ${delta}s) and failing job ${errorPayload}`)
+		logger.info(`failing ${workerName} (stuck for ${delta}s) and failing job ${errorPayload}`)
 	})
 	scheduler.on('workingTimestamp', (timestamp) => {
-		console.log(`scheduler working timestamp ${timestamp}`)
+		logger.info(`scheduler working timestamp ${timestamp}`)
 	})
 	scheduler.on('transferredJob', (timestamp, job) => {
-		console.log(`scheduler enquing job ${timestamp} >> ${JSON.stringify(job)}`)
+		logger.info(`scheduler enquing job ${timestamp} >> ${JSON.stringify(job)}`)
 	})
 
 	// //////////////
@@ -44,7 +45,7 @@ export async function nodeScheduler() {
 
 	const queue = new Queue({ connection: connectionDetails }, jobs)
 	queue.on('error', function (error) {
-		console.log(error)
+		logger.error(`resque:queue error: ${error}`)
 	})
 	await queue.connect()
 
@@ -73,19 +74,19 @@ export async function nodeScheduler() {
 	// test.hour = 22
 	// test.minute = 14
 	// test.tz = 'Canada/Eastern'
-	// console.log(Object.keys(schedule.scheduledJobs)[0])
-	// console.log(schedule.scheduledJobs[Object.keys(schedule.scheduledJobs)[0]].nextInvocation())
+	// logger.info(Object.keys(schedule.scheduledJobs)[0])
+	// logger.info(schedule.scheduledJobs[Object.keys(schedule.scheduledJobs)[0]].nextInvocation())
 
 	schedule.scheduleJob(everySunday, async () => {
 		if (scheduler.leader) {
-			console.log('>>> enquing {} job')
+			logger.info('>>> enquing {} job')
 			await queue.enqueue(queueTitles.schedule.queue, '{}', [])
 		}
 	})
 
 	const shutdown = async () => {
 		await scheduler.end()
-		console.log('scheduler shutdown ..')
+		logger.info('scheduler shutdown ..')
 		process.exit()
 	}
 

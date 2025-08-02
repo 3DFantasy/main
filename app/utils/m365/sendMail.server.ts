@@ -1,4 +1,5 @@
 import Result, { err, ok } from 'true-myth/result'
+import { logger } from '~/utils/logger'
 import { client } from '~/utils/m365/client.server'
 
 import type { Error } from '~/types'
@@ -53,9 +54,9 @@ export async function sendMail({
 
 		return ok({ success: true })
 	} catch (e: any) {
-		console.log('Status code:', e.statusCode)
-		console.log('Error message:', e.message)
-		console.log('Error body:', e.body)
+		logger.error(`Status code: ${e.statusCode}`)
+		logger.error(`Error message: ${e.message}`)
+		logger.error(`Error body: ${e.body}`)
 		return err({ message: `Something went wrong sending email: ${e}`, code: 500 })
 	}
 }

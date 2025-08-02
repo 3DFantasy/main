@@ -1,10 +1,10 @@
 import type { ActionFunctionArgs } from '@remix-run/node'
 import { db } from '~/lib/db.server'
 import { generatePassword, sendMail } from '~/utils/index.server'
+import { getEmailTemplate } from '~/utils/m365/emailTemplate.server'
 import { parseApiCreateAccountAction } from '~/utils/parse/actions/api.createAccount.server'
 
 import type { Account } from '~/lib/db.server'
-import { getEmailTemplate } from '~/utils/m365/emailTemplate.server'
 
 export type CreateAccountActionData = {
 	account?: Account

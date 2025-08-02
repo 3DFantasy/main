@@ -1,6 +1,7 @@
 import { Queue } from 'node-resque'
 import { jobs } from '~/resque/jobs.server'
 import { queueTitles } from '~/resque/worker.server'
+import { logger } from '~/utils/logger'
 
 import type { TeamId } from '~/types'
 
@@ -51,7 +52,7 @@ export async function resqueTask({ job, teamCheckProps, saveAllDepthChartsProps 
 	const redisQueue = new Queue({ connection: connectionDetails }, jobs)
 
 	redisQueue.on('error', function (error) {
-		console.log(error)
+		logger.error(`resque:queue error: ${error}`)
 	})
 
 	await redisQueue.connect()
