@@ -1,5 +1,6 @@
 import { gameCreate } from '~/dao/index.server'
 import { PXPAPIResponse } from '~/types'
+import { logger } from '~/utils/logger'
 import { timeout } from '../timeout'
 
 export type FetchAPIPXPInput = {
@@ -9,7 +10,7 @@ export type FetchAPIPXPInput = {
 
 export async function fetchAPIPXP({ gameIDs, year }: FetchAPIPXPInput) {
 	const url = process.env.PXP_API_URL
-	const fetchResp = Promise.all(
+	const fetchResp = await Promise.all(
 		gameIDs.map(async (gameID) => {
 			const resp = await fetch(url + gameID, {
 				method: 'GET',
@@ -34,8 +35,8 @@ export async function fetchAPIPXP({ gameIDs, year }: FetchAPIPXPInput) {
 				}
 			})
 			await timeout(5)
-			console.log(resp)
+			logger.info(resp)
 		})
 	)
-	console.log(fetchResp)
+	logger.info(`fetchAPIPXP complete: ${fetchResp}`)
 }

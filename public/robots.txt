@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Block sensitive areas (adjust based on your app structure)
+Disallow: /api/
+Disallow: /admin/
+Disallow: /auth/
+Disallow: /unsubscribe/

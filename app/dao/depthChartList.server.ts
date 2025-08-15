@@ -1,5 +1,6 @@
 import Result, { err, ok } from 'true-myth/result'
 import { db } from '~/lib/db.server'
+import { logger } from '~/utils/logger'
 
 import type { DepthChartList as DepthChartListPrisma } from '~/lib/db.server'
 import type { DepthChartObject, Error } from '~/types'
@@ -41,7 +42,7 @@ export async function compareDepthChartList({
 	})
 
 	if (currentDepthChartList.length === 0) {
-		console.log(`No depth chart list for year ${year}, teamId ${teamId} created yet, creating now..`)
+		logger.info(`No depth chart list for year ${year}, teamId ${teamId} created yet, creating now..`)
 		const createdDepthChartList = await db.depthChartList.create({
 			data: {
 				year,
@@ -59,15 +60,15 @@ export async function compareDepthChartList({
 			code: 500,
 		})
 	} else {
-		console.log(`DepthChartList retrieved for ${year}, teamId ${teamId}`)
+		logger.info(`DepthChartList retrieved for ${year}, teamId ${teamId}`)
 		depthChartList = parseDepthChartList({ depthChartList: currentDepthChartList[0] })
 	}
 
 	if (depthChartList.value.length === value.length) {
-		console.log(`No new depth chart found: ${year} & teamId:${teamId}`)
+		logger.info(`No new depth chart found: ${year} & teamId:${teamId}`)
 	} else {
 		newDepthChart = value[value.length - 1]
-		console.log('new depth chart:', newDepthChart)
+		logger.info(`New depth chart title: ${newDepthChart.title}; url: ${newDepthChart.href}`)
 	}
 	return ok({ depthChartList, newDepthChart })
 }

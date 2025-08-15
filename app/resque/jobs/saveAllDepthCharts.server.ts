@@ -1,4 +1,5 @@
 import { db } from '~/lib/db.server'
+import { logger } from '~/utils/logger'
 import { teamHandlers } from '~/utils/puppeteer/index.server'
 
 import type { DepthChartObject } from '~/types'
@@ -60,12 +61,12 @@ export async function saveAllDepthCharts({ teamId }: { teamId: number }): Promis
 	)
 
 	allResults.map((result) => {
-		console.log('Depth chart created:')
-		console.log(`teamId: ${result.teamId}`)
-		console.log(`season: ${result.season}, week:${result.week}`)
-		console.log(`${result.value}`)
+		logger.info('Depth chart created:')
+		logger.info(`teamId: ${result.teamId}`)
+		logger.info(`season: ${result.season}, week:${result.week}`)
+		logger.info(`${result.value}`)
 	})
 
-	console.log(`saveAllDepthCharts teamId:${teamId} complete`)
+	logger.info(`saveAllDepthCharts teamId:${teamId} complete`)
 	return true
 }
