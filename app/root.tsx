@@ -8,7 +8,7 @@ import {
 	useRouteError,
 } from '@remix-run/react'
 import { useState } from 'react'
-import { ErrorBoundary as ErrorBoundaryComponent, Header } from '~/components'
+import { ErrorBoundary as ErrorBoundaryComponent, Header, Loading } from '~/components'
 import { rootLoader } from '~/loader/root.server'
 import { Providers } from '~/providers'
 
@@ -16,6 +16,7 @@ import type { LoaderFunction } from '@remix-run/node'
 import type { LoaderData } from '~/loader/root.server'
 
 import 'remixicon/fonts/remixicon.css'
+import '~/styles/loading.css'
 import '~/styles/main.css'
 import '~/styles/tailwind.css'
 
@@ -61,6 +62,7 @@ export default function App() {
 				<Header />
 				<div className='container mx-auto md:px-0 px-2'>
 					<Outlet />
+					<Loading overlay={true} />
 				</div>
 			</main>
 		</Providers>
