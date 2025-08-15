@@ -58,8 +58,8 @@ model DepthChart {
   title            String
   value            String
   year             Int
-  season           String         @default("regular")
-  week             Int            @default(1)
+  season           String         // pre regular post
+  week             Int            
   Team             Team           @relation(fields: [teamId], references: [id], onDelete: Cascade)
   DepthChartList   DepthChartList @relation(fields: [depthChartListId], references: [id], onDelete: Cascade)
   createdAt        DateTime       @default(now())

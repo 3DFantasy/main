@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "DepthChart" ALTER COLUMN "season" DROP DEFAULT,
+ALTER COLUMN "week" DROP DEFAULT;

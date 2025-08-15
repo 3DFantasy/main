@@ -1,5 +1,6 @@
 export { createSignature } from './createSignature.server.'
 export { generatePassword } from './generatePassword.server'
+export { getDepthChartInfo } from './getDepthChartInfo.server'
 export { getTeamTitles } from './getTeamTitles.server'
 export { sendMail } from './m365/sendMail.server'
 export {
