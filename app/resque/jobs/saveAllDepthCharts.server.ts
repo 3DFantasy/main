@@ -3,6 +3,7 @@ import { logger } from '~/utils/logger'
 import { teamHandlers } from '~/utils/puppeteer/index.server'
 
 import type { DepthChartObject } from '~/types'
+import { getDepthChartInfo } from '~/utils/getDepthChartInfo.server'
 
 export async function saveAllDepthCharts({ teamId }: { teamId: number }): Promise<boolean> {
 	const year = Number(process.env.LEAGUE_YEAR)
@@ -33,6 +34,8 @@ export async function saveAllDepthCharts({ teamId }: { teamId: number }): Promis
 
 	const allResults = await Promise.all(
 		result.map(async (chart: DepthChartObject) => {
+			const depthChartDateInfo = getDepthChartInfo(new Date())
+
 			return await db.depthChart.create({
 				data: {
 					teamId: teamId,
@@ -40,12 +43,16 @@ export async function saveAllDepthCharts({ teamId }: { teamId: number }): Promis
 					value: chart.href,
 					year: year,
 					depthChartListId: newDepthChartList.id,
+					season: depthChartDateInfo.season,
+					week: depthChartDateInfo.week,
 				},
 				select: {
 					id: true,
 					teamId: true,
 					value: true,
 					year: true,
+					season: true,
+					week: true,
 					createdAt: true,
 					updatedAt: true,
 				},
@@ -56,6 +63,7 @@ export async function saveAllDepthCharts({ teamId }: { teamId: number }): Promis
 	allResults.map((result) => {
 		logger.info('Depth chart created:')
 		logger.info(`teamId: ${result.teamId}`)
+		logger.info(`season: ${result.season}, week:${result.week}`)
 		logger.info(`${result.value}`)
 	})
 

@@ -1,7 +1,7 @@
 import { compareDepthChartList } from '~/dao/depthChartList.server'
 import { db } from '~/lib/db.server'
 import { timeout } from '~/utils'
-import { sendMail } from '~/utils/index.server'
+import { getDepthChartInfo, sendMail } from '~/utils/index.server'
 import { logger } from '~/utils/logger'
 import { getEmailTemplate } from '~/utils/m365/emailTemplate.server'
 import { teamHandlers } from '~/utils/puppeteer/index.server'
@@ -32,6 +32,7 @@ export async function teamCheck({ teamId }: { teamId: number }) {
 
 	if (compareDepthChartListResp.value.newDepthChart && process.env.NODE_ENV !== 'development') {
 		const newDepthChartObj = compareDepthChartListResp.value.newDepthChart
+		const depthChartDateInfo = getDepthChartInfo(new Date())
 		// create new chart
 		const newDepthChart = await db.depthChart.create({
 			data: {
@@ -40,6 +41,8 @@ export async function teamCheck({ teamId }: { teamId: number }) {
 				value: newDepthChartObj.href,
 				year,
 				depthChartListId: compareDepthChartListResp.value.depthChartList.id,
+				season: depthChartDateInfo.season,
+				week: depthChartDateInfo.week,
 			},
 		})
 
