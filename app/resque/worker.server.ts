@@ -143,14 +143,31 @@ export const initWorker = async ({ schedule, team }: InitWorkerProps) => {
                 )
             })
 
-            // Add polling event to track worker activity
+            // Add polling event to track worker activity - CHANGED TO INFO
             worker.on('poll', (queue) => {
-                logger.debug(fileName, `Worker polling ${queue}`)
+                logger.info(fileName, `Worker polling ${queue}`)
             })
 
             try {
                 await worker.connect()
                 await worker.start()
+
+                // ADD THESE DEBUG LINES:
+                const queues = worker.options.queues
+                logger.info(
+                    fileName,
+                    `Worker queues: ${JSON.stringify(queues)}`
+                )
+                logger.info(
+                    fileName,
+                    `Worker connection: ${JSON.stringify(
+                        worker.connection.options
+                    )}`
+                )
+
+                // Force check if worker is actually connected
+                const isConnected = worker.connection.connected
+                logger.info(fileName, `Worker Redis connected: ${isConnected}`)
 
                 activeWorkers.push(worker)
                 globalWorkerRegistry[queueTitle] = worker
@@ -159,6 +176,26 @@ export const initWorker = async ({ schedule, team }: InitWorkerProps) => {
                     fileName,
                     `Worker successfully initialized for ${queueTitle}`
                 )
+
+                // ADD THIS - force check queue length
+                setTimeout(async () => {
+                    try {
+                        const redis = new Redis(connectionDetails.host)
+                        const queueLength = await redis.llen(
+                            `resque:queue:${queueTitle}`
+                        )
+                        logger.info(
+                            fileName,
+                            `Queue ${queueTitle} has ${queueLength} jobs waiting`
+                        )
+                        await redis.quit()
+                    } catch (error) {
+                        logger.error(
+                            fileName,
+                            `Error checking queue length: ${error}`
+                        )
+                    }
+                }, 1000)
             } catch (error) {
                 logger.error(
                     fileName,
