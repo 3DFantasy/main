@@ -6,37 +6,40 @@ import { parseFormData } from '../formData.server'
 import type { Error } from '~/types'
 
 export type ParseApiTeamCheckActionOutput = {
-	email: string
+    email: string
 }
 
 export const parseApiCreateAccountAction = async ({
-	formData,
+    formData,
 }: {
-	formData: FormData
+    formData: FormData
 }): Promise<Result<ParseApiTeamCheckActionOutput, Error>> => {
-	const email = parseFormData(formData.get('email'), 'parseApiCreateAccountAction-email')
+    const email = parseFormData(
+        formData.get('email'),
+        'parseApiCreateAccountAction-email'
+    )
 
-	if (email.isErr) {
-		return err(email.error)
-	}
-	const isEmail = parseEmail(email.value)
+    if (email.isErr) {
+        return err(email.error)
+    }
+    const isEmail = parseEmail(email.value)
 
-	if (isEmail.isErr) {
-		return err(isEmail.error)
-	}
+    if (isEmail.isErr) {
+        return err(isEmail.error)
+    }
 
-	const existingEmail = await db.account.findUnique({
-		where: {
-			email: email.value,
-		},
-	})
+    const existingEmail = await db.account.findUnique({
+        where: {
+            email: email.value,
+        },
+    })
 
-	if (existingEmail) {
-		return err({
-			message: 'Email already exists',
-			code: 401,
-		})
-	}
+    if (existingEmail) {
+        return err({
+            message: 'Email already exists',
+            code: 401,
+        })
+    }
 
-	return ok({ email: email.value })
+    return ok({ email: email.value })
 }

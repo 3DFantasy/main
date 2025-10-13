@@ -1,30 +1,37 @@
 export type GetEmailTemplateInput = {
-	newDepthChartProps?: {
-		link: string
-		team: string
-		title: string
-		account: {
-			uuid: string
-		}
-		depthChart: {
-			title: string
-			uuid: string
-		}
-	}
-	createAccountProps?: {
-		title: string
-		account: {
-			uuid: string
-			plainText: string
-		}
-		depthChart: {
-			uuid: string
-		}
-	}
+    newDepthChartProps?: {
+        link: string
+        team: string
+        title: string
+        account: {
+            uuid: string
+        }
+        depthChart: {
+            title: string
+            uuid: string
+        }
+    }
+    createAccountProps?: {
+        title: string
+        account: {
+            uuid: string
+            plainText: string
+        }
+        depthChart: {
+            uuid: string
+        }
+    }
 }
 
-export const getEmailTemplate = ({ newDepthChartProps, createAccountProps }: GetEmailTemplateInput) => {
-	const getBaseTemplate = (title: string, content: string, unsubscribeUrl?: string) => `
+export const getEmailTemplate = ({
+    newDepthChartProps,
+    createAccountProps,
+}: GetEmailTemplateInput) => {
+    const getBaseTemplate = (
+        title: string,
+        content: string,
+        unsubscribeUrl?: string
+    ) => `
     <!DOCTYPE html>
     <html>
       <head>
@@ -105,40 +112,52 @@ export const getEmailTemplate = ({ newDepthChartProps, createAccountProps }: Get
           <div class="footer">
             <a href="https://3dfantasy.ca">Website</a>
             <a href="mailto:wilson@3dfantasy.ca">Contact Us</a>
-            ${unsubscribeUrl ? `<a href="${unsubscribeUrl}">Unsubscribe</a>` : ''}
+            ${
+                unsubscribeUrl
+                    ? `<a href="${unsubscribeUrl}">Unsubscribe</a>`
+                    : ''
+            }
           </div>
         </div>
       </body>
     </html>
   `
 
-	if (newDepthChartProps) {
-		const content = `
+    if (newDepthChartProps) {
+        const content = `
       <h1>New depth chart posted</h1>
       <p>${newDepthChartProps.team}</p>
       <p>${newDepthChartProps.depthChart.title}</p>
       <a href="${newDepthChartProps.link}">Click here to view</a>
     `
-		const unsubscribeUrl = `https://3dfantasy.ca/unsubscribe/${newDepthChartProps.account.uuid}/${newDepthChartProps.depthChart.uuid}`
+        const unsubscribeUrl = `https://3dfantasy.ca/unsubscribe/${newDepthChartProps.account.uuid}/${newDepthChartProps.depthChart.uuid}`
 
-		return getBaseTemplate(newDepthChartProps.title, content, unsubscribeUrl)
-	}
+        return getBaseTemplate(
+            newDepthChartProps.title,
+            content,
+            unsubscribeUrl
+        )
+    }
 
-	if (createAccountProps) {
-		const content = `
+    if (createAccountProps) {
+        const content = `
       <h1>Account created</h1>
       <p>3DF account has been created for this email, your password is listed below</p>
       <p>${createAccountProps.account.plainText}</p>
       <a href="https://3dfantasy.ca/auth/login/">Click here for login page</a>
     `
-		const unsubscribeUrl = `https://3dfantasy.ca/unsubscribe/${createAccountProps.account.uuid}/${createAccountProps.depthChart.uuid}`
+        const unsubscribeUrl = `https://3dfantasy.ca/unsubscribe/${createAccountProps.account.uuid}/${createAccountProps.depthChart.uuid}`
 
-		return getBaseTemplate(createAccountProps.title, content, unsubscribeUrl)
-	}
+        return getBaseTemplate(
+            createAccountProps.title,
+            content,
+            unsubscribeUrl
+        )
+    }
 
-	return getBaseTemplate(
-		'NO EMAIL TEMPLATE MATCHED',
-		'null',
-		'https://3dfantasy.ca/settings/notifications'
-	)
+    return getBaseTemplate(
+        'NO EMAIL TEMPLATE MATCHED',
+        'null',
+        'https://3dfantasy.ca/settings/notifications'
+    )
 }

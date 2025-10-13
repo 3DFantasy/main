@@ -4,59 +4,68 @@ import { browserConfig, viewport } from '~/utils/puppeteer/index.server'
 import type { DepthChartObject } from '~/types'
 
 export async function team7(): Promise<DepthChartObject[]> {
-	const browser = await puppeteer.launch(browserConfig)
-	const page = await browser.newPage()
+    const browser = await puppeteer.launch(browserConfig)
+    const page = await browser.newPage()
 
-	await page.goto(process.env.TEAM_7_URL)
+    await page.goto(process.env.TEAM_7_URL)
 
-	await page.setViewport(viewport)
+    await page.setViewport(viewport)
 
-	const result = await page.evaluate(() => {
-		const tables = document.querySelectorAll('table')
-		const resultArray: DepthChartObject[] = []
+    const result = await page.evaluate(() => {
+        const tables = document.querySelectorAll('table')
+        const resultArray: DepthChartObject[] = []
 
-		for (const table of tables) {
-			const headerText = table.querySelector('thead')?.textContent || ''
+        for (const table of tables) {
+            const headerText = table.querySelector('thead')?.textContent || ''
 
-			// Skip 2024 table
-			if (headerText.includes('HAM Depth') || headerText.includes('OPP Depth')) {
-				continue
-			}
+            // Skip 2024 table
+            if (
+                headerText.includes('HAM Depth') ||
+                headerText.includes('OPP Depth')
+            ) {
+                continue
+            }
 
-			// Get tbody from THIS table only
-			const tbody = table.querySelector('tbody')
-			if (!tbody) continue
+            // Get tbody from THIS table only
+            const tbody = table.querySelector('tbody')
+            if (!tbody) continue
 
-			tbody.querySelectorAll('tr').forEach((row) => {
-				const cells = row.querySelectorAll('td')
+            tbody.querySelectorAll('tr').forEach((row) => {
+                const cells = row.querySelectorAll('td')
 
-				if (cells.length >= 5 && cells[4]) {
-					// Get the text from the "Depth & Roster" cell with null check
-					const depthRosterText = cells[4].textContent?.trim() || ''
+                if (cells.length >= 5 && cells[4]) {
+                    // Get the text from the "Depth & Roster" cell with null check
+                    const depthRosterText = cells[4].textContent?.trim() || ''
 
-					// Get the link from the "Depth & Roster" cell
-					const link = cells[4].querySelector('a')
-					const href = link ? link.href : null
+                    // Get the link from the "Depth & Roster" cell
+                    const link = cells[4].querySelector('a')
+                    const href = link ? link.href : null
 
-					// Only add if there's a link and it contains specific keywords
-					if (href && href.includes('.pdf') && (href.includes('Depth') || href.includes('Roster'))) {
-						resultArray.push({
-							title: `${cells[0]?.innerText || ''}, ${cells[1]?.innerText || ''}, ${
-								cells[2]?.innerText || ''
-							} - ${depthRosterText}`,
-							href: href,
-						})
-					}
-				}
-			})
-		}
+                    // Only add if there's a link and it contains specific keywords
+                    if (
+                        href &&
+                        href.includes('.pdf') &&
+                        (href.includes('Depth') || href.includes('Roster'))
+                    ) {
+                        resultArray.push({
+                            title: `${cells[0]?.innerText || ''}, ${
+                                cells[1]?.innerText || ''
+                            }, ${
+                                cells[2]?.innerText || ''
+                            } - ${depthRosterText}`,
+                            href: href,
+                        })
+                    }
+                }
+            })
+        }
 
-		return resultArray
-	})
+        return resultArray
+    })
 
-	await browser.close()
+    await browser.close()
 
-	return result
+    return result
 }
 
 // 2024

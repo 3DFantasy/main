@@ -1,15 +1,12 @@
-
 // import { driveCreate, driveUpdate, playCreate, playUpdate } from '~/dao/index.server'
 // import { teamArray } from '~/data/teamArray'
-
 
 import type { PXPAPIResponseInfoObj } from '~/types'
 
 export type ParsePlaysInput = {
-	gameId: number
-	playArray: PXPAPIResponseInfoObj[]
+    gameId: number
+    playArray: PXPAPIResponseInfoObj[]
 }
-
 
 // export async function parsePlays({ gameId, playArray }: ParsePlaysInput) {
 // 	const processedDrives = new Map<string, any>()
