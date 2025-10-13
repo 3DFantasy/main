@@ -8,6 +8,8 @@ import type {
     TeamCheckJobProps,
 } from './main.server'
 
+const fileName = 'resque/jobs.server.ts'
+
 export const jobs: any = {
     fetchAllPXP: {
         plugins: [Plugins.JobLock],
@@ -20,7 +22,7 @@ export const jobs: any = {
             },
         },
         perform: async (...args: any[]) => {
-            logger.info(`fetchAllPXP args: ${args}`)
+            logger.info(fileName, `fetchAllPXP args: ${args}`)
             const [gameIDs, year] = args
             return await fetchAPIPXP({ gameIDs, year })
         },
@@ -37,7 +39,7 @@ export const jobs: any = {
             },
         },
         perform: async (...args: any[]) => {
-            logger.info(`teamCheck received args: ${args}`)
+            logger.info(fileName, `teamCheck received args: ${args}`)
 
             // Handle the case where args might be nested
             let teamCheckProps: TeamCheckJobProps
@@ -51,6 +53,7 @@ export const jobs: any = {
             }
 
             logger.info(
+                fileName,
                 `Processing teamCheck for team ${teamCheckProps.teamId}`
             )
 
@@ -59,6 +62,7 @@ export const jobs: any = {
             })
 
             logger.info(
+                fileName,
                 `Completed teamCheck job for team ${teamCheckProps.teamId}`
             )
             return result
@@ -76,7 +80,7 @@ export const jobs: any = {
             },
         },
         perform: async (...args: any[]) => {
-            logger.info(`saveAllDepthCharts received args: ${args}`)
+            logger.info(fileName, `saveAllDepthCharts received args: ${args}`)
 
             let saveAllDepthChartsProps: SaveAllDepthChartsJobProps
 
@@ -87,6 +91,7 @@ export const jobs: any = {
             }
 
             logger.info(
+                fileName,
                 `Processing saveAllDepthCharts for team ${saveAllDepthChartsProps.teamId}`
             )
 
@@ -95,6 +100,7 @@ export const jobs: any = {
             })
 
             logger.info(
+                fileName,
                 `Completed saveAllDepthCharts job for team ${saveAllDepthChartsProps.teamId}`
             )
             return result

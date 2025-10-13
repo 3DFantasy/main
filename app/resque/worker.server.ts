@@ -20,6 +20,7 @@ export const queueTitles = {
 
 const globalWorkerRegistry: Record<string, Worker> = {}
 const WORKER_TIMEOUT = 30000 // 30 seconds
+const fileName = 'resque/worker.server.ts'
 
 async function cleanupStaleWorkers(queueName: string) {
     try {
@@ -48,6 +49,7 @@ async function cleanupStaleWorkers(queueName: string) {
         if (staleWorkers.length > 0) {
             await redis.srem('resque:workers', ...staleWorkers)
             logger.info(
+                fileName,
                 `Cleaned up ${staleWorkers.length} stale workers for ${queueName}`
             )
         }
@@ -55,6 +57,7 @@ async function cleanupStaleWorkers(queueName: string) {
         await redis.quit()
     } catch (error) {
         logger.error(
+            fileName,
             `Error cleaning up stale workers for ${queueName}: ${error}`
         )
     }
@@ -71,13 +74,13 @@ export const initWorker = async ({ schedule, team }: InitWorkerProps) => {
                 queueTitles[jobType as keyof typeof queueTitles]?.queue
 
             if (!queueTitle) {
-                logger.error(`Invalid job type: ${jobType}`)
+                logger.error(fileName, `Invalid job type: ${jobType}`)
                 continue
             }
 
             // Check if worker already exists
             if (globalWorkerRegistry[queueTitle]) {
-                logger.info(`Worker for ${queueTitle} already exists`)
+                logger.info(fileName, `Worker for ${queueTitle} already exists`)
                 activeWorkers.push(globalWorkerRegistry[queueTitle])
                 continue
             }
@@ -100,11 +103,11 @@ export const initWorker = async ({ schedule, team }: InitWorkerProps) => {
 
             // Enhanced error handling
             worker.on('start', () => {
-                logger.info(`Worker started for ${queueTitle}`)
+                logger.info(fileName, `Worker started for ${queueTitle}`)
             })
 
             worker.on('end', async () => {
-                logger.info(`Worker ended for ${queueTitle}`)
+                logger.info(fileName, `Worker ended for ${queueTitle}`)
 
                 // Clean up registry
                 if (globalWorkerRegistry[queueTitle] === worker) {
@@ -119,18 +122,21 @@ export const initWorker = async ({ schedule, team }: InitWorkerProps) => {
 
             worker.on('success', (queue, job, result, duration) => {
                 logger.info(
+                    fileName,
                     `Job success ${queue} ${job.class} >> completed (${duration}ms)`
                 )
             })
 
             worker.on('failure', (queue, job, failure, duration) => {
                 logger.error(
+                    fileName,
                     `Job failure ${queue} ${job.class} >> ${failure} (${duration}ms)`
                 )
             })
 
             worker.on('error', (error, queue, job) => {
                 logger.error(
+                    fileName,
                     `Worker error ${queue} ${
                         job?.class || 'unknown'
                     } >> ${error}`
@@ -139,7 +145,7 @@ export const initWorker = async ({ schedule, team }: InitWorkerProps) => {
 
             // Add polling event to track worker activity
             worker.on('poll', (queue) => {
-                logger.debug(`Worker polling ${queue}`)
+                logger.debug(fileName, `Worker polling ${queue}`)
             })
 
             try {
@@ -149,9 +155,13 @@ export const initWorker = async ({ schedule, team }: InitWorkerProps) => {
                 activeWorkers.push(worker)
                 globalWorkerRegistry[queueTitle] = worker
 
-                logger.info(`Worker successfully initialized for ${queueTitle}`)
+                logger.info(
+                    fileName,
+                    `Worker successfully initialized for ${queueTitle}`
+                )
             } catch (error) {
                 logger.error(
+                    fileName,
                     `Failed to start worker for ${queueTitle}: ${error}`
                 )
             }
@@ -171,6 +181,7 @@ export const initWorker = async ({ schedule, team }: InitWorkerProps) => {
 
 async function shutdown() {
     logger.info(
+        fileName,
         `Gracefully shutting down ${
             Object.keys(globalWorkerRegistry).length
         } workers...`
@@ -183,7 +194,7 @@ async function shutdown() {
                 try {
                     await worker.end()
                 } catch (error) {
-                    logger.error(`Error ending worker: ${error}`)
+                    logger.error(fileName, `Error ending worker: ${error}`)
                 }
             })
         )
@@ -193,10 +204,10 @@ async function shutdown() {
             (key) => delete globalWorkerRegistry[key]
         )
 
-        logger.info('All workers shut down successfully')
+        logger.info(fileName, 'All workers shut down successfully')
         process.exit(0)
     } catch (error) {
-        logger.error(`Error during shutdown: ${error}`)
+        logger.error(fileName, `Error during shutdown: ${error}`)
         process.exit(1)
     }
 }

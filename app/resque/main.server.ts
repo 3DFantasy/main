@@ -27,6 +27,8 @@ export const connectionDetails = {
     database: 0,
 }
 
+const fileName = 'resque/main.server.ts'
+
 export async function resqueTask({
     job,
     teamCheckProps,
@@ -53,19 +55,19 @@ export async function resqueTask({
 
     // Add queue event listeners for debugging
     redisQueue.on('error', function (error) {
-        logger.error(`resque:queue error: ${error}`)
+        logger.error(fileName, `resque:queue error: ${error}`)
     })
     try {
         await redisQueue.connect()
 
         // Log the enqueue attempt
-        logger.info(`Enqueueing job: ${job} to queue: ${queueTitle}`)
+        logger.info(fileName, `Enqueueing job: ${job} to queue: ${queueTitle}`)
 
         await redisQueue.enqueue(queueTitle, job, [props])
 
-        logger.info(`Successfully enqueued job: ${job}`)
+        logger.info(fileName, `Successfully enqueued job: ${job}`)
     } catch (error) {
-        logger.error(`Failed to enqueue job ${job}: ${error}`)
+        logger.error(fileName, `Failed to enqueue job ${job}: ${error}`)
         throw error
     } finally {
         await redisQueue.end()
@@ -81,7 +83,7 @@ export async function getQueueStatus(queueName: string) {
 
         const queueLength = await redisQueue.length(queueName)
 
-        logger.info(`Queue ${queueName} - Pending: ${queueLength}`)
+        logger.info(fileName, `Queue ${queueName} - Pending: ${queueLength}`)
 
         return { pending: queueLength }
     } finally {

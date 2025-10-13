@@ -4,39 +4,40 @@ import { logger } from '~/utils/logger'
 import { timeout } from '../timeout'
 
 export type FetchAPIPXPInput = {
-	gameIDs: string[]
-	year: number
+    gameIDs: string[]
+    year: number
 }
 
+const fileName = 'utils/fetch/apiPXP.server.ts'
 export async function fetchAPIPXP({ gameIDs, year }: FetchAPIPXPInput) {
-	const url = process.env.PXP_API_URL
-	const fetchResp = await Promise.all(
-		gameIDs.map(async (gameID) => {
-			const resp = await fetch(url + gameID, {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-			}).then(async (result) => {
-				const resp = (await result.json()) as PXPAPIResponse
+    const url = process.env.PXP_API_URL
+    const fetchResp = await Promise.all(
+        gameIDs.map(async (gameID) => {
+            const resp = await fetch(url + gameID, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }).then(async (result) => {
+                const resp = (await result.json()) as PXPAPIResponse
 
-				const game = await gameCreate({
-					data: {
-						id: gameID,
-						response: JSON.stringify(resp),
-						year,
-					},
-				})
+                const game = await gameCreate({
+                    data: {
+                        id: gameID,
+                        response: JSON.stringify(resp),
+                        year,
+                    },
+                })
 
-				if (!game) {
-					return `Something went wrong creating: ${gameID}`
-				} else {
-					return `${gameID} ✔`
-				}
-			})
-			await timeout(5)
-			logger.info(resp)
-		})
-	)
-	logger.info(`fetchAPIPXP complete: ${fetchResp}`)
+                if (!game) {
+                    return `Something went wrong creating: ${gameID}`
+                } else {
+                    return `${gameID} ✔`
+                }
+            })
+            await timeout(5)
+            logger.info(fileName, resp)
+        })
+    )
+    logger.info(fileName, `fetchAPIPXP complete: ${fetchResp}`)
 }

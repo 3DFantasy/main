@@ -4,17 +4,17 @@ import { getTeamTitles } from '~/utils/index.server'
 import type { TeamTitleObj } from '~/utils/getTeamTitles.server'
 
 export type LoaderData = {
-	teamTitles: TeamTitleObj[]
+    teamTitles: TeamTitleObj[]
 }
 
 export const settingsNotificationLoader = async (request: Request) => {
-	await authenticator.isAuthenticated(request, {
-		failureRedirect: '/auth/login',
-	})
+    await authenticator.isAuthenticated(request, {
+        failureRedirect: '/auth/login',
+    })
 
-	const teamTitles = getTeamTitles()
+    const teamTitles = getTeamTitles()
 
-	return {
-		teamTitles,
-	}
+    return {
+        teamTitles,
+    }
 }

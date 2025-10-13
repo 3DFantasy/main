@@ -7,32 +7,35 @@ import type { Account } from '@prisma/client'
 import type { TeamTitleObj } from '~/utils/getTeamTitles.server'
 
 export type LoaderData = {
-	account: Account
-	teamTitles: TeamTitleObj[]
-	message?: string
-	code?: number
+    account: Account
+    teamTitles: TeamTitleObj[]
+    message?: string
+    code?: number
 }
 
-export const unsubscribeLoader = async (request: Request, params: LoaderFunctionArgs['params']) => {
-	const parsedParams = await parseUnsubscribeLoader({
-		params,
-	})
+export const unsubscribeLoader = async (
+    request: Request,
+    params: LoaderFunctionArgs['params']
+) => {
+    const parsedParams = await parseUnsubscribeLoader({
+        params,
+    })
 
-	const teamTitles = getTeamTitles()
+    const teamTitles = getTeamTitles()
 
-	if (parsedParams.isErr) {
-		return {
-			message: parsedParams.error.message,
-			code: parsedParams.error.code,
-			teamTitles,
-		}
-	}
+    if (parsedParams.isErr) {
+        return {
+            message: parsedParams.error.message,
+            code: parsedParams.error.code,
+            teamTitles,
+        }
+    }
 
-	const account = await db.account.findUnique({
-		where: {
-			uuid: parsedParams.value.accountUUID,
-		},
-	})
+    const account = await db.account.findUnique({
+        where: {
+            uuid: parsedParams.value.accountUUID,
+        },
+    })
 
-	return { account, teamTitles }
+    return { account, teamTitles }
 }

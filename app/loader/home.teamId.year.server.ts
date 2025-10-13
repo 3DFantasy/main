@@ -5,25 +5,28 @@ import { authenticator } from '~/utils/auth/auth.server'
 import type { DepthChart } from '@prisma/client'
 
 export type LoaderData = {
-	depthCharts: DepthChart[]
+    depthCharts: DepthChart[]
 }
 
-export const homeTeamIdYearLoader = async (request: Request, params: LoaderFunctionArgs['params']) => {
-	await authenticator.isAuthenticated(request, {
-		failureRedirect: '/auth/login',
-	})
+export const homeTeamIdYearLoader = async (
+    request: Request,
+    params: LoaderFunctionArgs['params']
+) => {
+    await authenticator.isAuthenticated(request, {
+        failureRedirect: '/auth/login',
+    })
 
-	const depthCharts = await db.depthChart.findMany({
-		where: {
-			year: Number(params.year),
-			Team: {
-				uuid: params.teamId,
-			},
-		},
-		orderBy: {
-			id: 'asc',
-		},
-	})
+    const depthCharts = await db.depthChart.findMany({
+        where: {
+            year: Number(params.year),
+            Team: {
+                uuid: params.teamId,
+            },
+        },
+        orderBy: {
+            id: 'asc',
+        },
+    })
 
-	return { depthCharts }
+    return { depthCharts }
 }

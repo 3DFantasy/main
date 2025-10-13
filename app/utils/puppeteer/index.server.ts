@@ -10,17 +10,17 @@ import { team9 } from './team9.server'
 
 export const viewport = { width: 1080, height: 1024 }
 export const browserConfig = {
-	headless: true,
-	args: [
-		'--no-sandbox',
-		'--disable-setuid-sandbox',
-		'--disable-dev-shm-usage',
-		'--disable-accelerated-2d-canvas',
-		'--no-first-run',
-		'--no-zygote',
-		'--single-process',
-		'--disable-gpu',
-	],
+    headless: true,
+    args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-accelerated-2d-canvas',
+        '--no-first-run',
+        '--no-zygote',
+        '--single-process',
+        '--disable-gpu',
+    ],
 }
 
 export { team1 } from './team1.server'
@@ -34,13 +34,13 @@ export { team8 } from './team8.server'
 export { team9 } from './team9.server'
 
 export const teamHandlers = {
-	1: team1,
-	2: team2,
-	3: team3,
-	4: team4,
-	5: team5,
-	6: team6,
-	7: team7,
-	8: team8,
-	9: team9,
+    1: team1,
+    2: team2,
+    3: team3,
+    4: team4,
+    5: team5,
+    6: team6,
+    7: team7,
+    8: team8,
+    9: team9,
 }

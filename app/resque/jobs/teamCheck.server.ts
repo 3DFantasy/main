@@ -135,6 +135,9 @@ export async function teamCheck({ teamId }: { teamId: number }) {
         }
     }
 
-    logger.info(`Team${teamId}Check complete`)
+    logger.info(
+        'resque/jobs/teamCheck.server.ts',
+        `Team${teamId}Check complete`
+    )
     return true
 }
