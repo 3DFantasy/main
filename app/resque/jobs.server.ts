@@ -9,13 +9,11 @@ import type {
 
 export const jobs: any = {
     fetchAllPXP: {
-        plugins: [Plugins.JobLock],
         perform: async (gameIDs: string[], year: number) => {
             return await fetchAPIPXP({ gameIDs, year })
         },
     },
     teamCheck: {
-        plugins: [Plugins.JobLock],
         perform: async (teamCheckProps: TeamCheckJobProps) => {
             return await teamCheck({
                 teamId: teamCheckProps.teamId,
@@ -23,7 +21,6 @@ export const jobs: any = {
         },
     },
     saveAllDepthCharts: {
-        plugins: [Plugins.JobLock],
         perform: async (
             saveAllDepthChartsProps: SaveAllDepthChartsJobProps
         ) => {
