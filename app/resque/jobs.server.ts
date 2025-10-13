@@ -13,40 +13,51 @@ export const jobs: any = {
         plugins: [Plugins.JobLock],
         pluginOptions: {
             JobLock: {
-                reEnqueue: false, // Don't re-enqueue locked jobs
+                reEnqueue: false,
                 key: (queue: string, func: string, args: any[]) => {
                     return `lock:${queue}:${func}:${JSON.stringify(args)}`
                 },
             },
         },
-        perform: async (gameIDs: string[], year: number) => {
-            logger.info(
-                `Starting fetchAllPXP job for ${gameIDs.length} games, year ${year}`
-            )
-            const result = await fetchAPIPXP({ gameIDs, year })
-            logger.info(`Completed fetchAllPXP job`)
-            return result
+        perform: async (...args: any[]) => {
+            logger.info(`fetchAllPXP args: ${args}`)
+            const [gameIDs, year] = args
+            return await fetchAPIPXP({ gameIDs, year })
         },
     },
     teamCheck: {
         plugins: [Plugins.JobLock],
         pluginOptions: {
             JobLock: {
-                reEnqueue: false, // This was the problem!
+                reEnqueue: false,
                 key: (queue: string, func: string, args: any[]) => {
-                    // Create unique lock per team
                     const teamId = args[0]?.teamId
                     return `lock:${queue}:${func}:team:${teamId}`
                 },
             },
         },
-        perform: async (teamCheckProps: TeamCheckJobProps) => {
+        perform: async (...args: any[]) => {
+            logger.info(`teamCheck received args: ${args}`)
+
+            // Handle the case where args might be nested
+            let teamCheckProps: TeamCheckJobProps
+
+            if (args.length === 1 && args[0]) {
+                // If it's passed as a single object
+                teamCheckProps = args[0] as TeamCheckJobProps
+            } else {
+                // If it's passed as separate arguments (shouldn't happen but just in case)
+                teamCheckProps = { teamId: args[0] }
+            }
+
             logger.info(
-                `Starting teamCheck job for team ${teamCheckProps.teamId}`
+                `Processing teamCheck for team ${teamCheckProps.teamId}`
             )
+
             const result = await teamCheck({
                 teamId: teamCheckProps.teamId,
             })
+
             logger.info(
                 `Completed teamCheck job for team ${teamCheckProps.teamId}`
             )
@@ -64,15 +75,25 @@ export const jobs: any = {
                 },
             },
         },
-        perform: async (
-            saveAllDepthChartsProps: SaveAllDepthChartsJobProps
-        ) => {
+        perform: async (...args: any[]) => {
+            logger.info(`saveAllDepthCharts received args: ${args}`)
+
+            let saveAllDepthChartsProps: SaveAllDepthChartsJobProps
+
+            if (args.length === 1 && args[0]) {
+                saveAllDepthChartsProps = args[0] as SaveAllDepthChartsJobProps
+            } else {
+                saveAllDepthChartsProps = { teamId: args[0] }
+            }
+
             logger.info(
-                `Starting saveAllDepthCharts job for team ${saveAllDepthChartsProps.teamId}`
+                `Processing saveAllDepthCharts for team ${saveAllDepthChartsProps.teamId}`
             )
+
             const result = await saveAllDepthCharts({
                 teamId: saveAllDepthChartsProps.teamId,
             })
+
             logger.info(
                 `Completed saveAllDepthCharts job for team ${saveAllDepthChartsProps.teamId}`
             )
