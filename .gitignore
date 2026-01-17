@@ -5,6 +5,7 @@ app/data/2024gameIDs.ts
 app/data/ep
 app/data/teamArray.ts
 *.dump
+CLAUDE.local.md
 
 # Logs
 logs
