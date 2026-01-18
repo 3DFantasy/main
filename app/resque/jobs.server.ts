@@ -1,4 +1,3 @@
-import { Plugins } from 'node-resque'
 import { saveAllDepthCharts, teamCheck } from '~/resque/jobs'
 import { fetchAPIPXP } from '~/utils/fetch/apiPXP.server'
 
