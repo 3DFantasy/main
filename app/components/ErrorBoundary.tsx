@@ -1,4 +1,4 @@
-import { Button, Link } from '@heroui/react'
+import { Button, Card, CardBody, Link } from '@heroui/react'
 import { useLocation, useNavigate } from '@remix-run/react'
 
 interface ErrorBoundaryProps {
@@ -13,13 +13,13 @@ export function ErrorBoundary({ message, code }: ErrorBoundaryProps) {
     console.log(`${location.pathname}`)
 
     return (
-        <div className="w-fit mx-auto">
-            <div className="mt-20">
-                <div className="flex flex-col mx-auto">
-                    <h1 className="mx-auto">3DF</h1>
-                    <h2 className="mx-auto">{message}</h2>
+        <div className="flex items-center justify-center min-h-[70vh]">
+            <Card className="w-full max-w-md">
+                <CardBody className="flex flex-col items-center gap-4 py-8">
+                    <h1 className="text-2xl font-bold">3DF</h1>
+                    <h2 className="text-lg text-foreground/60">{message}</h2>
                     <p>Sorry about that ... </p>
-                    <div className="flex flex-row mx-auto mt-4">
+                    <div className="flex flex-row gap-2 mt-2">
                         <Button onPress={() => navigate(-1)} color="default">
                             Back
                         </Button>
@@ -27,8 +27,8 @@ export function ErrorBoundary({ message, code }: ErrorBoundaryProps) {
                             Home
                         </Button>
                     </div>
-                </div>
-            </div>
+                </CardBody>
+            </Card>
         </div>
     )
 }

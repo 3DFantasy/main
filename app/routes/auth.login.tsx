@@ -1,4 +1,4 @@
-import { addToast, Button, Input } from '@heroui/react'
+import { addToast, Button, Card, CardBody, CardHeader, Input } from '@heroui/react'
 import {
     Form,
     useActionData,
@@ -78,62 +78,68 @@ export default function Login() {
     }
 
     return (
-        <div className="mt-40 mx-auto max-w-80">
-            <h1 className="mx-auto w-fit">Login</h1>
-            <Form
-                method="post"
-                action={`/auth/login${nextUrl ? `?nextUrl=${nextUrl}` : ''}`}
-            >
-                <Input
-                    className={inputClass}
-                    type="email"
-                    name="email"
-                    label="Email"
-                    color={error.email ? 'danger' : 'default'}
-                    value={formData.email}
-                    onChange={(e) => handleInputChange(e, 'email')}
-                />
-                <Input
-                    className={inputClass}
-                    type={formData.hidePassword ? 'password' : 'text'}
-                    label="Password"
-                    name="password"
-                    value={formData.password}
-                    color={error.password ? 'danger' : 'default'}
-                    onChange={(e) => handleInputChange(e, 'password')}
-                    endContent={
-                        <button
-                            onClick={(e) => {
-                                e.preventDefault()
-                                setFormData({
-                                    ...formData,
-                                    hidePassword: !formData.hidePassword,
-                                })
-                            }}
-                        >
-                            {formData.hidePassword ? (
-                                <i className="ri-eye-line ri-lg"></i>
-                            ) : (
-                                <i className="ri-eye-off-line ri-lg"></i>
-                            )}
-                        </button>
-                    }
-                />
-                <div className="mx-auto w-fit">
-                    <Button
-                        color="default"
-                        isDisabled={
-                            navigation.state !== 'idle' ||
-                            formData.password.length === 0 ||
-                            formData.email.length === 0
-                        }
-                        isLoading={navigation.state !== 'idle'}
-                        type="submit"
+        <div className="flex items-center justify-center min-h-[70vh]">
+            <Card className="w-full max-w-sm">
+                <CardHeader className="flex justify-center">
+                    <h1 className="text-xl font-semibold">Login</h1>
+                </CardHeader>
+                <CardBody>
+                    <Form
+                        method="post"
+                        action={`/auth/login${nextUrl ? `?nextUrl=${nextUrl}` : ''}`}
                     >
-                        Sign in
-                    </Button>
-                </div>
-            </Form>
+                        <Input
+                            className={inputClass}
+                            type="email"
+                            name="email"
+                            label="Email"
+                            color={error.email ? 'danger' : 'default'}
+                            value={formData.email}
+                            onChange={(e) => handleInputChange(e, 'email')}
+                        />
+                        <Input
+                            className={inputClass}
+                            type={formData.hidePassword ? 'password' : 'text'}
+                            label="Password"
+                            name="password"
+                            value={formData.password}
+                            color={error.password ? 'danger' : 'default'}
+                            onChange={(e) => handleInputChange(e, 'password')}
+                            endContent={
+                                <button
+                                    onClick={(e) => {
+                                        e.preventDefault()
+                                        setFormData({
+                                            ...formData,
+                                            hidePassword: !formData.hidePassword,
+                                        })
+                                    }}
+                                >
+                                    {formData.hidePassword ? (
+                                        <i className="ri-eye-line ri-lg"></i>
+                                    ) : (
+                                        <i className="ri-eye-off-line ri-lg"></i>
+                                    )}
+                                </button>
+                            }
+                        />
+                        <div className="mx-auto w-fit mt-2">
+                            <Button
+                                color="primary"
+                                isDisabled={
+                                    navigation.state !== 'idle' ||
+                                    formData.password.length === 0 ||
+                                    formData.email.length === 0
+                                }
+                                isLoading={navigation.state !== 'idle'}
+                                type="submit"
+                            >
+                                Sign in
+                            </Button>
+                        </div>
+                    </Form>
+                </CardBody>
+            </Card>
         </div>
     )
 }

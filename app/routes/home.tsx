@@ -1,4 +1,4 @@
-import { BreadcrumbItem, Breadcrumbs, Link } from '@heroui/react'
+import { BreadcrumbItem, Breadcrumbs, Card, CardBody, Link } from '@heroui/react'
 import {
     Outlet,
     useLoaderData,
@@ -99,16 +99,20 @@ export default function Home() {
             </Breadcrumbs>
 
             {breadcrumbArray.length === 1 ? (
-                <ul className="my-2">
-                    {teams.map((team) => {
-                        const href = `/home/${team.uuid}`
-                        return (
-                            <li>
-                                <Link href={href}>{team.title}</Link>
-                            </li>
-                        )
-                    })}
-                </ul>
+                <Card className="mt-4">
+                    <CardBody>
+                        <ul className="flex flex-col gap-2">
+                            {teams.map((team) => {
+                                const href = `/home/${team.uuid}`
+                                return (
+                                    <li key={team.uuid}>
+                                        <Link href={href}>{team.title}</Link>
+                                    </li>
+                                )
+                            })}
+                        </ul>
+                    </CardBody>
+                </Card>
             ) : (
                 <Outlet context={{ breadcrumbArray }} />
             )}

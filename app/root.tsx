@@ -7,11 +7,10 @@ import {
     useLoaderData,
     useRouteError,
 } from '@remix-run/react'
-import { useState } from 'react'
 import {
     ErrorBoundary as ErrorBoundaryComponent,
-    Header,
     Loading,
+    Sidebar,
 } from '~/components'
 import { rootLoader } from '~/loader/root.server'
 import { Providers } from '~/providers'
@@ -49,6 +48,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
                     name="viewport"
                     content="width=device-width, initial-scale=1"
                 />
+                <link rel="preconnect" href="https://fonts.googleapis.com" />
+                <link
+                    rel="preconnect"
+                    href="https://fonts.gstatic.com"
+                    crossOrigin="anonymous"
+                />
+                <link
+                    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+                    rel="stylesheet"
+                />
                 <Meta />
                 <Links />
             </head>
@@ -63,15 +72,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
     const { account } = useLoaderData<LoaderData>()
-    const [theme, setTheme] = useState('dark')
 
     return (
         <Providers initialAccount={account}>
-            <main className={`${theme} text-foreground bg-background`}>
-                <Header />
-                <div className="container mx-auto md:px-0 px-2">
-                    <Outlet />
-                    <Loading overlay={true} />
+            <main className="text-foreground bg-background bg-grain">
+                <div className="flex min-h-dvh">
+                    <Sidebar />
+                    <div className="relative z-10 flex-1 overflow-y-auto pt-14 md:pt-0">
+                        <div className="mx-auto max-w-6xl px-4 py-6 md:px-8">
+                            <Outlet />
+                            <Loading overlay={true} />
+                        </div>
+                    </div>
                 </div>
             </main>
         </Providers>

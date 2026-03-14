@@ -1,4 +1,4 @@
-import { Link } from '@heroui/react'
+import { Card, CardBody, Link } from '@heroui/react'
 import {
     Outlet,
     useLoaderData,
@@ -32,18 +32,22 @@ export default function HomeTeamId() {
     return (
         <div>
             {breadcrumbArray.length === 2 ? (
-                <ul className="my-2">
-                    {years.map((year) => {
-                        const yearStr = year.toString()
-                        const href = `${location.pathname}/${yearStr}`
+                <Card className="mt-4">
+                    <CardBody>
+                        <ul className="flex flex-col gap-2">
+                            {years.map((year) => {
+                                const yearStr = year.toString()
+                                const href = `${location.pathname}/${yearStr}`
 
-                        return (
-                            <li>
-                                <Link href={href}>{yearStr}</Link>
-                            </li>
-                        )
-                    })}
-                </ul>
+                                return (
+                                    <li key={yearStr}>
+                                        <Link href={href}>{yearStr}</Link>
+                                    </li>
+                                )
+                            })}
+                        </ul>
+                    </CardBody>
+                </Card>
             ) : (
                 <Outlet context={{ breadcrumbArray }} />
             )}

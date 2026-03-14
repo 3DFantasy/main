@@ -1,4 +1,4 @@
-import { addToast, Button, Input } from '@heroui/react'
+import { addToast, Button, Card, CardBody, CardHeader, Input } from '@heroui/react'
 import { Form, useActionData } from '@remix-run/react'
 import { useEffect, useState } from 'react'
 import { authSignupAction } from '~/actions/auth.signup.server'
@@ -95,67 +95,73 @@ export default function Signup() {
     }
 
     return (
-        <div className="mt-40 mx-auto max-w-80">
-            <h1 className="mx-auto w-fit">Signup for 3DF</h1>
-            <Form method="post">
-                <Input
-                    className={inputClass}
-                    type="text"
-                    name="email"
-                    label="Email"
-                    color={error.email ? 'danger' : 'default'}
-                    value={formData.email}
-                    onChange={(e) => handleInputChange(e, 'email')}
-                />
-                <Input
-                    className={inputClass}
-                    type={formData.hidePassword ? 'password' : 'text'}
-                    label="Password"
-                    name="password"
-                    value={formData.password}
-                    onChange={(e) => handleInputChange(e, 'password')}
-                    color={error.password ? 'danger' : 'default'}
-                    endContent={
-                        <button
-                            onClick={(e) => {
-                                e.preventDefault()
-                                setFormData({
-                                    ...formData,
-                                    hidePassword: !formData.hidePassword,
-                                })
-                            }}
-                        >
-                            {formData.hidePassword ? (
-                                <i className="ri-eye-line ri-lg"></i>
-                            ) : (
-                                <i className="ri-eye-off-line ri-lg"></i>
-                            )}
-                        </button>
-                    }
-                />
-                <Input
-                    className={inputClass}
-                    type={formData.hidePassword ? 'password' : 'text'}
-                    label="Confirm Password"
-                    name="confirm"
-                    value={formData.confirm}
-                    color={'default'}
-                    onChange={(e) => handleInputChange(e, 'confirm')}
-                />
-                <div className="mx-auto w-fit">
-                    <Button
-                        color="default"
-                        type="submit"
-                        isDisabled={
-                            formData.password !== formData.confirm ||
-                            formData.password.length === 0 ||
-                            formData.email.length === 0
-                        }
-                    >
-                        Sign up
-                    </Button>
-                </div>
-            </Form>
+        <div className="flex items-center justify-center min-h-[70vh]">
+            <Card className="w-full max-w-sm">
+                <CardHeader className="flex justify-center">
+                    <h1 className="text-xl font-semibold">Signup for 3DF</h1>
+                </CardHeader>
+                <CardBody>
+                    <Form method="post">
+                        <Input
+                            className={inputClass}
+                            type="text"
+                            name="email"
+                            label="Email"
+                            color={error.email ? 'danger' : 'default'}
+                            value={formData.email}
+                            onChange={(e) => handleInputChange(e, 'email')}
+                        />
+                        <Input
+                            className={inputClass}
+                            type={formData.hidePassword ? 'password' : 'text'}
+                            label="Password"
+                            name="password"
+                            value={formData.password}
+                            onChange={(e) => handleInputChange(e, 'password')}
+                            color={error.password ? 'danger' : 'default'}
+                            endContent={
+                                <button
+                                    onClick={(e) => {
+                                        e.preventDefault()
+                                        setFormData({
+                                            ...formData,
+                                            hidePassword: !formData.hidePassword,
+                                        })
+                                    }}
+                                >
+                                    {formData.hidePassword ? (
+                                        <i className="ri-eye-line ri-lg"></i>
+                                    ) : (
+                                        <i className="ri-eye-off-line ri-lg"></i>
+                                    )}
+                                </button>
+                            }
+                        />
+                        <Input
+                            className={inputClass}
+                            type={formData.hidePassword ? 'password' : 'text'}
+                            label="Confirm Password"
+                            name="confirm"
+                            value={formData.confirm}
+                            color={'default'}
+                            onChange={(e) => handleInputChange(e, 'confirm')}
+                        />
+                        <div className="mx-auto w-fit mt-2">
+                            <Button
+                                color="primary"
+                                type="submit"
+                                isDisabled={
+                                    formData.password !== formData.confirm ||
+                                    formData.password.length === 0 ||
+                                    formData.email.length === 0
+                                }
+                            >
+                                Sign up
+                            </Button>
+                        </div>
+                    </Form>
+                </CardBody>
+            </Card>
         </div>
     )
 }

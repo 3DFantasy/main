@@ -1,10 +1,8 @@
-import { Listbox, ListboxItem } from '@heroui/react'
-import { Outlet, useLoaderData } from '@remix-run/react'
-import { useState } from 'react'
+import { Card, CardBody, Tab, Tabs } from '@heroui/react'
+import { Outlet, useLoaderData, useLocation, useNavigate } from '@remix-run/react'
 import { settingsLoader } from '~/loader/settings.server'
 
 import type { LoaderFunction, MetaFunction } from '@remix-run/node'
-import type { ReactElement } from 'react'
 import type { LoaderData } from '~/loader/settings.server'
 import type { Account } from '~/types'
 
@@ -19,54 +17,39 @@ export const loader: LoaderFunction = async ({ request }) => {
     return settingsLoader(request)
 }
 
-export const ListboxWrapper = ({ children }: { children: ReactElement }) => (
-    <div className="w-full max-w-[260px] h-fit border-small px-1 py-2 rounded-small border-default-200 dark:border-default-100">
-        {children}
-    </div>
-)
-
 export type SettingsContext = {
     account: Account
 }
 
 export default function Settings() {
     const { account } = useLoaderData<LoaderData>()
-    const [selectedKeys, setSelectedKeys] = useState<any>(new Set([]))
+    const location = useLocation()
+    const navigate = useNavigate()
 
     const settingsContext: SettingsContext = {
         account,
     }
 
+    const selectedKey = location.pathname.includes('/settings/notifications')
+        ? 'notifications'
+        : 'account'
+
     return (
-        <div className="mt-4 flex flex-row">
-            <ListboxWrapper>
-                <Listbox
-                    aria-label="Actions"
-                    selectedKeys={selectedKeys}
-                    selectionMode="single"
-                    variant="flat"
+        <Card className="mt-4">
+            <CardBody>
+                <Tabs
+                    selectedKey={selectedKey}
+                    onSelectionChange={(key) => navigate(`/settings/${key}`)}
+                    variant="underlined"
+                    aria-label="Settings tabs"
                 >
-                    <ListboxItem
-                        key="account"
-                        href="/settings/account"
-                        onPress={() => setSelectedKeys(new Set(['account']))}
-                    >
-                        Account
-                    </ListboxItem>
-                    <ListboxItem
-                        key="notifications"
-                        href="/settings/notifications"
-                        onPress={() =>
-                            setSelectedKeys(new Set(['notifications']))
-                        }
-                    >
-                        Notifications
-                    </ListboxItem>
-                </Listbox>
-            </ListboxWrapper>
-            <div className="w-full px-3">
-                <Outlet context={settingsContext} />
-            </div>
-        </div>
+                    <Tab key="account" title="Account" />
+                    <Tab key="notifications" title="Notifications" />
+                </Tabs>
+                <div className="mt-4">
+                    <Outlet context={settingsContext} />
+                </div>
+            </CardBody>
+        </Card>
     )
 }
