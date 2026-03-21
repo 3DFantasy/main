@@ -12,9 +12,7 @@ export const homeTeamIdYearLoader = async (
     request: Request,
     params: LoaderFunctionArgs['params']
 ) => {
-    await authenticator.isAuthenticated(request, {
-        failureRedirect: '/auth/login',
-    })
+    await authenticator.isAuthenticated(request)
 
     const depthCharts = await db.depthChart.findMany({
         where: {

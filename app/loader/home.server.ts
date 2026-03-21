@@ -5,7 +5,7 @@ import { getTeamTitles } from '~/utils/getTeamTitles.server'
 import type { AuthAccount } from '~/utils/auth/auth.server'
 
 export type LoaderData = {
-    account: AuthAccount
+    account: AuthAccount | null
     nextUrl?: string
     teams: {
         id: number
@@ -19,9 +19,7 @@ export const homeLoader = async (request: Request) => {
     const url = new URL(request.url)
     const nextUrl = url.searchParams.get('nextUrl')
 
-    const account: AuthAccount = await authenticator.isAuthenticated(request, {
-        failureRedirect: '/auth/login',
-    })
+    const account = await authenticator.isAuthenticated(request)
 
     const teams = await db.team.findMany({
         select: {

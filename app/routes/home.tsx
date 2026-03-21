@@ -40,7 +40,7 @@ export default function Home() {
     const { account: authAccount, setAccount } = useAuth()
 
     useEffect(() => {
-        if (!authAccount) {
+        if (!authAccount && account) {
             setAccount({
                 id: account.id,
                 email: account.email,

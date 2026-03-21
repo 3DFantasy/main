@@ -138,20 +138,6 @@ function UserSection({
     )
 }
 
-function SidebarLogo({ size = 'lg' }: { size?: 'sm' | 'lg' }) {
-    const { theme } = useTheme()
-    const [mounted, setMounted] = useState(false)
-
-    useEffect(() => {
-        setMounted(true)
-    }, [])
-
-    const logoSrc = mounted && theme === 'light' ? '/logo-light.png' : '/logo-dark.png'
-    const imgClass = size === 'lg' ? 'h-8 w-8' : 'h-6 w-6'
-
-    return <img src={logoSrc} alt="3DF" className={imgClass} />
-}
-
 export function Sidebar() {
     const location = useLocation()
     const { account, logout } = useAuth()
@@ -165,14 +151,7 @@ export function Sidebar() {
         <>
             {/* Desktop sidebar */}
             <aside className="hidden md:flex flex-col sticky top-0 h-dvh w-64 shrink-0 border-r border-divider bg-content1">
-                <div className="flex items-center gap-3 px-5 py-5">
-                    <SidebarLogo />
-                    <span className="text-lg font-bold text-foreground">
-                        3DF
-                    </span>
-                </div>
-
-                <div className="flex-1 py-2">
+                <div className="flex-1 py-4">
                     <NavLinks account={account} pathname={location.pathname} />
                 </div>
 
@@ -187,10 +166,6 @@ export function Sidebar() {
             {/* Mobile top bar */}
             <div className="md:hidden fixed top-0 left-0 right-0 z-40 flex items-center justify-between h-14 px-4 border-b border-divider bg-content1">
                 <div className="flex items-center gap-2">
-                    <SidebarLogo size="sm" />
-                    <span className="text-base font-bold text-foreground">
-                        3DF
-                    </span>
                 </div>
                 <button
                     onClick={() => setMobileOpen(!mobileOpen)}

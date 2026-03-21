@@ -6,9 +6,7 @@ export type LoaderData = {
 
 export const homeTeamIdLoader = async (request: Request) => {
     // const url = new URL(request.url)
-    await authenticator.isAuthenticated(request, {
-        failureRedirect: '/auth/login',
-    })
+    await authenticator.isAuthenticated(request)
 
     return {
         years: [2024, 2025],
