@@ -8,13 +8,11 @@ export type LoaderData = {
     depthCharts: DepthChart[]
 }
 
-export const homeTeamIdYearLoader = async (
+export const depthChartsTeamIdYearLoader = async (
     request: Request,
     params: LoaderFunctionArgs['params']
 ) => {
-    await authenticator.isAuthenticated(request, {
-        failureRedirect: '/auth/login',
-    })
+    await authenticator.isAuthenticated(request)
 
     const depthCharts = await db.depthChart.findMany({
         where: {

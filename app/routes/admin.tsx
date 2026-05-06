@@ -4,6 +4,8 @@ import {
     addToast,
     Button,
     ButtonGroup,
+    Card,
+    CardBody,
     Checkbox,
     CheckboxGroup,
     Input,
@@ -99,7 +101,8 @@ export default function Admin() {
     }
 
     return (
-        <div className="my-4">
+        <Card className="my-4">
+            <CardBody>
             <Accordion defaultExpandedKeys={['team-check']} variant="light">
                 <AccordionItem
                     key="team-check"
@@ -216,6 +219,7 @@ export default function Admin() {
                     </div>
                 </AccordionItem>
             </Accordion>
-        </div>
+            </CardBody>
+        </Card>
     )
 }

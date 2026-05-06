@@ -4,6 +4,8 @@ import {
     addToast,
     Button,
     ButtonGroup,
+    Card,
+    CardBody,
     Checkbox,
     CheckboxGroup,
 } from '@heroui/react'
@@ -102,7 +104,8 @@ export default function Unsubscribe() {
     }, [fetcher.data])
 
     return (
-        <div className="mt-4">
+        <Card className="mt-4">
+            <CardBody>
             <Accordion defaultExpandedKeys={['unsubscribe-all']}>
                 <AccordionItem
                     key="unsubscribe-all"
@@ -208,6 +211,7 @@ export default function Unsubscribe() {
                     </ButtonGroup>
                 </AccordionItem>
             </Accordion>
-        </div>
+            </CardBody>
+        </Card>
     )
 }

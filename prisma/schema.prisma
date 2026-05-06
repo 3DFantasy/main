@@ -67,7 +67,7 @@ model DepthChart {
 }
 
 model Game {
-  id        Int      @id @default(autoincrement())
+  id        Int      @id
   uuid      String   @unique @default(uuid())
   response  String
   year      Int      @default(2024)

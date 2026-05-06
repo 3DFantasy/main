@@ -1,11 +1,6 @@
-import { BreadcrumbItem, Breadcrumbs, Link } from '@heroui/react'
-import {
-    Outlet,
-    useLoaderData,
-    useLocation,
-    useNavigate,
-} from '@remix-run/react'
-import { useEffect, useState } from 'react'
+import { Card, CardBody } from '@heroui/react'
+import { useLoaderData, useNavigate } from '@remix-run/react'
+import { useEffect } from 'react'
 import { homeLoader } from '~/loader/home.server'
 import { useAuth } from '~/providers'
 
@@ -23,24 +18,13 @@ export const loader: LoaderFunction = async ({ request }) => {
     return homeLoader(request)
 }
 
-export type BreadCrumbObj = {
-    path: string
-    title: string
-}
-
-export type HomeContext = {
-    breadcrumbArray: BreadCrumbObj[]
-}
-
 export default function Home() {
     const navigate = useNavigate()
-    const location = useLocation()
-    const [breadcrumbArray, setBreadcrumbArray] = useState<BreadCrumbObj[]>([])
-    const { account, nextUrl, teams } = useLoaderData<LoaderData>()
+    const { account, nextUrl } = useLoaderData<LoaderData>()
     const { account: authAccount, setAccount } = useAuth()
 
     useEffect(() => {
-        if (!authAccount) {
+        if (!authAccount && account) {
             setAccount({
                 id: account.id,
                 email: account.email,
@@ -52,66 +36,16 @@ export default function Home() {
         }
     }, [])
 
-    useEffect(() => {
-        if (location.pathname) {
-            setBreadcrumbArray(createBreadcrumbArray(location.pathname))
-        }
-    }, [location.pathname])
-
-    function createBreadcrumbArray(path: string): BreadCrumbObj[] {
-        const segments = path.split('/').filter((segment) => segment.length > 0)
-        const result: BreadCrumbObj[] = []
-
-        let currentPath = ''
-        for (let i = 0; i < segments.length; i++) {
-            const segment = segments[i]
-            currentPath += '/' + segment
-
-            let title: string
-            if (i === 0) {
-                title = 'Home'
-            } else if (i === 1) {
-                const team = teams.find((t) => t.uuid === segment)
-                title = team ? team.title : 'N/A'
-            } else {
-                // For other segments, just capitalize and format the segment name
-                title =
-                    segment.charAt(0).toUpperCase() +
-                    segment.slice(1).replace(/-/g, ' ')
-            }
-
-            result.push({ path: currentPath, title })
-        }
-
-        return result
-    }
-
     return (
         <div className="my-2">
-            <Breadcrumbs>
-                {breadcrumbArray.map((breadcrumb, i) => {
-                    return (
-                        <BreadcrumbItem key={i} href={breadcrumb.path}>
-                            {breadcrumb.title}
-                        </BreadcrumbItem>
-                    )
-                })}
-            </Breadcrumbs>
-
-            {breadcrumbArray.length === 1 ? (
-                <ul className="my-2">
-                    {teams.map((team) => {
-                        const href = `/home/${team.uuid}`
-                        return (
-                            <li>
-                                <Link href={href}>{team.title}</Link>
-                            </li>
-                        )
-                    })}
-                </ul>
-            ) : (
-                <Outlet context={{ breadcrumbArray }} />
-            )}
+            <Card className="mt-4">
+                <CardBody className="py-8">
+                    <h1 className="text-2xl font-bold mb-2">Welcome to 3DF</h1>
+                    <p className="text-foreground/60">
+                        CFL depth chart tracking and play-by-play analytics.
+                    </p>
+                </CardBody>
+            </Card>
         </div>
     )
 }

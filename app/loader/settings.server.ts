@@ -1,3 +1,4 @@
+import { redirect } from '@remix-run/node'
 import { db } from '~/lib/db.server'
 import { authenticator } from '~/utils/auth/auth.server'
 
@@ -15,6 +16,11 @@ export const settingsLoader = async (request: Request) => {
             failureRedirect: '/auth/login',
         }
     )
+
+    const url = new URL(request.url)
+    if (url.pathname === '/settings' || url.pathname === '/settings/') {
+        throw redirect('/settings/account')
+    }
 
     const account = await db.account.findUnique({
         where: { id: authAccount.id },
