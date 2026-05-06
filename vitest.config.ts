@@ -9,20 +9,41 @@ export default defineConfig({
     plugins: [tsconfigPaths(), react()],
     test: {
         globals: true,
-        environment: 'node',
-        environmentMatchGlobs: [
-            ['app/**/*.{test,spec}.{ts,tsx}', 'jsdom'],
-            ['app/**/*.integration.{test,spec}.{ts,tsx}', 'node'],
-        ],
         setupFiles: ['./vitest.setup.ts'],
         env: { NODE_ENV: 'test' },
-        include: [
-            'app/**/*.{test,spec}.{ts,tsx}',
-            'tests/unit/**/*.{test,spec}.{ts,tsx}',
-            'tests/integration/**/*.{test,spec}.{ts,tsx}',
-        ],
-        exclude: ['node_modules', 'build', 'dist', 'tests/e2e/**'],
         pool: 'forks',
-        poolOptions: { forks: { singleFork: true } },
+        fileParallelism: false,
+        projects: [
+            {
+                extends: true,
+                test: {
+                    name: 'unit',
+                    environment: 'jsdom',
+                    include: [
+                        'app/**/*.{test,spec}.{ts,tsx}',
+                        'tests/unit/**/*.{test,spec}.{ts,tsx}',
+                    ],
+                    exclude: [
+                        '**/*.integration.{test,spec}.{ts,tsx}',
+                        'node_modules',
+                        'build',
+                        'dist',
+                        'tests/e2e/**',
+                    ],
+                },
+            },
+            {
+                extends: true,
+                test: {
+                    name: 'integration',
+                    environment: 'node',
+                    include: [
+                        'app/**/*.integration.{test,spec}.{ts,tsx}',
+                        'tests/integration/**/*.{test,spec}.{ts,tsx}',
+                    ],
+                    exclude: ['node_modules', 'build', 'dist', 'tests/e2e/**'],
+                },
+            },
+        ],
     },
 })
