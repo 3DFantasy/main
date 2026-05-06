@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Game" ALTER COLUMN "id" DROP DEFAULT;
+DROP SEQUENCE "Game_id_seq";
