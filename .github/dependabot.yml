@@ -30,6 +30,15 @@ updates:
           types:
               patterns:
                   - '@types/*'
+              exclude-patterns:
+                  - '@types/react'
+                  - '@types/react-dom'
+          react:
+              patterns:
+                  - 'react'
+                  - 'react-dom'
+                  - '@types/react'
+                  - '@types/react-dom'
           eslint:
               patterns:
                   - 'eslint'
