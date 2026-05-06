@@ -1,4 +1,4 @@
-export { createSignature } from './createSignature.server.'
+export { createSignature } from './createSignature.server'
 export { generatePassword } from './generatePassword.server'
 export { getDepthChartInfo } from './getDepthChartInfo.server'
 export { getTeamTitles } from './getTeamTitles.server'
