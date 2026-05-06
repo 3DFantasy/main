@@ -34,6 +34,12 @@ updates:
             update-types: ['version-update:semver-major']
           - dependency-name: '@vitejs/plugin-react'
             update-types: ['version-update:semver-major']
+          # Prisma 7 removes datasource.url from schema and moves to
+          # prisma.config.ts + driver adapters — needs deliberate migration.
+          - dependency-name: 'prisma'
+            update-types: ['version-update:semver-major']
+          - dependency-name: '@prisma/client'
+            update-types: ['version-update:semver-major']
       groups:
           react-router:
               patterns:
@@ -68,6 +74,10 @@ updates:
               patterns:
                   - 'vite'
                   - '@vitejs/*'
+          prisma:
+              patterns:
+                  - 'prisma'
+                  - '@prisma/*'
 
     - package-ecosystem: github-actions
       directory: /
