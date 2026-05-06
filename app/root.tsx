@@ -22,6 +22,7 @@ import 'remixicon/fonts/remixicon.css'
 import '~/styles/loading.css'
 import '~/styles/main.css'
 import '~/styles/tailwind.css'
+import '~/styles/teams/index.css'
 
 export type RootContextAccount = {
     id: number

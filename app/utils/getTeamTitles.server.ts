@@ -1,6 +1,7 @@
 export type TeamTitleObj = {
     value: string
     title: string
+    abbr: string
 }
 
 export const getTeamTitles = (): TeamTitleObj[] => {
@@ -9,6 +10,7 @@ export const getTeamTitles = (): TeamTitleObj[] => {
         return {
             value: `team${teamNumber}`,
             title: process.env[`TEAM_${teamNumber}_TITLE`] as string,
+            abbr: process.env[`TEAM_${teamNumber}_ABBR`] as string,
         }
     })
 }

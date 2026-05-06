@@ -28,28 +28,42 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function DepthChartsTeamId() {
     const location = useLocation()
     const { years } = useLoaderData<LoaderData>()
-    const { breadcrumbArray } = useOutletContext<DepthChartsContext>()
+    const { breadcrumbArray, activeTeamId, filter } =
+        useOutletContext<DepthChartsContext>()
+
+    const filteredYears = years.filter((year) =>
+        year.toString().includes(filter.trim())
+    )
+
     return (
         <div>
             {breadcrumbArray.length === 2 ? (
                 <Card className="mt-4">
                     <CardBody>
-                        <ul className="flex flex-col gap-2">
-                            {years.map((year) => {
+                        <div className="flex flex-col items-start gap-3">
+                            {filteredYears.map((year) => {
                                 const yearStr = year.toString()
                                 const href = `${location.pathname}/${yearStr}`
-
                                 return (
-                                    <li key={yearStr}>
-                                        <Link href={href}>{yearStr}</Link>
-                                    </li>
+                                    <Link
+                                        key={yearStr}
+                                        href={href}
+                                        className="team-button"
+                                    >
+                                        {yearStr}
+                                    </Link>
                                 )
                             })}
-                        </ul>
+                            {filteredYears.length === 0 && (
+                                <p className="text-foreground/50 text-sm">
+                                    No years match "{filter}".
+                                </p>
+                            )}
+                        </div>
                     </CardBody>
                 </Card>
             ) : (
-                <Outlet context={{ breadcrumbArray }} />
+                <Outlet context={{ breadcrumbArray, activeTeamId, filter }} />
             )}
         </div>
     )

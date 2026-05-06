@@ -1,5 +1,12 @@
-import { BreadcrumbItem, Breadcrumbs, Card, CardBody, Link } from '@heroui/react'
-import { Outlet, useLoaderData, useLocation } from '@remix-run/react'
+import {
+    BreadcrumbItem,
+    Breadcrumbs,
+    Card,
+    CardBody,
+    Input,
+    Link,
+} from '@heroui/react'
+import { Outlet, useLoaderData, useLocation, useParams } from '@remix-run/react'
 import { useEffect, useState } from 'react'
 import { depthChartsLoader } from '~/loader/depthCharts.server'
 
@@ -27,17 +34,31 @@ export type BreadCrumbObj = {
 
 export type DepthChartsContext = {
     breadcrumbArray: BreadCrumbObj[]
+    activeTeamId: number | null
+    filter: string
+}
+
+function matchesFilter(value: string, filter: string) {
+    return value.toLowerCase().includes(filter.trim().toLowerCase())
 }
 
 export default function DepthCharts() {
     const location = useLocation()
+    const params = useParams()
     const [breadcrumbArray, setBreadcrumbArray] = useState<BreadCrumbObj[]>([])
+    const [filter, setFilter] = useState('')
     const { teams } = useLoaderData<LoaderData>()
+
+    const activeTeam = params.teamId
+        ? (teams.find((t) => t.uuid === params.teamId) ?? null)
+        : null
+    const activeTeamId = activeTeam?.id ?? null
 
     useEffect(() => {
         if (location.pathname) {
             setBreadcrumbArray(createBreadcrumbArray(location.pathname))
         }
+        setFilter('')
     }, [location.pathname])
 
     function createBreadcrumbArray(path: string): BreadCrumbObj[] {
@@ -67,8 +88,16 @@ export default function DepthCharts() {
         return result
     }
 
+    const filteredTeams = teams.filter(
+        (team) =>
+            matchesFilter(team.title, filter) ||
+            matchesFilter(team.abbr ?? '', filter)
+    )
+
     return (
-        <div className="my-2">
+        <div
+            className={`my-2 ${activeTeamId ? `team-${activeTeamId}` : ''}`}
+        >
             <Breadcrumbs>
                 {breadcrumbArray.map((breadcrumb, i) => {
                     return (
@@ -79,23 +108,47 @@ export default function DepthCharts() {
                 })}
             </Breadcrumbs>
 
+            <Input
+                value={filter}
+                onValueChange={setFilter}
+                placeholder="Filter..."
+                isClearable
+                onClear={() => setFilter('')}
+                startContent={
+                    <i className="ri-search-line text-foreground/40" />
+                }
+                className="mt-4"
+            />
+
             {breadcrumbArray.length === 1 ? (
                 <Card className="mt-4">
                     <CardBody>
-                        <ul className="flex flex-col gap-2">
-                            {teams.map((team) => {
+                        <div className="flex flex-col items-start gap-3">
+                            {filteredTeams.map((team) => {
                                 const href = `/depth-charts/${team.uuid}`
                                 return (
-                                    <li key={team.uuid}>
-                                        <Link href={href}>{team.title}</Link>
-                                    </li>
+                                    <Link
+                                        key={team.uuid}
+                                        href={href}
+                                        title={team.title}
+                                        className={`team-${team.id} team-button`}
+                                    >
+                                        {team.abbr}
+                                    </Link>
                                 )
                             })}
-                        </ul>
+                            {filteredTeams.length === 0 && (
+                                <p className="text-foreground/50 text-sm">
+                                    No teams match "{filter}".
+                                </p>
+                            )}
+                        </div>
                     </CardBody>
                 </Card>
             ) : (
-                <Outlet context={{ breadcrumbArray }} />
+                <Outlet
+                    context={{ breadcrumbArray, activeTeamId, filter }}
+                />
             )}
         </div>
     )

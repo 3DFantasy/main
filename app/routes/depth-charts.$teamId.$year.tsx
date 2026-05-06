@@ -24,25 +24,36 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
 export default function DepthChartsTeamIdYear() {
     const { depthCharts } = useLoaderData<LoaderData>()
-    const { breadcrumbArray } = useOutletContext<DepthChartsContext>()
+    const { breadcrumbArray, filter } = useOutletContext<DepthChartsContext>()
+
+    const filtered = depthCharts.filter((dc) =>
+        dc.title.toLowerCase().includes(filter.trim().toLowerCase())
+    )
 
     return (
         <div>
-            <h2 className="my-2">Depth Charts</h2>
             {breadcrumbArray.length === 3 ? (
-                <Card className="mt-2">
+                <Card className="mt-4">
                     <CardBody>
-                        <ul className="flex flex-col gap-2">
-                            {depthCharts.map((depthChart) => {
+                        <div className="flex flex-col items-start gap-3">
+                            {filtered.map((depthChart) => {
                                 return (
-                                    <li key={depthChart.value}>
-                                        <Link target="_blank" href={depthChart.value}>
-                                            {depthChart.title}
-                                        </Link>
-                                    </li>
+                                    <Link
+                                        key={depthChart.value}
+                                        target="_blank"
+                                        href={depthChart.value}
+                                        className="team-button"
+                                    >
+                                        {depthChart.title}
+                                    </Link>
                                 )
                             })}
-                        </ul>
+                            {filtered.length === 0 && (
+                                <p className="text-foreground/50 text-sm">
+                                    No depth charts match "{filter}".
+                                </p>
+                            )}
+                        </div>
                     </CardBody>
                 </Card>
             ) : (

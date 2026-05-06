@@ -1,0 +1,43 @@
+@import './team1.css';
+@import './team2.css';
+@import './team3.css';
+@import './team4.css';
+@import './team5.css';
+@import './team6.css';
+@import './team7.css';
+@import './team8.css';
+@import './team9.css';
+
+.team-link {
+    color: var(--team-primary);
+    transition: color 0.2s ease;
+}
+
+.team-link:hover {
+    color: var(--team-secondary);
+}
+
+.team-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1rem;
+    min-width: 5rem;
+    border: 2px solid var(--team-primary);
+    border-radius: 0.5rem;
+    background-color: transparent;
+    color: hsl(var(--heroui-foreground));
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.team-button:hover {
+    background-color: var(--team-primary);
+    border-color: var(--team-primary);
+    color: #ffffff;
+}

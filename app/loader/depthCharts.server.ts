@@ -7,6 +7,7 @@ export type LoaderData = {
         id: number
         uuid: string
         title: string
+        abbr: string
         key: string
     }[]
 }
@@ -31,6 +32,7 @@ export const depthChartsLoader = async (request: Request) => {
                 id: team.id,
                 uuid: team.uuid,
                 title: teamTitle.title,
+                abbr: teamTitle.abbr,
                 key: teamTitle.value,
             }
         }),
