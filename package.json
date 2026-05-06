@@ -28,7 +28,7 @@
     "baseline-browser-mapping": "^2.10.9",
     "bcryptjs": "^3.0.3",
     "caniuse-lite": "^1.0.30001792",
-    "framer-motion": "^11.11.17",
+    "framer-motion": "^12.38.0",
     "isbot": "^5.1.40",
     "next-themes": "^0.4.3",
     "node-resque": "^9.3.5",
