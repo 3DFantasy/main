@@ -85,7 +85,6 @@ module.exports = {
 					'warn',
 					{ argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
 				],
-				'@typescript-eslint/ban-types': 'warn',
 				'react-hooks/exhaustive-deps': 'warn',
 				'import/no-named-as-default': 'off',
 				'import/order': 'off',
