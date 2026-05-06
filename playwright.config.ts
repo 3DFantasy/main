@@ -1,9 +1,11 @@
 import { defineConfig, devices } from '@playwright/test'
 import { config as loadEnv } from 'dotenv'
 
-loadEnv({ path: '.env.test' })
+const testEnv = loadEnv({ path: '.env.test' }).parsed ?? {}
 
-const PORT = Number(process.env.PORT ?? 3000)
+// Force test isolation: don't let the spawned server read the project's .env.
+// Every var the server needs must come from .env.test.
+const PORT = Number(testEnv.PORT ?? 3000)
 const baseURL = `http://localhost:${PORT}`
 
 export default defineConfig({
@@ -35,6 +37,8 @@ export default defineConfig({
         stdout: 'pipe',
         stderr: 'pipe',
         env: {
+            ...testEnv,
+            PORT: String(PORT),
             NODE_ENV: 'production',
             DISABLE_RESQUE: 'true',
         },
