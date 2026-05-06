@@ -98,7 +98,7 @@ export default function Unsubscribe() {
                 color: 'success',
             })
         }
-    }, [fetcherData, account?.email])
+    }, [fetcherData, account])
 
     return (
         <Card className="mt-4">

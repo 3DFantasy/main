@@ -46,10 +46,12 @@ export const parseSettingsAccountAction = async ({
             code: 500,
         })
     }
+    // parseFormData returns `ok(null)` for empty strings, so check truthiness
+    // rather than `.length === 0` to avoid a null-deref TypeError.
     if (
-        currentPassword.value.length === 0 ||
-        newPassword.value.length === 0 ||
-        newPasswordConfirm.value.length === 0
+        !currentPassword.value ||
+        !newPassword.value ||
+        !newPasswordConfirm.value
     ) {
         return err({
             message: 'Password cannot be blank',
