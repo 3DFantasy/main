@@ -18,10 +18,6 @@ export function parseFormData(
                 code: parsedNumber.error.code,
             })
         }
-    } else if (typeof value === 'bigint') {
-        return ok(value as bigint)
-    } else if (typeof value === 'function') {
-        return ok(value as Function)
     } else if (typeof value === 'object') {
         return ok(value as object)
     } else if (typeof value === 'string') {
@@ -34,8 +30,6 @@ export function parseFormData(
         } else {
             return ok(null)
         }
-    } else if (typeof value === 'symbol') {
-        return ok(value as symbol)
     } else if (value === null) {
         return ok(value as object)
     } else {

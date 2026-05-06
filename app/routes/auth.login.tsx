@@ -51,18 +51,9 @@ export default function Login() {
     const inputClass = 'my-2'
 
     useEffect(() => {
-        if (actionData) {
-            if (actionData.message) {
-                setError({
-                    email: true,
-                    password: true,
-                })
-                addToast({
-                    title: actionData.message,
-                    description: `${formData.email}`,
-                    color: 'danger',
-                })
-            }
+        if (actionData?.message) {
+            setError({ email: true, password: true })
+            addToast({ title: actionData.message, color: 'danger' })
         }
     }, [actionData])
 

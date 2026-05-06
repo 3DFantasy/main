@@ -54,7 +54,7 @@ export default function Unsubscribe() {
             error.current = true
             navigate('/home')
         }
-    }, [message, code])
+    }, [message, code, navigate])
 
     useEffect(() => {
         if (account) {
@@ -72,36 +72,33 @@ export default function Unsubscribe() {
         }
     }, [account])
 
+    const fetcherData = fetcher.data
     useEffect(() => {
-        if (fetcher.data) {
-            if (fetcher.data.message) {
-                addToast({
-                    title: 'Error',
-                    description: fetcher.data.message,
-                    color: 'danger',
-                })
-            }
-            if (fetcher.data.account) {
-                const newSelected = []
-
-                for (let i = 1; i <= 9; i++) {
-                    const key =
-                        `team${i}Notification` as keyof typeof fetcher.data.account
-
-                    if (fetcher.data.account[key] === true) {
-                        newSelected.push(`team${i}`)
-                    }
-                }
-
-                setSelected(newSelected)
-                addToast({
-                    title: 'Updated',
-                    description: `Email notification subscription preferences have been updated for ${account.email}`,
-                    color: 'success',
-                })
-            }
+        if (!fetcherData) return
+        if (fetcherData.message) {
+            addToast({
+                title: 'Error',
+                description: fetcherData.message,
+                color: 'danger',
+            })
         }
-    }, [fetcher.data])
+        if (fetcherData.account) {
+            const newSelected: string[] = []
+            for (let i = 1; i <= 9; i++) {
+                const key =
+                    `team${i}Notification` as keyof typeof fetcherData.account
+                if (fetcherData.account[key] === true) {
+                    newSelected.push(`team${i}`)
+                }
+            }
+            setSelected(newSelected)
+            addToast({
+                title: 'Updated',
+                description: `Email notification subscription preferences have been updated for ${account.email}`,
+                color: 'success',
+            })
+        }
+    }, [fetcherData, account.email])
 
     return (
         <Card className="mt-4">
@@ -153,7 +150,7 @@ export default function Unsubscribe() {
                     >
                         {teamTitles.map((team) => {
                             return (
-                                <Checkbox value={team.value}>
+                                <Checkbox key={team.value} value={team.value}>
                                     {team.title}
                                 </Checkbox>
                             )

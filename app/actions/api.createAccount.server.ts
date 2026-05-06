@@ -1,4 +1,3 @@
-import type { ActionFunctionArgs } from '@remix-run/node'
 import { db } from '~/lib/db.server'
 import { generatePassword, sendMail } from '~/utils/index.server'
 import { getEmailTemplate } from '~/utils/m365/emailTemplate.server'
@@ -14,10 +13,7 @@ export type CreateAccountActionData = {
     api: 'createAccount'
 }
 
-export const apiCreateAccountAction = async (
-    request: Request,
-    params: ActionFunctionArgs['params']
-) => {
+export const apiCreateAccountAction = async (request: Request) => {
     const formData = await request.formData()
 
     const form = await parseApiCreateAccountAction({ formData })

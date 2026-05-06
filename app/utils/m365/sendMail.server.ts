@@ -30,16 +30,6 @@ export type SendMailResponse = {
     success: boolean
 }
 
-type MicrosoftGraphSendMailResponse = {
-    status: number
-    body: {
-        error: {
-            code: string
-            message: string
-        }
-    }
-}
-
 const fileName = 'utils/m365/sendMail.server.ts'
 export async function sendMail({
     message,

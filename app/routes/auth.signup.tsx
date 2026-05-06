@@ -59,7 +59,6 @@ export default function Signup() {
             if (actionData.message) {
                 addToast({
                     title: actionData.message,
-                    description: `${formData.email}`,
                     color: 'danger',
                 })
 

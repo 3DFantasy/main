@@ -36,25 +36,19 @@ export const loader: LoaderFunction = async ({ request }) => {
 export default function SettingsNotifications() {
     const fetcher = useFetcher<ActionData>()
     const navigation = useNavigation()
-    const [selected, setSelected] = useState<string[]>([])
     const { teamTitles } = useLoaderData<LoaderData>()
     const { account } = useOutletContext<SettingsContext>()
-
-    useEffect(() => {
-        if (account) {
-            const initialSelected = []
-
-            for (let i = 1; i <= 9; i++) {
-                const notificationKey = `team${i}Notification`
-
-                if (account[notificationKey as keyof typeof account] === true) {
-                    initialSelected.push(`team${i}`)
-                }
+    const [selected, setSelected] = useState<string[]>(() => {
+        if (!account) return []
+        const initial: string[] = []
+        for (let i = 1; i <= 9; i++) {
+            const key = `team${i}Notification`
+            if (account[key as keyof typeof account] === true) {
+                initial.push(`team${i}`)
             }
-
-            setSelected(initialSelected)
         }
-    }, [])
+        return initial
+    })
 
     useEffect(() => {
         if (fetcher.data) {
@@ -89,7 +83,11 @@ export default function SettingsNotifications() {
                 onValueChange={setSelected}
             >
                 {teamTitles.map((team) => {
-                    return <Checkbox value={team.value}>{team.title}</Checkbox>
+                    return (
+                        <Checkbox key={team.value} value={team.value}>
+                            {team.title}
+                        </Checkbox>
+                    )
                 })}
             </CheckboxGroup>
             <ButtonGroup className="my-4">

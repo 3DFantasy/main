@@ -7,7 +7,7 @@ import {
     Link,
 } from '@heroui/react'
 import { Outlet, useLoaderData, useLocation, useParams } from '@remix-run/react'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { depthChartsLoader } from '~/loader/depthCharts.server'
 
 import type { LoaderFunction, MetaFunction } from '@remix-run/node'
@@ -45,7 +45,6 @@ function matchesFilter(value: string, filter: string) {
 export default function DepthCharts() {
     const location = useLocation()
     const params = useParams()
-    const [breadcrumbArray, setBreadcrumbArray] = useState<BreadCrumbObj[]>([])
     const [filter, setFilter] = useState('')
     const { teams } = useLoaderData<LoaderData>()
 
@@ -54,15 +53,10 @@ export default function DepthCharts() {
         : null
     const activeTeamId = activeTeam?.id ?? null
 
-    useEffect(() => {
-        if (location.pathname) {
-            setBreadcrumbArray(createBreadcrumbArray(location.pathname))
-        }
-        setFilter('')
-    }, [location.pathname])
-
-    function createBreadcrumbArray(path: string): BreadCrumbObj[] {
-        const segments = path.split('/').filter((segment) => segment.length > 0)
+    const breadcrumbArray = useMemo<BreadCrumbObj[]>(() => {
+        const segments = location.pathname
+            .split('/')
+            .filter((segment) => segment.length > 0)
         const result: BreadCrumbObj[] = []
 
         let currentPath = ''
@@ -86,7 +80,11 @@ export default function DepthCharts() {
         }
 
         return result
-    }
+    }, [location.pathname, teams])
+
+    useEffect(() => {
+        setFilter('')
+    }, [location.pathname])
 
     const filteredTeams = teams.filter(
         (team) =>

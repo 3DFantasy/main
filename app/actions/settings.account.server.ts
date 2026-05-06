@@ -1,7 +1,6 @@
 import { db } from '~/lib/db.server'
 import { parseSettingsAccountAction } from '~/utils/parse/actions/settings.account.server'
 
-import type { ActionFunctionArgs } from '@remix-run/node'
 import type { Account } from '~/types'
 
 export type ActionData = {
@@ -10,10 +9,7 @@ export type ActionData = {
     code?: number
 }
 
-export const settingsAccountAction = async (
-    request: Request,
-    params: ActionFunctionArgs['params']
-) => {
+export const settingsAccountAction = async (request: Request) => {
     const formData = await request.formData()
 
     const form = await parseSettingsAccountAction({ formData })

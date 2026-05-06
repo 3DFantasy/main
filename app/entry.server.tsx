@@ -17,10 +17,12 @@ import type { EntryContext } from '@remix-run/node'
 
 installGlobals()
 
-initWorker({
-    schedule: false,
-    team: true,
-})
+if (process.env.DISABLE_RESQUE !== 'true') {
+    initWorker({
+        schedule: false,
+        team: true,
+    })
+}
 
 const ABORT_DELAY = 5000
 

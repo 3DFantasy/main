@@ -34,7 +34,7 @@ export default function Home() {
         if (nextUrl) {
             navigate(nextUrl)
         }
-    }, [])
+    }, [account, authAccount, nextUrl, navigate, setAccount])
 
     return (
         <div className="my-2">

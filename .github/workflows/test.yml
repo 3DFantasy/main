@@ -1,0 +1,97 @@
+name: Test
+
+on:
+    pull_request:
+    push:
+        branches: [main]
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+
+        services:
+            postgres:
+                image: postgres:16
+                env:
+                    POSTGRES_USER: postgres
+                    POSTGRES_PASSWORD: postgres
+                    POSTGRES_DB: 3df_test
+                ports:
+                    - 5432:5432
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+            redis:
+                image: redis:7
+                ports:
+                    - 6379:6379
+                options: >-
+                    --health-cmd "redis-cli ping"
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+
+        env:
+            DATABASE_URL: postgresql://postgres:postgres@localhost:5432/3df_test
+            SESSION_SECRET: ci-session-secret
+            REDIS_HOST: localhost
+            REDIS_PORT: 6379
+            REDIS_QUEUE: 3df-test
+            DISABLE_RESQUE: 'true'
+            AZURE_TENANT_ID: fake
+            AZURE_CLIENT_ID: fake
+            AZURE_CLIENT_SECRET: fake
+            M365_EMAIL: test@example.com
+            TEAM_1_TITLE: Team One
+            TEAM_1_ABBR: T1
+            TEAM_2_TITLE: Team Two
+            TEAM_2_ABBR: T2
+            TEAM_3_TITLE: Team Three
+            TEAM_3_ABBR: T3
+            TEAM_4_TITLE: Team Four
+            TEAM_4_ABBR: T4
+            TEAM_5_TITLE: Team Five
+            TEAM_5_ABBR: T5
+            TEAM_6_TITLE: Team Six
+            TEAM_6_ABBR: T6
+            TEAM_7_TITLE: Team Seven
+            TEAM_7_ABBR: T7
+            TEAM_8_TITLE: Team Eight
+            TEAM_8_ABBR: T8
+            TEAM_9_TITLE: Team Nine
+            TEAM_9_ABBR: T9
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: 'npm'
+
+            - run: npm ci
+
+            - run: npx prisma generate
+
+            - run: npx prisma migrate deploy
+
+            - run: npm run typecheck
+
+            - run: npm run lint
+
+            - run: npm run test
+
+            - run: npm run build
+
+            - run: npx playwright install --with-deps chromium
+
+            - run: npm run test:e2e
+
+            - if: failure()
+              uses: actions/upload-artifact@v4
+              with:
+                  name: playwright-report
+                  path: playwright-report/
+                  retention-days: 7

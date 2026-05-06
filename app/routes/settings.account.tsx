@@ -22,8 +22,8 @@ export const meta: MetaFunction = () => {
     ]
 }
 
-export const action: ActionFunction = async ({ request, params }) => {
-    return settingsAccountAction(request, params)
+export const action: ActionFunction = async ({ request }) => {
+    return settingsAccountAction(request)
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -64,17 +64,14 @@ export default function SettingsAccount() {
                     color: 'danger',
                 })
                 if (fetcher.data.message.includes('Current password')) {
-                    setError({
-                        ...error,
-                        currentPassword: true,
-                    })
+                    setError((e) => ({ ...e, currentPassword: true }))
                 } else {
-                    setError({
-                        ...error,
+                    setError((e) => ({
+                        ...e,
                         newPasswordConfirm: true,
                         newPassword: true,
                         currentPassword: true,
-                    })
+                    }))
                 }
             }
             if (fetcher.data.code === 200) {

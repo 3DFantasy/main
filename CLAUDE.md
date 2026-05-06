@@ -18,6 +18,39 @@ npm run typecheck     # Run TypeScript type checking
 npm run lint          # Run ESLint
 ```
 
+### Testing
+
+Three layers, two runners (Vitest + Playwright):
+
+```bash
+npm run test              # vitest: unit + integration
+npm run test:unit         # vitest: unit only (jsdom, no DB)
+npm run test:integration  # vitest: integration (real Postgres test DB)
+npm run test:e2e          # playwright: browser flows
+npm run test:e2e:ui       # playwright UI debugger
+npm run test:all          # everything
+```
+
+**Layout:**
+
+- Unit tests live next to source as `*.test.ts` (e.g. `app/utils/getDepthChartInfo.server.test.ts`).
+- Integration tests use the suffix `*.integration.test.ts` and hit a real `3df_test` Postgres DB.
+- Playwright e2e specs live in `tests/e2e/`. Shared fixtures and helpers in `tests/helpers/`.
+
+**Local setup (one-time):**
+
+```bash
+createdb 3df_test
+cp .env.test.example .env.test
+DATABASE_URL=$(grep ^DATABASE_URL .env.test | cut -d= -f2-) npx prisma migrate deploy
+npx playwright install --with-deps chromium
+```
+
+**External deps in tests:**
+
+- Real Postgres for integration; Redis, Puppeteer, Microsoft Graph, and `@azure/identity` are mocked in `vitest.setup.ts`.
+- E2E runs the production build with `DISABLE_RESQUE=true` so no Redis worker is started.
+
 ### Building & Deployment
 
 ```bash

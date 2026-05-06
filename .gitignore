@@ -84,9 +84,15 @@ web_modules/
 # dotenv environment variable files
 .env
 .env.development.local
+.env.test
 .env.test.local
 .env.production.local
 .env.local
+
+# Test artifacts
+playwright-report/
+test-results/
+playwright/.cache/
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache

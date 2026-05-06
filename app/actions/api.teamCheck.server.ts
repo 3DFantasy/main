@@ -1,7 +1,6 @@
 import { resqueTask } from '~/resque/main.server'
 import { parseApiTeamCheckAction } from '~/utils/parse/actions/api.teamCheck.server'
 
-import type { ActionFunctionArgs } from '@remix-run/node'
 import type { TeamId } from '~/types'
 
 export type TeamCheckActionData = {
@@ -11,10 +10,7 @@ export type TeamCheckActionData = {
     api: 'teamCheck'
 }
 
-export const apiTeamCheckAction = async (
-    request: Request,
-    params: ActionFunctionArgs['params']
-) => {
+export const apiTeamCheckAction = async (request: Request) => {
     let count = 0
 
     const formData = await request.formData()

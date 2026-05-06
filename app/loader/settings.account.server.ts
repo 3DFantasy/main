@@ -7,7 +7,7 @@ export type LoaderData = {
 }
 
 export const settingsAccountLoader = async (request: Request) => {
-    const authAccount = await authenticator.isAuthenticated(request, {
+    await authenticator.isAuthenticated(request, {
         failureRedirect: '/auth/login',
     })
 
