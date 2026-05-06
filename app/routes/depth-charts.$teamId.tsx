@@ -5,30 +5,30 @@ import {
     useLocation,
     useOutletContext,
 } from '@remix-run/react'
-import { homeTeamIdLoader } from '~/loader/home.teamId.server'
+import { depthChartsTeamIdLoader } from '~/loader/depthCharts.teamId.server'
 
 import type { LoaderFunction, MetaFunction } from '@remix-run/node'
-import type { LoaderData } from '~/loader/home.teamId.server'
-import type { HomeContext } from '~/routes/home'
+import type { LoaderData } from '~/loader/depthCharts.teamId.server'
+import type { DepthChartsContext } from '~/routes/depth-charts'
 
 export const meta: MetaFunction = () => {
     return [
         { title: '3DF - Team' },
         {
-            name: '3DF/home/team',
+            name: '3DF/depth-charts/team',
             content: 'Team page for 3DFantasy application',
         },
     ]
 }
 
 export const loader: LoaderFunction = async ({ request }) => {
-    return homeTeamIdLoader(request)
+    return depthChartsTeamIdLoader(request)
 }
 
-export default function HomeTeamId() {
+export default function DepthChartsTeamId() {
     const location = useLocation()
     const { years } = useLoaderData<LoaderData>()
-    const { breadcrumbArray } = useOutletContext<HomeContext>()
+    const { breadcrumbArray } = useOutletContext<DepthChartsContext>()
     return (
         <div>
             {breadcrumbArray.length === 2 ? (

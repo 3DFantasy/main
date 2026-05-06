@@ -13,6 +13,11 @@ type NavItem = {
 
 const navItems: NavItem[] = [
     { label: 'Home', href: '/home', icon: 'ri-home-4-line' },
+    {
+        label: 'Depth Charts',
+        href: '/depth-charts',
+        icon: 'ri-list-ordered',
+    },
     { label: 'Settings', href: '/settings', icon: 'ri-settings-3-line' },
     {
         label: 'Admin',

@@ -8,7 +8,7 @@ export type LoaderData = {
     depthCharts: DepthChart[]
 }
 
-export const homeTeamIdYearLoader = async (
+export const depthChartsTeamIdYearLoader = async (
     request: Request,
     params: LoaderFunctionArgs['params']
 ) => {

@@ -4,8 +4,7 @@ export type LoaderData = {
     years: number[]
 }
 
-export const homeTeamIdLoader = async (request: Request) => {
-    // const url = new URL(request.url)
+export const depthChartsTeamIdLoader = async (request: Request) => {
     await authenticator.isAuthenticated(request)
 
     return {

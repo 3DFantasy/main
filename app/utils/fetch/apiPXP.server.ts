@@ -23,7 +23,7 @@ export async function fetchAPIPXP({ gameIDs, year }: FetchAPIPXPInput) {
 
                 const game = await gameCreate({
                     data: {
-                        id: gameID,
+                        geniusGameId: gameID,
                         response: JSON.stringify(resp),
                         year,
                     },

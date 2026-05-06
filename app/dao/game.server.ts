@@ -2,7 +2,7 @@ import { db } from '~/lib/db.server'
 
 export type GameCreateInput = {
     data: {
-        id: string
+        geniusGameId: string
         response: string
         year: number
     }
@@ -10,12 +10,13 @@ export type GameCreateInput = {
 
 export async function gameCreate({
     data,
-}: // where,
-GameCreateInput): Promise<typeof game> {
+}: GameCreateInput): Promise<typeof game> {
     const game = await db.game.create({
         data: data,
         select: {
             id: true,
+            uuid: true,
+            geniusGameId: true,
             response: true,
             createdAt: true,
             updatedAt: true,
@@ -27,7 +28,7 @@ GameCreateInput): Promise<typeof game> {
 export type GameFindManyInput = {
     where: {
         year?: number
-        id?: string
+        geniusGameId?: string
     }
 }
 
@@ -38,6 +39,8 @@ export async function gameFindMany({
         where,
         select: {
             id: true,
+            uuid: true,
+            geniusGameId: true,
             response: true,
         },
     })
