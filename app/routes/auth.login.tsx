@@ -1,22 +1,13 @@
 import { addToast, Button, Card, CardBody, CardHeader, Input } from '@heroui/react'
-import {
-    Form,
-    useActionData,
-    useLoaderData,
-    useNavigation,
-} from '@remix-run/react'
+import { Form, useActionData, useLoaderData, useNavigation } from 'react-router'
 import { useEffect, useState } from 'react'
 import { ActionData, authLoginAction } from '~/actions/auth.login.server'
 import { authLoginLoader } from '~/loader/auth.login.server'
 
-import type {
-    ActionFunction,
-    LoaderFunction,
-    MetaFunction,
-} from '@remix-run/node'
+import type { Route } from './+types/auth.login'
 import type { LoaderData } from '~/loader/auth.login.server'
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = () => {
     return [
         { title: '3DF - Login' },
         {
@@ -26,11 +17,11 @@ export const meta: MetaFunction = () => {
     ]
 }
 
-export const loader: LoaderFunction = async ({ request }) => {
+export async function loader({ request }: Route.LoaderArgs) {
     return authLoginLoader(request)
 }
 
-export const action: ActionFunction = async ({ request }) => {
+export async function action({ request }: Route.ActionArgs) {
     return authLoginAction(request)
 }
 

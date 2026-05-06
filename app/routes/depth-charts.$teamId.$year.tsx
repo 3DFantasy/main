@@ -1,14 +1,14 @@
 import { Card, CardBody, Link } from '@heroui/react'
-import { Outlet, useLoaderData, useOutletContext } from '@remix-run/react'
+import { Outlet, useLoaderData, useOutletContext } from 'react-router'
 import {
     depthChartsTeamIdYearLoader,
     LoaderData,
 } from '~/loader/depthCharts.teamId.year.server'
 import { DepthChartsContext } from '~/routes/depth-charts'
 
-import type { LoaderFunction, MetaFunction } from '@remix-run/node'
+import type { Route } from './+types/depth-charts.$teamId.$year'
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = () => {
     return [
         { title: '3DF - Year' },
         {
@@ -18,7 +18,7 @@ export const meta: MetaFunction = () => {
     ]
 }
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export async function loader({ request, params }: Route.LoaderArgs) {
     return depthChartsTeamIdYearLoader(request, params)
 }
 

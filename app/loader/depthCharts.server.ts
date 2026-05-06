@@ -1,5 +1,5 @@
 import { db } from '~/lib/db.server'
-import { authenticator } from '~/utils/auth/auth.server'
+import { getCurrentAccount } from '~/utils/auth/auth.server'
 import { getTeamTitles } from '~/utils/getTeamTitles.server'
 
 export type LoaderData = {
@@ -13,7 +13,7 @@ export type LoaderData = {
 }
 
 export const depthChartsLoader = async (request: Request) => {
-    await authenticator.isAuthenticated(request)
+    await getCurrentAccount(request)
 
     const teams = await db.team.findMany({
         select: {

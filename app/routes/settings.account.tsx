@@ -1,18 +1,14 @@
 import { addToast, Button, Input } from '@heroui/react'
-import { useFetcher, useNavigation, useOutletContext } from '@remix-run/react'
+import { useFetcher, useNavigation, useOutletContext } from 'react-router'
 import { useEffect, useState } from 'react'
 import { settingsAccountAction } from '~/actions/settings.account.server'
 import { settingsAccountLoader } from '~/loader/settings.account.server'
 
-import type {
-    ActionFunction,
-    LoaderFunction,
-    MetaFunction,
-} from '@remix-run/node'
+import type { Route } from './+types/settings.account'
 import type { ActionData } from '~/actions/settings.account.server'
 import type { SettingsContext } from './settings'
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = () => {
     return [
         { title: '3DF - Account Settings' },
         {
@@ -22,11 +18,11 @@ export const meta: MetaFunction = () => {
     ]
 }
 
-export const action: ActionFunction = async ({ request }) => {
+export async function action({ request }: Route.ActionArgs) {
     return settingsAccountAction(request)
 }
 
-export const loader: LoaderFunction = async ({ request }) => {
+export async function loader({ request }: Route.LoaderArgs) {
     return settingsAccountLoader(request)
 }
 

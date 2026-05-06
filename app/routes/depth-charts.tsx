@@ -6,14 +6,14 @@ import {
     Input,
     Link,
 } from '@heroui/react'
-import { Outlet, useLoaderData, useLocation, useParams } from '@remix-run/react'
+import { Outlet, useLoaderData, useLocation, useParams } from 'react-router'
 import { useEffect, useMemo, useState } from 'react'
 import { depthChartsLoader } from '~/loader/depthCharts.server'
 
-import type { LoaderFunction, MetaFunction } from '@remix-run/node'
+import type { Route } from './+types/depth-charts'
 import type { LoaderData } from '~/loader/depthCharts.server'
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = () => {
     return [
         { title: '3DF - Depth Charts' },
         {
@@ -23,7 +23,7 @@ export const meta: MetaFunction = () => {
     ]
 }
 
-export const loader: LoaderFunction = async ({ request }) => {
+export async function loader({ request }: Route.LoaderArgs) {
     return depthChartsLoader(request)
 }
 

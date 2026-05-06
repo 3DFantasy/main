@@ -10,16 +10,16 @@ import {
     CheckboxGroup,
     Input,
 } from '@heroui/react'
-import { useFetcher, useLoaderData, useNavigation } from '@remix-run/react'
+import { useFetcher, useLoaderData, useNavigation } from 'react-router'
 import { useEffect, useState } from 'react'
 import { adminLoader } from '~/loader/admin.server'
 
-import type { LoaderFunction, MetaFunction } from '@remix-run/node'
+import type { Route } from './+types/admin'
 import type { CreateAccountActionData } from '~/actions/api.createAccount.server'
 import type { TeamCheckActionData } from '~/actions/api.teamCheck.server'
 import type { LoaderData } from '~/loader/admin.server'
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = () => {
     return [
         { title: '3DF - Admin' },
         {
@@ -29,7 +29,7 @@ export const meta: MetaFunction = () => {
     ]
 }
 
-export const loader: LoaderFunction = async ({ request }) => {
+export async function loader({ request }: Route.LoaderArgs) {
     return adminLoader(request)
 }
 

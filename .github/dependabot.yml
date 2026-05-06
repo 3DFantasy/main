@@ -1,0 +1,33 @@
+version: 2
+updates:
+    - package-ecosystem: npm
+      directory: /
+      schedule:
+          interval: weekly
+      open-pull-requests-limit: 10
+      groups:
+          react-router:
+              patterns:
+                  - 'react-router'
+                  - '@react-router/*'
+          testing:
+              patterns:
+                  - 'vitest'
+                  - '@vitest/*'
+                  - '@playwright/test'
+                  - '@testing-library/*'
+                  - 'jsdom'
+                  - 'vitest-mock-extended'
+          types:
+              patterns:
+                  - '@types/*'
+          eslint:
+              patterns:
+                  - 'eslint'
+                  - 'eslint-*'
+                  - '@typescript-eslint/*'
+
+    - package-ecosystem: github-actions
+      directory: /
+      schedule:
+          interval: weekly

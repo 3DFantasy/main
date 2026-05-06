@@ -5,21 +5,16 @@ import {
     Checkbox,
     CheckboxGroup,
 } from '@heroui/react'
-import {
-    useFetcher,
-    useLoaderData,
-    useNavigation,
-    useOutletContext,
-} from '@remix-run/react'
+import { useFetcher, useLoaderData, useNavigation, useOutletContext } from 'react-router'
 import { useEffect, useState } from 'react'
 import { settingsNotificationLoader } from '~/loader/settings.notification.server'
 
-import type { LoaderFunction, MetaFunction } from '@remix-run/node'
+import type { Route } from './+types/settings.notifications'
 import type { ActionData } from '~/actions/unsubscribe.server'
 import type { LoaderData } from '~/loader/settings.notification.server'
 import type { SettingsContext } from '~/routes/settings'
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = () => {
     return [
         { title: '3DF - Notification Settings' },
         {
@@ -29,7 +24,7 @@ export const meta: MetaFunction = () => {
     ]
 }
 
-export const loader: LoaderFunction = async ({ request }) => {
+export async function loader({ request }: Route.LoaderArgs) {
     return settingsNotificationLoader(request)
 }
 

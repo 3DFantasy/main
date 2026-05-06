@@ -1,6 +1,7 @@
-import { ActionFunction } from '@remix-run/node'
 import { unsubscribeAction } from '~/actions/unsubscribe.server'
 
-export const action: ActionFunction = async ({ request }) => {
+import type { Route } from './+types/api.unsubscribe'
+
+export async function action({ request }: Route.ActionArgs) {
     return unsubscribeAction(request)
 }

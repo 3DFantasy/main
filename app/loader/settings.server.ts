@@ -1,21 +1,15 @@
-import { redirect } from '@remix-run/node'
+import { redirect } from 'react-router'
 import { db } from '~/lib/db.server'
-import { authenticator } from '~/utils/auth/auth.server'
+import { requireAuth } from '~/utils/auth/auth.server'
 
 import type { Account } from '~/types'
-import type { AuthAccount } from '~/utils/auth/auth.server'
 
 export type LoaderData = {
     account: Account
 }
 
 export const settingsLoader = async (request: Request) => {
-    const authAccount: AuthAccount = await authenticator.isAuthenticated(
-        request,
-        {
-            failureRedirect: '/auth/login',
-        }
-    )
+    const authAccount = await requireAuth(request)
 
     const url = new URL(request.url)
     if (url.pathname === '/settings' || url.pathname === '/settings/') {

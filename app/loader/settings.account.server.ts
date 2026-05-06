@@ -1,15 +1,11 @@
-import { authenticator } from '~/utils/auth/auth.server'
-
-// import { db } from '~/lib/db.server'
+import { requireAuth } from '~/utils/auth/auth.server'
 
 export type LoaderData = {
     // account: TeamCheckBoxObj[]
 }
 
 export const settingsAccountLoader = async (request: Request) => {
-    await authenticator.isAuthenticated(request, {
-        failureRedirect: '/auth/login',
-    })
+    await requireAuth(request)
 
     return {
         // account

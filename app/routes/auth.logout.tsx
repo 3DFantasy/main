@@ -1,7 +1,9 @@
-import { LoaderFunction, MetaFunction, redirect } from '@remix-run/node'
+import { redirect } from 'react-router'
 import { sessionStorage } from '~/utils/auth/sessionStorage.server'
 
-export const meta: MetaFunction = () => {
+import type { Route } from './+types/auth.logout'
+
+export const meta: Route.MetaFunction = () => {
     return [
         { title: '3DF - Logout' },
         {
@@ -11,7 +13,7 @@ export const meta: MetaFunction = () => {
     ]
 }
 
-export const loader: LoaderFunction = async ({ request }) => {
+export async function loader({ request }: Route.LoaderArgs) {
     const session = await sessionStorage.getSession(
         request.headers.get('Cookie')
     )

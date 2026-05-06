@@ -9,20 +9,15 @@ import {
     Checkbox,
     CheckboxGroup,
 } from '@heroui/react'
-import { LoaderFunction, MetaFunction } from '@remix-run/node'
-import {
-    useFetcher,
-    useLoaderData,
-    useNavigate,
-    useNavigation,
-} from '@remix-run/react'
+import { useFetcher, useLoaderData, useNavigate, useNavigation } from 'react-router'
 import { useEffect, useRef, useState } from 'react'
 import { unsubscribeLoader } from '~/loader/unsubscribe.account.depthChart.server'
 
+import type { Route } from './+types/unsubscribe.$account.$depthChart'
 import type { ActionData } from '~/actions/unsubscribe.server'
 import type { LoaderData } from '~/loader/unsubscribe.account.depthChart.server'
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = () => {
     return [
         { title: '3DF - Unsubscribe' },
         {
@@ -32,7 +27,7 @@ export const meta: MetaFunction = () => {
     ]
 }
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export async function loader({ request, params }: Route.LoaderArgs) {
     return unsubscribeLoader(request, params)
 }
 

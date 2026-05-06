@@ -1,4 +1,5 @@
-import { authenticator } from '~/utils/auth/auth.server'
+import { redirect } from 'react-router'
+import { getCurrentAccount } from '~/utils/auth/auth.server'
 
 export type LoaderData = {
     error: boolean
@@ -7,9 +8,7 @@ export type LoaderData = {
 export const authSignupLoader = async (request: Request) => {
     const url = new URL(request.url)
     const error = url.searchParams.get('error')
-    await authenticator.isAuthenticated(request, {
-        successRedirect: '/home',
-    })
+    if (await getCurrentAccount(request)) throw redirect('/home')
 
     return { error: error === 'true' ? true : false }
 }
