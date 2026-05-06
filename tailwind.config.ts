@@ -2,6 +2,9 @@ import { heroui } from "@heroui/react"
 
 import type { Config } from 'tailwindcss'
 
+// HeroUI bundles its own tailwindcss types; cast through unknown to bridge them.
+type TailwindPlugin = Required<Config>['plugins'][number]
+
 export default {
 	content: ['./app/**/*.{js,jsx,ts,tsx}', "./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}"],
 	theme: {
@@ -72,6 +75,6 @@ export default {
 					},
 				},
 			},
-		}),
+		}) as unknown as TailwindPlugin,
 	],
 } satisfies Config
