@@ -5,6 +5,15 @@ updates:
       schedule:
           interval: weekly
       open-pull-requests-limit: 10
+      ignore:
+          # Hold ESLint v8 until we migrate .eslintrc.cjs to flat config.
+          # ESLint 9 made flat config the default; v10 removed legacy support.
+          - dependency-name: 'eslint'
+            update-types: ['version-update:semver-major']
+          - dependency-name: 'eslint-plugin-react-hooks'
+            update-types: ['version-update:semver-major']
+          - dependency-name: 'eslint-import-resolver-typescript'
+            update-types: ['version-update:semver-major']
       groups:
           react-router:
               patterns:
