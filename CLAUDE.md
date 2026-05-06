@@ -7,16 +7,16 @@ npm run typecheck       # tsc — whole-program type errors
 npm run lint            # ESLint — see .eslintrc.cjs
 npm test                # Vitest: unit + integration (needs threedf_test DB)
 npm run test:e2e        # Playwright: real browser against the production build (needs threedf_test DB)
-npm run build           # Remix vite:build — full production bundle
+npm run build           # react-router build — full production bundle
 ```
 
 What each uniquely catches:
 
 -   **typecheck** — whole-program type errors. Vitest only typechecks the files it executes; `tsc` walks the entire graph and surfaces issues in files no test imports yet.
 -   **lint** — stale-closure `useEffect` deps (`react-hooks/exhaustive-deps`), missing `key` props in `.map()`, dead variables, a11y regressions. Errors fail the script; warnings are advisory.
--   **test** — Vitest unit (jsdom, no DB) plus integration (real Postgres against `threedf_test`, hits actual DAOs and Remix loaders/actions). Redis, Puppeteer, Microsoft Graph, and `@azure/identity` are mocked at the module boundary in `vitest.setup.ts`.
--   **test:e2e** — the only check that exercises a real Chromium against the Remix production build. Playwright's `webServer` runs `npm run build && npm start` with `DISABLE_RESQUE=true` and the full `.env.test` injected, so e2e is isolated from the dev `.env`.
--   **build** — runs the production Vite + Remix pipeline. Only this catches `.server.ts`/client boundary leaks, route file format issues, and Vite resolution failures that don't surface in dev or unit tests.
+-   **test** — Vitest unit (jsdom, no DB) plus integration (real Postgres against `threedf_test`, hits actual DAOs and React Router loaders/actions). Redis, Puppeteer, Microsoft Graph, and `@azure/identity` are mocked at the module boundary in `vitest.setup.ts`.
+-   **test:e2e** — the only check that exercises a real Chromium against the React Router production build. Playwright's `webServer` runs `npm run build && npm start` with `DISABLE_RESQUE=true` and the full `.env.test` injected, so e2e is isolated from the dev `.env`.
+-   **build** — runs the production Vite + React Router pipeline. Only this catches `.server.ts`/client boundary leaks, route file format issues, and Vite resolution failures that don't surface in dev or unit tests.
 
 **Prerequisites for `test` and `test:e2e`:** the `threedf_test` Postgres DB must be reachable and migrated (see "Testing → Local setup"). The test helpers refuse any DB whose name doesn't end in `_test` — see `tests/helpers/db.ts::assertTestDatabase`.
 

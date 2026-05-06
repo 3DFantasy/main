@@ -1,4 +1,4 @@
-import { authenticator } from '~/utils/auth/auth.server'
+import { getCurrentAccount } from '~/utils/auth/auth.server'
 
 import type { AuthAccount } from '~/utils/auth/auth.server'
 
@@ -7,10 +7,7 @@ export type LoaderData = {
 }
 
 export const indexLoader = async (request: Request) => {
-    const account: AuthAccount = await authenticator.isAuthenticated(
-        request,
-        {}
-    )
+    const account = await getCurrentAccount(request)
 
     return {
         account,

@@ -1,4 +1,4 @@
-import { authenticator } from '~/utils/auth/auth.server'
+import { getCurrentAccount } from '~/utils/auth/auth.server'
 
 import type { AuthAccount } from '~/utils/auth/auth.server'
 
@@ -11,7 +11,7 @@ export const homeLoader = async (request: Request) => {
     const url = new URL(request.url)
     const nextUrl = url.searchParams.get('nextUrl')
 
-    const account = await authenticator.isAuthenticated(request)
+    const account = await getCurrentAccount(request)
 
     return {
         account,

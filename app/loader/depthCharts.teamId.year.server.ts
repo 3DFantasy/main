@@ -1,6 +1,6 @@
 import { LoaderFunctionArgs } from 'react-router'
 import { db } from '~/lib/db.server'
-import { authenticator } from '~/utils/auth/auth.server'
+import { getCurrentAccount } from '~/utils/auth/auth.server'
 
 import type { DepthChart } from '@prisma/client'
 
@@ -12,7 +12,7 @@ export const depthChartsTeamIdYearLoader = async (
     request: Request,
     params: LoaderFunctionArgs['params']
 ) => {
-    await authenticator.isAuthenticated(request)
+    await getCurrentAccount(request)
 
     const depthCharts = await db.depthChart.findMany({
         where: {

@@ -1,6 +1,7 @@
-import { ActionFunction } from '@remix-run/node'
 import { apiCreateAccountAction } from '~/actions/api.createAccount.server'
 
-export const action: ActionFunction = async ({ request }) => {
+import type { Route } from './+types/api.createAccount'
+
+export async function action({ request }: Route.ActionArgs) {
     return apiCreateAccountAction(request)
 }

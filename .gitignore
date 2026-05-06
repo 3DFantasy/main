@@ -94,6 +94,9 @@ playwright-report/
 test-results/
 playwright/.cache/
 
+# React Router auto-generated route types
+.react-router/
+
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 .parcel-cache

@@ -1,17 +1,13 @@
 import { addToast, Button, Card, CardBody, CardHeader, Input } from '@heroui/react'
-import { Form, useActionData } from '@remix-run/react'
+import { Form, useActionData } from 'react-router'
 import { useEffect, useState } from 'react'
 import { authSignupAction } from '~/actions/auth.signup.server'
 import { authSignupLoader } from '~/loader/auth.signup.server'
 
-import type {
-    ActionFunctionArgs,
-    LoaderFunction,
-    MetaFunction,
-} from '@remix-run/node'
+import type { Route } from './+types/auth.signup'
 import type { ActionData } from '~/actions/auth.signup.server'
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = () => {
     return [
         { title: '3DF - Signup' },
         {
@@ -21,11 +17,11 @@ export const meta: MetaFunction = () => {
     ]
 }
 
-export const loader: LoaderFunction = async ({ request }) => {
+export async function loader({ request }: Route.LoaderArgs) {
     return authSignupLoader(request)
 }
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({ request }: Route.ActionArgs) {
     return authSignupAction(request)
 }
 

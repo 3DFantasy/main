@@ -1,5 +1,5 @@
 import { Button, Card, CardBody, Link } from '@heroui/react'
-import { useLocation, useNavigate } from '@remix-run/react'
+import { useLocation, useNavigate } from 'react-router';
 
 interface ErrorBoundaryProps {
     message: string

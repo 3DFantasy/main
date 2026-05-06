@@ -1,6 +1,5 @@
 {
 	"include": [
-		"remix.env.d.ts",
 		"**/*.ts",
 		"**/*.tsx",
 		"tailwind.config.js",
@@ -8,11 +7,19 @@
 		"vitest.config.ts",
 		"vitest.setup.ts",
 		"playwright.config.ts",
-		"postcss.config.cts"
+		"react-router.config.ts",
+		"postcss.config.cts",
+		".react-router/types/**/*"
 	],
 	"exclude": ["tests/e2e/**"],
 	"compilerOptions": {
-		"types": ["vitest/globals", "@testing-library/jest-dom"],
+		"types": [
+			"vitest/globals",
+			"@testing-library/jest-dom",
+			"@react-router/node",
+			"vite/client"
+		],
+		"rootDirs": [".", "./.react-router/types"],
 		"paths": {
 			"~/*": ["./app/*"]
 		},

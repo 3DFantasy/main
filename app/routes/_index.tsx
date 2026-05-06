@@ -1,9 +1,9 @@
 import { Button, Card, CardBody, Link } from '@heroui/react'
 import { indexLoader } from '~/loader/index.server'
 
-import type { LoaderFunction, MetaFunction } from '@remix-run/node'
+import type { Route } from './+types/_index'
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = () => {
     return [
         { title: '3DF' },
         {
@@ -14,7 +14,7 @@ export const meta: MetaFunction = () => {
     ]
 }
 
-export const loader: LoaderFunction = async ({ request }) => {
+export async function loader({ request }: Route.LoaderArgs) {
     return indexLoader(request)
 }
 

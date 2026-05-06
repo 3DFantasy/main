@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs } from '@remix-run/node'
+import { LoaderFunctionArgs } from 'react-router';
 import Result, { err, ok } from 'true-myth/result'
 import { db } from '~/lib/db.server'
 

@@ -6,7 +6,7 @@ import {
     ScrollRestoration,
     useLoaderData,
     useRouteError,
-} from '@remix-run/react'
+} from 'react-router'
 import {
     ErrorBoundary as ErrorBoundaryComponent,
     Loading,
@@ -15,7 +15,7 @@ import {
 import { rootLoader } from '~/loader/root.server'
 import { Providers } from '~/providers'
 
-import type { LoaderFunction } from '@remix-run/node'
+import type { Route } from './+types/root'
 import type { LoaderData } from '~/loader/root.server'
 
 import 'remixicon/fonts/remixicon.css'
@@ -36,7 +36,7 @@ export type RootContext = {
     >
 }
 
-export const loader: LoaderFunction = async ({ request }) => {
+export async function loader({ request }: Route.LoaderArgs) {
     return rootLoader(request)
 }
 

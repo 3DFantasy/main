@@ -1,19 +1,19 @@
 import { Card, CardBody, Tab, Tabs } from '@heroui/react'
-import { Outlet, useLoaderData, useLocation, useNavigate } from '@remix-run/react'
+import { Outlet, useLoaderData, useLocation, useNavigate } from 'react-router'
 import { settingsLoader } from '~/loader/settings.server'
 
-import type { LoaderFunction, MetaFunction } from '@remix-run/node'
+import type { Route } from './+types/settings'
 import type { LoaderData } from '~/loader/settings.server'
 import type { Account } from '~/types'
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = () => {
     return [
         { title: '3DF - Settings' },
         { name: '3DF', content: 'Modify your 3DF application settings' },
     ]
 }
 
-export const loader: LoaderFunction = async ({ request }) => {
+export async function loader({ request }: Route.LoaderArgs) {
     return settingsLoader(request)
 }
 

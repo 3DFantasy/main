@@ -1,20 +1,20 @@
 import { Card, CardBody } from '@heroui/react'
-import { useLoaderData, useNavigate } from '@remix-run/react'
+import { useLoaderData, useNavigate } from 'react-router'
 import { useEffect } from 'react'
 import { homeLoader } from '~/loader/home.server'
 import { useAuth } from '~/providers'
 
-import type { LoaderFunction, MetaFunction } from '@remix-run/node'
+import type { Route } from './+types/home'
 import type { LoaderData } from '~/loader/home.server'
 
-export const meta: MetaFunction = () => {
+export const meta: Route.MetaFunction = () => {
     return [
         { title: '3DF - Home' },
         { name: '3DF/home', content: 'Home page for 3DFantasy application' },
     ]
 }
 
-export const loader: LoaderFunction = async ({ request }) => {
+export async function loader({ request }: Route.LoaderArgs) {
     return homeLoader(request)
 }
 

@@ -1,4 +1,4 @@
-import { authenticator } from '~/utils/auth/auth.server'
+import { getCurrentAccount } from '~/utils/auth/auth.server'
 
 import type { AuthAccount } from '~/utils/auth/auth.server'
 
@@ -7,10 +7,7 @@ export type LoaderData = {
 }
 
 export const rootLoader = async (request: Request) => {
-    const account: AuthAccount | null = await authenticator.isAuthenticated(
-        request,
-        {}
-    )
+    const account = await getCurrentAccount(request)
 
     // resqueTask({
     // 	job: 'teamCheck',
