@@ -20,7 +20,14 @@ What each uniquely catches:
 
 **Prerequisites for `test` and `test:e2e`:** the `threedf_test` Postgres DB must be reachable and migrated (see "Testing → Local setup"). The test helpers refuse any DB whose name doesn't end in `_test` — see `tests/helpers/db.ts::assertTestDatabase`.
 
-CI runs all five via `.github/workflows/test.yml` (single job named `test`) on every PR and on pushes to `main`. CI uses an ephemeral `postgres:16` service rather than the Pi. A green CI run is the floor, not a victory lap — flaky tests and missing coverage still hide bugs.
+CI runs all five via `.github/workflows/ci.yml` on every PR and on pushes to `main`. The workflow has four parallel jobs (no `needs:` chains — fastest signal wins):
+
+-   **unit** — typecheck, lint, `npm run test:unit`. No DB. ~30s.
+-   **build** — `npm run build`. No DB. Catches `.server.ts`/client boundary leaks and Vite resolution errors that don't show up in unit tests.
+-   **integration** — `prisma migrate deploy` → `npm run test:integration` against an ephemeral `postgres:16` service. Real DB, real Prisma queries.
+-   **e2e** — `prisma migrate deploy` → `playwright install` → `npm run test:e2e`. Playwright builds the app via its `webServer` config and drives a real Chromium against it.
+
+`integration` and `e2e` each run their own ephemeral `postgres:16` service rather than reaching the Pi. A green CI run is the floor, not a victory lap — flaky tests and missing coverage still hide bugs.
 
 ## Plan Mode Instruction
 
