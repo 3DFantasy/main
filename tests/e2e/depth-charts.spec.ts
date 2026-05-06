@@ -5,7 +5,9 @@ test.describe('depth charts', () => {
         authenticatedPage,
     }) => {
         await authenticatedPage.goto('/depth-charts')
-        await expect(authenticatedPage.getByRole('link', { name: /depth charts/i })).toBeVisible()
+        // Filter input is unique to this page; safer than role-based selectors that
+        // collide with the sidebar nav and breadcrumb "Depth Charts" entries.
+        await expect(authenticatedPage.getByPlaceholder('Filter...')).toBeVisible()
     })
 
     test('filter narrows visible teams', async ({ authenticatedPage }) => {

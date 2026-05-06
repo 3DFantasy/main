@@ -6,16 +6,14 @@ on:
         branches: [main]
 
 # Shared, non-secret env. DB-related vars are set per-job because each job runs its own Postgres service.
+# Microsoft Graph creds are intentionally omitted — getClient() in app/utils/m365/client.server.ts is
+# lazy, so server boot succeeds without them. Tests that exercise sendMail mock the module instead.
 env:
     SESSION_SECRET: ci-session-secret
     REDIS_HOST: localhost
     REDIS_PORT: 6379
     REDIS_QUEUE: 3df-test
     DISABLE_RESQUE: 'true'
-    AZURE_TENANT_ID: fake
-    AZURE_CLIENT_ID: fake
-    AZURE_CLIENT_SECRET: fake
-    M365_EMAIL: test@example.com
     TEAM_1_TITLE: Team One
     TEAM_1_ABBR: T1
     TEAM_2_TITLE: Team Two

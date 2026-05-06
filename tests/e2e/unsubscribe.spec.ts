@@ -1,15 +1,13 @@
 import { expect, test } from '../helpers/fixtures'
 
 test.describe('unsubscribe', () => {
-    test('public unsubscribe page loads with valid account uuid', async ({
+    test('redirects to /home when the account param is not a valid uuid', async ({
         page,
-        seedDb,
+        seedDb: _seedDb,
     }) => {
-        // We need the account UUID — re-query via login UI not necessary; the fixture
-        // seeds a known email, and we can navigate the unsubscribe URL directly.
-        // The route accepts /unsubscribe/:account/:depthChart — use a placeholder depthChart segment.
-        // The page will redirect to /home on invalid params, so we just assert it does not 500.
-        const response = await page.goto(`/unsubscribe/${seedDb.email}/team1`)
-        expect(response?.status()).toBeLessThan(500)
+        // The loader rejects non-UUID account params, returns a message+code,
+        // and the component navigates to /home in response.
+        await page.goto('/unsubscribe/not-a-uuid/team1')
+        await expect(page).toHaveURL(/\/home|\/auth\/login/)
     })
 })

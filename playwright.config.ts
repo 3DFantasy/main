@@ -3,9 +3,13 @@ import { config as loadEnv } from 'dotenv'
 
 const testEnv = loadEnv({ path: '.env.test' }).parsed ?? {}
 
-// Force test isolation: don't let the spawned server read the project's .env.
-// Every var the server needs must come from .env.test.
-const PORT = Number(testEnv.PORT ?? 3000)
+// Belt-and-suspenders: mutate the parent's process.env so every nested subprocess
+// (Playwright's webServer, the npm scripts it spawns, vite, remix-serve) inherits
+// these values directly — not just via webServer.env. Some CI shells have been
+// observed to drop webServer.env keys when launching nested shells.
+Object.assign(process.env, testEnv)
+
+const PORT = Number(process.env.PORT ?? 3000)
 const baseURL = `http://localhost:${PORT}`
 
 export default defineConfig({
@@ -33,7 +37,7 @@ export default defineConfig({
         command: 'npm run build && npm start',
         url: baseURL,
         reuseExistingServer: !process.env.CI,
-        timeout: 120_000,
+        timeout: 180_000,
         stdout: 'pipe',
         stderr: 'pipe',
         env: {

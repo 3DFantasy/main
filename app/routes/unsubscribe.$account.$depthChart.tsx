@@ -74,7 +74,7 @@ export default function Unsubscribe() {
 
     const fetcherData = fetcher.data
     useEffect(() => {
-        if (!fetcherData) return
+        if (!fetcherData || !account) return
         if (fetcherData.message) {
             addToast({
                 title: 'Error',
@@ -98,7 +98,7 @@ export default function Unsubscribe() {
                 color: 'success',
             })
         }
-    }, [fetcherData, account.email])
+    }, [fetcherData, account?.email])
 
     return (
         <Card className="mt-4">
