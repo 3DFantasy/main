@@ -19,6 +19,15 @@ updates:
             update-types: ['version-update:semver-major']
           - dependency-name: 'tailwindcss'
             update-types: ['version-update:semver-major']
+          # React 19 is a deliberate migration — handle as its own PR.
+          - dependency-name: 'react'
+            update-types: ['version-update:semver-major']
+          - dependency-name: 'react-dom'
+            update-types: ['version-update:semver-major']
+          - dependency-name: '@types/react'
+            update-types: ['version-update:semver-major']
+          - dependency-name: '@types/react-dom'
+            update-types: ['version-update:semver-major']
       groups:
           react-router:
               patterns:
