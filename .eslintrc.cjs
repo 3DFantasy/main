@@ -51,6 +51,9 @@ module.exports = {
 			},
 			rules: {
 				'no-mixed-spaces-and-tabs': 'off', // This disables the rule globally
+				'react/no-unescaped-entities': 'off', // straight quotes in JSX text are fine
+				'jsx-a11y/click-events-have-key-events': 'warn',
+				'jsx-a11y/no-static-element-interactions': 'warn',
 			},
 		},
 
@@ -78,9 +81,14 @@ module.exports = {
 			],
 			rules: {
 				'@typescript-eslint/no-explicit-any': 'off',
-				'@typescript-eslint/no-unused-vars': 'off',
-				'react-hooks/exhaustive-deps': 'off',
+				'@typescript-eslint/no-unused-vars': [
+					'warn',
+					{ argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+				],
+				'@typescript-eslint/ban-types': 'warn',
+				'react-hooks/exhaustive-deps': 'warn',
 				'import/no-named-as-default': 'off',
+				'import/order': 'off',
 			},
 		},
 

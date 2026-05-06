@@ -100,13 +100,13 @@ export function ErrorBoundary() {
     } else if (typeof error === 'object' && error !== null) {
         // Handle Response objects from Remix
         if ('data' in error && error.data && typeof error.data === 'object') {
-            // @ts-ignore
+            // @ts-expect-error narrowing from `unknown` Remix error
             errorMessage = error.data.message || JSON.stringify(error.data)
         } else if ('statusText' in error) {
-            // @ts-ignore
+            // @ts-expect-error narrowing from `unknown` Remix error
             errorMessage = error.statusText
         } else if ('message' in error) {
-            // @ts-ignore
+            // @ts-expect-error narrowing from `unknown` Remix error
             errorMessage = error.message
         } else {
             errorMessage = JSON.stringify(error)
@@ -116,7 +116,7 @@ export function ErrorBoundary() {
     }
 
     return (
-        <html>
+        <html lang="en">
             <head>
                 <title>Oh no!</title>
                 <Meta />

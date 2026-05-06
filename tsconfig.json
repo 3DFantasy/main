@@ -5,9 +5,14 @@
 		"**/*.tsx",
 		"tailwind.config.js",
 		"vite.config.ts",
+		"vitest.config.ts",
+		"vitest.setup.ts",
+		"playwright.config.ts",
 		"postcss.config.cts"
 	],
+	"exclude": ["tests/e2e/**"],
 	"compilerOptions": {
+		"types": ["vitest/globals", "@testing-library/jest-dom"],
 		"paths": {
 			"~/*": ["./app/*"]
 		},

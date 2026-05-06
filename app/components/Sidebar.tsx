@@ -185,7 +185,9 @@ export function Sidebar() {
             {/* Mobile overlay */}
             {mobileOpen && (
                 <>
-                    <div
+                    <button
+                        type="button"
+                        aria-label="Close menu"
                         className="md:hidden fixed inset-0 z-40 bg-black/50"
                         onClick={() => setMobileOpen(false)}
                     />

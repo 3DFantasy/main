@@ -27,14 +27,7 @@ export function Providers({
     const [account, setAccount] = useState<RootContextAccount | null>(
         initialAccount
     )
-    const [toastPlacement, setToastPlacement] = useState<
-        | 'top-left'
-        | 'bottom-center'
-        | 'top-center'
-        | 'top-right'
-        | 'bottom-left'
-        | 'bottom-right'
-    >('bottom-center')
+    const toastPlacement = 'bottom-center' as const
 
     const logout = () => {
         if (account) {

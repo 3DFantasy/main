@@ -1,4 +1,3 @@
-import { ActionFunctionArgs } from '@remix-run/node'
 import { AuthorizationError } from 'remix-auth'
 import { authenticator } from '~/utils/auth/auth.server'
 
@@ -7,10 +6,7 @@ export type ActionData = {
     code: number
 }
 
-export const authLoginAction = async (
-    request: Request,
-    params?: ActionFunctionArgs['params']
-) => {
+export const authLoginAction = async (request: Request) => {
     const url = new URL(request.url)
     const nextUrl = url.searchParams.get('nextUrl')
 

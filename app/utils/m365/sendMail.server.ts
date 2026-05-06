@@ -1,6 +1,6 @@
 import Result, { err, ok } from 'true-myth/result'
 import { logger } from '~/utils/logger'
-import { client } from '~/utils/m365/client.server'
+import { getClient } from '~/utils/m365/client.server'
 
 import type { Error } from '~/types'
 
@@ -30,16 +30,6 @@ export type SendMailResponse = {
     success: boolean
 }
 
-type MicrosoftGraphSendMailResponse = {
-    status: number
-    body: {
-        error: {
-            code: string
-            message: string
-        }
-    }
-}
-
 const fileName = 'utils/m365/sendMail.server.ts'
 export async function sendMail({
     message,
@@ -51,7 +41,7 @@ export async function sendMail({
     }
 
     try {
-        await client
+        await getClient()
             .api(`users/${process.env.MICROSOFT_3DFANTASY_FROM_EMAIL}/sendMail`)
             .post(sendMail)
         logger.info(

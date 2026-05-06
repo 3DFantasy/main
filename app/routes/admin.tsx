@@ -54,35 +54,30 @@ export default function Admin() {
         },
     })
     useEffect(() => {
-        if (fetcher.data) {
-            if (fetcher.data.message) {
+        const data = fetcher.data
+        if (!data) return
+        if (data.message) {
+            addToast({
+                title: `${data.code} Error`,
+                description: data.message,
+                color: 'danger',
+            })
+            setFormData((f) => ({
+                ...f,
+                password: '',
+                error: { ...f.error, email: data.message ?? null },
+            }))
+        } else if (data.api === 'teamCheck') {
+            if (data.count > 0) {
                 addToast({
-                    title: `${fetcher.data.code} Error`,
-                    description: fetcher.data.message,
-                    color: 'danger',
+                    title: `TeamCheck jobs successfully queued`,
+                    description: `${data.count} jobs queued`,
                 })
-                setFormData({
-                    ...formData,
-                    password: '',
-                    error: {
-                        ...formData,
-                        email: fetcher.data.message,
-                    },
-                })
-            } else if (fetcher.data.api === 'teamCheck') {
-                if (fetcher.data.count > 0) {
-                    addToast({
-                        title: `TeamCheck jobs successfully queued`,
-                        description: `${fetcher.data.count} jobs queued`,
-                    })
-                }
-            } else if (fetcher.data.api === 'createAccount') {
-                if (fetcher.data.plainText) {
-                    setFormData({
-                        ...formData,
-                        password: fetcher.data.plainText,
-                    })
-                }
+            }
+        } else if (data.api === 'createAccount') {
+            if (data.plainText) {
+                const plainText = data.plainText
+                setFormData((f) => ({ ...f, password: plainText }))
             }
         }
     }, [fetcher.data])
