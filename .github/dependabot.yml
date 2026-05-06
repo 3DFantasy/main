@@ -17,6 +17,8 @@ updates:
           # HeroUI v3 requires Tailwind v4 — gated behind that migration.
           - dependency-name: '@heroui/react'
             update-types: ['version-update:semver-major']
+          - dependency-name: 'tailwindcss'
+            update-types: ['version-update:semver-major']
       groups:
           react-router:
               patterns:
