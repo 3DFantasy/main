@@ -1,11 +1,9 @@
 import {
-    BreadcrumbItem,
     Breadcrumbs,
     Card,
-    CardBody,
-    Input,
     Link,
 } from '@heroui/react'
+import { Input } from '~/components/ui/Input'
 import { Outlet, useLoaderData, useLocation, useParams } from 'react-router'
 import { useEffect, useMemo, useState } from 'react'
 import { depthChartsLoader } from '~/loader/depthCharts.server'
@@ -99,28 +97,23 @@ export default function DepthCharts() {
             <Breadcrumbs>
                 {breadcrumbArray.map((breadcrumb, i) => {
                     return (
-                        <BreadcrumbItem key={i} href={breadcrumb.path}>
+                        <Breadcrumbs.Item key={i} href={breadcrumb.path}>
                             {breadcrumb.title}
-                        </BreadcrumbItem>
+                        </Breadcrumbs.Item>
                     )
                 })}
             </Breadcrumbs>
 
             <Input
                 value={filter}
-                onValueChange={setFilter}
+                onChange={(e) => setFilter(e.target.value)}
                 placeholder="Filter..."
-                isClearable
-                onClear={() => setFilter('')}
-                startContent={
-                    <i className="ri-search-line text-foreground/40" />
-                }
                 className="mt-4"
             />
 
             {breadcrumbArray.length === 1 ? (
                 <Card className="mt-4">
-                    <CardBody>
+                    <Card.Content>
                         <div className="flex flex-col items-start gap-3">
                             {filteredTeams.map((team) => {
                                 const href = `/depth-charts/${team.uuid}`
@@ -128,7 +121,7 @@ export default function DepthCharts() {
                                     <Link
                                         key={team.uuid}
                                         href={href}
-                                        title={team.title}
+                                        aria-label={team.title}
                                         className={`team-${team.id} team-button`}
                                     >
                                         {team.abbr}
@@ -141,7 +134,7 @@ export default function DepthCharts() {
                                 </p>
                             )}
                         </div>
-                    </CardBody>
+                    </Card.Content>
                 </Card>
             ) : (
                 <Outlet

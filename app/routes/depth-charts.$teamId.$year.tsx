@@ -1,4 +1,4 @@
-import { Card, CardBody, Link } from '@heroui/react'
+import { Card, Link } from '@heroui/react'
 import { Outlet, useLoaderData, useOutletContext } from 'react-router'
 import {
     depthChartsTeamIdYearLoader,
@@ -34,7 +34,7 @@ export default function DepthChartsTeamIdYear() {
         <div>
             {breadcrumbArray.length === 3 ? (
                 <Card className="mt-4">
-                    <CardBody>
+                    <Card.Content>
                         <div className="flex flex-col items-start gap-3">
                             {filtered.map((depthChart) => {
                                 return (
@@ -54,7 +54,7 @@ export default function DepthChartsTeamIdYear() {
                                 </p>
                             )}
                         </div>
-                    </CardBody>
+                    </Card.Content>
                 </Card>
             ) : (
                 <Outlet />

@@ -1,4 +1,4 @@
-import { Card, CardBody, Tab, Tabs } from '@heroui/react'
+import { Card, Tabs } from '@heroui/react'
 import { Outlet, useLoaderData, useLocation, useNavigate } from 'react-router'
 import { settingsLoader } from '~/loader/settings.server'
 
@@ -36,20 +36,21 @@ export default function Settings() {
 
     return (
         <Card className="mt-4">
-            <CardBody>
+            <Card.Content>
                 <Tabs
                     selectedKey={selectedKey}
                     onSelectionChange={(key) => navigate(`/settings/${key}`)}
-                    variant="underlined"
                     aria-label="Settings tabs"
                 >
-                    <Tab key="account" title="Account" />
-                    <Tab key="notifications" title="Notifications" />
+                    <Tabs.List>
+                        <Tabs.Tab id="account">Account</Tabs.Tab>
+                        <Tabs.Tab id="notifications">Notifications</Tabs.Tab>
+                    </Tabs.List>
                 </Tabs>
                 <div className="mt-4">
                     <Outlet context={settingsContext} />
                 </div>
-            </CardBody>
+            </Card.Content>
         </Card>
     )
 }

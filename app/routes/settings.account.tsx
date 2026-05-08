@@ -1,6 +1,7 @@
-import { addToast, Button, Input } from '@heroui/react'
-import { useFetcher, useNavigation, useOutletContext } from 'react-router'
+import { Button, toast } from '@heroui/react'
+import { useFetcher, useOutletContext } from 'react-router'
 import { useEffect, useState } from 'react'
+import { Input } from '~/components/ui/Input'
 import { settingsAccountAction } from '~/actions/settings.account.server'
 import { settingsAccountLoader } from '~/loader/settings.account.server'
 
@@ -28,7 +29,6 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function SettingsAccount() {
     const fetcher = useFetcher<ActionData>()
-    const navigation = useNavigation()
     const { account } = useOutletContext<SettingsContext>()
 
     const [formData, setFormData] = useState<{
@@ -54,10 +54,9 @@ export default function SettingsAccount() {
     useEffect(() => {
         if (fetcher.data) {
             if (fetcher.data.message) {
-                addToast({
-                    title: 'Error',
+                toast('Error', {
                     description: `${fetcher.data.message}`,
-                    color: 'danger',
+                    variant: 'danger',
                 })
                 if (fetcher.data.message.includes('Current password')) {
                     setError((e) => ({ ...e, currentPassword: true }))
@@ -71,10 +70,9 @@ export default function SettingsAccount() {
                 }
             }
             if (fetcher.data.code === 200) {
-                addToast({
-                    title: 'Account updated',
+                toast('Account updated', {
                     description: `Account details successfully updated`,
-                    color: 'default',
+                    variant: 'default',
                 })
             }
         }
@@ -160,8 +158,7 @@ export default function SettingsAccount() {
                 </div>
                 <div>
                     <Button
-                        color="default"
-                        isLoading={navigation.state !== 'idle'}
+                        variant="secondary"
                         isDisabled={
                             formData.newPasswordConfirm !==
                                 formData.newPassword ||

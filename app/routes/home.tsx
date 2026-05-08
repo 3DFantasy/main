@@ -1,4 +1,4 @@
-import { Card, CardBody } from '@heroui/react'
+import { Card } from '@heroui/react'
 import { useLoaderData, useNavigate } from 'react-router'
 import { useEffect } from 'react'
 import { homeLoader } from '~/loader/home.server'
@@ -39,12 +39,12 @@ export default function Home() {
     return (
         <div className="my-2">
             <Card className="mt-4">
-                <CardBody className="py-8">
+                <Card.Content className="py-8">
                     <h1 className="text-2xl font-bold mb-2">Welcome to 3DF</h1>
                     <p className="text-foreground/60">
                         CFL depth chart tracking and play-by-play analytics.
                     </p>
-                </CardBody>
+                </Card.Content>
             </Card>
         </div>
     )

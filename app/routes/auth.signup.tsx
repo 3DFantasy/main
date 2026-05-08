@@ -1,6 +1,7 @@
-import { addToast, Button, Card, CardBody, CardHeader, Input } from '@heroui/react'
+import { Button, Card, toast } from '@heroui/react'
 import { Form, useActionData } from 'react-router'
 import { useEffect, useState } from 'react'
+import { Input } from '~/components/ui/Input'
 import { authSignupAction } from '~/actions/auth.signup.server'
 import { authSignupLoader } from '~/loader/auth.signup.server'
 
@@ -53,10 +54,7 @@ export default function Signup() {
     useEffect(() => {
         if (actionData) {
             if (actionData.message) {
-                addToast({
-                    title: actionData.message,
-                    color: 'danger',
-                })
+                toast(actionData.message, { variant: 'danger' })
 
                 if (actionData.message.includes('characters')) {
                     setError({
@@ -92,10 +90,10 @@ export default function Signup() {
     return (
         <div className="flex items-center justify-center min-h-[70vh]">
             <Card className="w-full max-w-sm">
-                <CardHeader className="flex justify-center">
+                <Card.Header className="flex justify-center">
                     <h1 className="text-xl font-semibold">Signup for 3DF</h1>
-                </CardHeader>
-                <CardBody>
+                </Card.Header>
+                <Card.Content>
                     <Form method="post">
                         <Input
                             className={inputClass}
@@ -143,7 +141,7 @@ export default function Signup() {
                         />
                         <div className="mx-auto w-fit mt-2">
                             <Button
-                                color="primary"
+                                variant="primary"
                                 type="submit"
                                 isDisabled={
                                     formData.password !== formData.confirm ||
@@ -155,7 +153,7 @@ export default function Signup() {
                             </Button>
                         </div>
                     </Form>
-                </CardBody>
+                </Card.Content>
             </Card>
         </div>
     )

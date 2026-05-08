@@ -1,5 +1,5 @@
 import { Avatar, Button, Link } from '@heroui/react'
-import { useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
 import { useAuth } from '~/providers'
@@ -51,8 +51,8 @@ function NavLinks({
                             onPress={onNavigate}
                             className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                                 isActive
-                                    ? 'bg-primary/10 text-primary'
-                                    : 'text-foreground/60 hover:text-foreground hover:bg-content2'
+                                    ? 'bg-accent/10 text-accent'
+                                    : 'text-foreground/60 hover:text-foreground hover:bg-surface-secondary'
                             }`}
                         >
                             <i className={`${item.icon} ri-lg`}></i>
@@ -79,7 +79,7 @@ function ThemeToggle() {
     return (
         <button
             onClick={() => setTheme(isDark ? 'light' : 'dark')}
-            className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-foreground/60 hover:text-foreground hover:bg-content2 transition-colors w-full"
+            className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-foreground/60 hover:text-foreground hover:bg-surface-secondary transition-colors w-full"
             title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
         >
             <i
@@ -97,24 +97,21 @@ function UserSection({
     account: ReturnType<typeof useAuth>['account']
     logout: () => void
 }) {
+    const navigate = useNavigate()
     if (!account) {
         return (
             <div className="flex flex-col gap-2 px-3">
                 <Button
-                    as={Link}
-                    href="/auth/login"
-                    color="primary"
-                    variant="flat"
+                    onPress={() => navigate('/auth/login')}
+                    variant="primary"
                     size="sm"
                     className="w-full"
                 >
                     Log In
                 </Button>
                 <Button
-                    as={Link}
-                    href="/auth/signup"
-                    color="default"
-                    variant="bordered"
+                    onPress={() => navigate('/auth/signup')}
+                    variant="outline"
                     size="sm"
                     className="w-full"
                 >
@@ -126,7 +123,7 @@ function UserSection({
 
     return (
         <div className="flex items-center gap-3 px-3">
-            <Avatar size="sm" color="primary" />
+            <Avatar size="sm" color="accent" />
             <div className="flex-1 min-w-0">
                 <p className="text-sm text-foreground truncate">
                     {account.email}
@@ -155,12 +152,12 @@ export function Sidebar() {
     return (
         <>
             {/* Desktop sidebar */}
-            <aside className="hidden md:flex flex-col sticky top-0 h-dvh w-64 shrink-0 border-r border-divider bg-content1">
+            <aside className="hidden md:flex flex-col sticky top-0 h-dvh w-64 shrink-0 border-r border-separator bg-surface">
                 <div className="flex-1 py-4">
                     <NavLinks account={account} pathname={location.pathname} />
                 </div>
 
-                <div className="border-t border-divider py-4">
+                <div className="border-t border-separator py-4">
                     <div className="px-3 mb-3">
                         <ThemeToggle />
                     </div>
@@ -169,7 +166,7 @@ export function Sidebar() {
             </aside>
 
             {/* Mobile top bar */}
-            <div className="md:hidden fixed top-0 left-0 right-0 z-40 flex items-center justify-between h-14 px-4 border-b border-divider bg-content1">
+            <div className="md:hidden fixed top-0 left-0 right-0 z-40 flex items-center justify-between h-14 px-4 border-b border-separator bg-surface">
                 <div className="flex items-center gap-2">
                 </div>
                 <button
@@ -191,7 +188,7 @@ export function Sidebar() {
                         className="md:hidden fixed inset-0 z-40 bg-black/50"
                         onClick={() => setMobileOpen(false)}
                     />
-                    <aside className="md:hidden fixed top-14 left-0 bottom-0 z-50 w-64 flex flex-col bg-content1 border-r border-divider">
+                    <aside className="md:hidden fixed top-14 left-0 bottom-0 z-50 w-64 flex flex-col bg-surface border-r border-separator">
                         <div className="flex-1 py-4">
                             <NavLinks
                                 account={account}
@@ -199,7 +196,7 @@ export function Sidebar() {
                                 onNavigate={() => setMobileOpen(false)}
                             />
                         </div>
-                        <div className="border-t border-divider py-4">
+                        <div className="border-t border-separator py-4">
                             <div className="px-3 mb-3">
                                 <ThemeToggle />
                             </div>

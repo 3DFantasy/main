@@ -1,13 +1,11 @@
 import {
     Accordion,
-    AccordionItem,
-    addToast,
     Button,
     ButtonGroup,
     Card,
-    CardBody,
     Checkbox,
     CheckboxGroup,
+    toast,
 } from '@heroui/react'
 import { useFetcher, useLoaderData, useNavigate, useNavigation } from 'react-router'
 import { useEffect, useRef, useState } from 'react'
@@ -41,10 +39,9 @@ export default function Unsubscribe() {
 
     useEffect(() => {
         if ((message || code) && !error.current) {
-            addToast({
-                color: 'danger',
-                title: 'Error',
+            toast('Error', {
                 description: message,
+                variant: 'danger',
             })
             error.current = true
             navigate('/home')
@@ -71,10 +68,9 @@ export default function Unsubscribe() {
     useEffect(() => {
         if (!fetcherData || !account) return
         if (fetcherData.message) {
-            addToast({
-                title: 'Error',
+            toast('Error', {
                 description: fetcherData.message,
-                color: 'danger',
+                variant: 'danger',
             })
         }
         if (fetcherData.account) {
@@ -87,23 +83,25 @@ export default function Unsubscribe() {
                 }
             }
             setSelected(newSelected)
-            addToast({
-                title: 'Updated',
+            toast('Updated', {
                 description: `Email notification subscription preferences have been updated for ${account.email}`,
-                color: 'success',
+                variant: 'success',
             })
         }
     }, [fetcherData, account])
 
     return (
         <Card className="mt-4">
-            <CardBody>
+            <Card.Content>
             <Accordion defaultExpandedKeys={['unsubscribe-all']}>
-                <AccordionItem
-                    key="unsubscribe-all"
+                <Accordion.Item
+                    id="unsubscribe-all"
                     aria-label="Unsubscribe from all team email notification accordion section"
-                    title="Unsubscribe from all"
                 >
+                    <Accordion.Heading>
+                        <Accordion.Trigger>Unsubscribe from all</Accordion.Trigger>
+                    </Accordion.Heading>
+                    <Accordion.Body>
                     <Button
                         onPress={() => {
                             fetcher.submit(
@@ -128,12 +126,16 @@ export default function Unsubscribe() {
                     >
                         Unsubscribe
                     </Button>
-                </AccordionItem>
-                <AccordionItem
-                    key="unsubscribe-team-selection"
+                    </Accordion.Body>
+                </Accordion.Item>
+                <Accordion.Item
+                    id="unsubscribe-team-selection"
                     aria-label="Unsubscribe from select teams accordion section"
-                    title="Unsubscribe per team"
                 >
+                    <Accordion.Heading>
+                        <Accordion.Trigger>Unsubscribe per team</Accordion.Trigger>
+                    </Accordion.Heading>
+                    <Accordion.Body>
                     <p className="mb-4">
                         Select the teams that you would like to continue to
                         receive new depth chart email notifications for
@@ -141,7 +143,7 @@ export default function Unsubscribe() {
                     <CheckboxGroup
                         defaultValue={[]}
                         value={selected}
-                        onValueChange={setSelected}
+                        onChange={setSelected}
                     >
                         {teamTitles.map((team) => {
                             return (
@@ -153,8 +155,7 @@ export default function Unsubscribe() {
                     </CheckboxGroup>
                     <ButtonGroup className="my-4">
                         <Button
-                            color="default"
-                            isLoading={navigation.state !== 'idle'}
+                            variant="secondary"
                             isDisabled={navigation.state !== 'idle'}
                             onPress={() => {
                                 setSelected([])
@@ -163,8 +164,7 @@ export default function Unsubscribe() {
                             Clear
                         </Button>
                         <Button
-                            color="secondary"
-                            isLoading={navigation.state !== 'idle'}
+                            variant="secondary"
                             isDisabled={navigation.state !== 'idle'}
                             onPress={() => {
                                 if (selected.length < teamTitles.length) {
@@ -179,8 +179,7 @@ export default function Unsubscribe() {
                             Select All
                         </Button>
                         <Button
-                            color="success"
-                            isLoading={navigation.state !== 'idle'}
+                            variant="primary"
                             isDisabled={navigation.state !== 'idle'}
                             onPress={() => {
                                 fetcher.submit(
@@ -201,9 +200,10 @@ export default function Unsubscribe() {
                             Update
                         </Button>
                     </ButtonGroup>
-                </AccordionItem>
+                    </Accordion.Body>
+                </Accordion.Item>
             </Accordion>
-            </CardBody>
+            </Card.Content>
         </Card>
     )
 }

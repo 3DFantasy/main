@@ -16,11 +16,6 @@ updates:
             versions: ['6.x']
           - dependency-name: 'eslint-import-resolver-typescript'
             versions: ['5.x']
-          # HeroUI v3 requires Tailwind v4 — gated behind that migration.
-          - dependency-name: '@heroui/react'
-            update-types: ['version-update:semver-major']
-          - dependency-name: 'tailwindcss'
-            update-types: ['version-update:semver-major']
           # React 20 will be a deliberate migration when it ships.
           - dependency-name: 'react'
             versions: ['20.x']

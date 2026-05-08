@@ -1,6 +1,7 @@
-import { addToast, Button, Card, CardBody, CardHeader, Input } from '@heroui/react'
+import { Button, Card, toast } from '@heroui/react'
 import { Form, useActionData, useLoaderData, useNavigation } from 'react-router'
 import { useEffect, useState } from 'react'
+import { Input } from '~/components/ui/Input'
 import { ActionData, authLoginAction } from '~/actions/auth.login.server'
 import { authLoginLoader } from '~/loader/auth.login.server'
 
@@ -44,7 +45,7 @@ export default function Login() {
     useEffect(() => {
         if (actionData?.message) {
             setError({ email: true, password: true })
-            addToast({ title: actionData.message, color: 'danger' })
+            toast(actionData.message, { variant: 'danger' })
         }
     }, [actionData])
 
@@ -62,10 +63,10 @@ export default function Login() {
     return (
         <div className="flex items-center justify-center min-h-[70vh]">
             <Card className="w-full max-w-sm">
-                <CardHeader className="flex justify-center">
+                <Card.Header className="flex justify-center">
                     <h1 className="text-xl font-semibold">Login</h1>
-                </CardHeader>
-                <CardBody>
+                </Card.Header>
+                <Card.Content>
                     <Form
                         method="post"
                         action={`/auth/login${nextUrl ? `?nextUrl=${nextUrl}` : ''}`}
@@ -107,20 +108,19 @@ export default function Login() {
                         />
                         <div className="mx-auto w-fit mt-2">
                             <Button
-                                color="primary"
+                                variant="primary"
                                 isDisabled={
                                     navigation.state !== 'idle' ||
                                     formData.password.length === 0 ||
                                     formData.email.length === 0
                                 }
-                                isLoading={navigation.state !== 'idle'}
                                 type="submit"
                             >
                                 Sign in
                             </Button>
                         </div>
                     </Form>
-                </CardBody>
+                </Card.Content>
             </Card>
         </div>
     )

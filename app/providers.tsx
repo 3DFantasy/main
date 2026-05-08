@@ -1,12 +1,11 @@
-import { addToast, HeroUIProvider, ToastProvider } from '@heroui/react'
-import { useNavigate } from 'react-router';
+import { RouterProvider, toast, ToastProvider } from '@heroui/react'
 import { ThemeProvider as NextThemesProvider } from 'next-themes'
 import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router'
 
 import type { ReactNode } from 'react'
 import type { RootContextAccount } from './root'
 
-// Create Auth Context
 const AuthContext = createContext<{
     account: RootContextAccount | null
     setAccount: (account: RootContextAccount | null) => void
@@ -27,14 +26,11 @@ export function Providers({
     const [account, setAccount] = useState<RootContextAccount | null>(
         initialAccount
     )
-    const toastPlacement = 'bottom-center' as const
 
     const logout = () => {
         if (account) {
-            addToast({
-                title: `User Signed out: `,
+            toast(`User Signed out: `, {
                 description: account.email,
-                color: 'default',
             })
             setAccount(null)
             loggedIn.current = false
@@ -44,10 +40,8 @@ export function Providers({
 
     useEffect(() => {
         if (!loggedIn.current && account) {
-            addToast({
-                title: 'Authenticated:',
+            toast('Authenticated:', {
                 description: account.email,
-                color: 'default',
             })
             loggedIn.current = true
         }
@@ -55,12 +49,12 @@ export function Providers({
 
     return (
         <AuthContext.Provider value={{ account, setAccount, logout }}>
-            <HeroUIProvider navigate={navigate}>
+            <RouterProvider navigate={navigate}>
                 <NextThemesProvider attribute="class" defaultTheme="dark">
-                    <ToastProvider placement={toastPlacement} />
+                    <ToastProvider placement="bottom" />
                     {children}
                 </NextThemesProvider>
-            </HeroUIProvider>
+            </RouterProvider>
         </AuthContext.Provider>
     )
 }

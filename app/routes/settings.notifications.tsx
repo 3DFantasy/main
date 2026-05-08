@@ -1,9 +1,9 @@
 import {
-    addToast,
     Button,
     ButtonGroup,
     Checkbox,
     CheckboxGroup,
+    toast,
 } from '@heroui/react'
 import { useFetcher, useLoaderData, useNavigation, useOutletContext } from 'react-router'
 import { useEffect, useState } from 'react'
@@ -48,18 +48,16 @@ export default function SettingsNotifications() {
     useEffect(() => {
         if (fetcher.data) {
             if (fetcher.data.message) {
-                addToast({
-                    title: 'Error',
+                toast('Error', {
                     description: fetcher.data.message,
-                    color: 'danger',
+                    variant: 'danger',
                 })
             }
             if (fetcher.data.account) {
-                addToast({
-                    title: 'Updated',
+                toast('Updated', {
                     description:
                         'Email notification subscription preferences have been updated',
-                    color: 'success',
+                    variant: 'success',
                 })
             }
         }
@@ -75,7 +73,7 @@ export default function SettingsNotifications() {
             <CheckboxGroup
                 defaultValue={[]}
                 value={selected}
-                onValueChange={setSelected}
+                onChange={setSelected}
             >
                 {teamTitles.map((team) => {
                     return (
@@ -87,8 +85,7 @@ export default function SettingsNotifications() {
             </CheckboxGroup>
             <ButtonGroup className="my-4">
                 <Button
-                    color="default"
-                    isLoading={navigation.state !== 'idle'}
+                    variant="secondary"
                     isDisabled={navigation.state !== 'idle'}
                     onPress={() => {
                         setSelected([])
@@ -97,8 +94,7 @@ export default function SettingsNotifications() {
                     Clear
                 </Button>
                 <Button
-                    color="secondary"
-                    isLoading={navigation.state !== 'idle'}
+                    variant="secondary"
                     isDisabled={navigation.state !== 'idle'}
                     onPress={() => {
                         if (selected.length < teamTitles.length) {
@@ -113,8 +109,7 @@ export default function SettingsNotifications() {
                     Select All
                 </Button>
                 <Button
-                    color="success"
-                    isLoading={navigation.state !== 'idle'}
+                    variant="primary"
                     isDisabled={navigation.state !== 'idle'}
                     onPress={() => {
                         fetcher.submit(

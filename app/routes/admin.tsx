@@ -1,17 +1,15 @@
 import {
     Accordion,
-    AccordionItem,
-    addToast,
     Button,
     ButtonGroup,
     Card,
-    CardBody,
     Checkbox,
     CheckboxGroup,
-    Input,
+    toast,
 } from '@heroui/react'
 import { useFetcher, useLoaderData, useNavigation } from 'react-router'
 import { useEffect, useState } from 'react'
+import { Input } from '~/components/ui/Input'
 import { adminLoader } from '~/loader/admin.server'
 
 import type { Route } from './+types/admin'
@@ -57,10 +55,9 @@ export default function Admin() {
         const data = fetcher.data
         if (!data) return
         if (data.message) {
-            addToast({
-                title: `${data.code} Error`,
+            toast(`${data.code} Error`, {
                 description: data.message,
-                color: 'danger',
+                variant: 'danger',
             })
             setFormData((f) => ({
                 ...f,
@@ -69,8 +66,7 @@ export default function Admin() {
             }))
         } else if (data.api === 'teamCheck') {
             if (data.count > 0) {
-                addToast({
-                    title: `TeamCheck jobs successfully queued`,
+                toast(`TeamCheck jobs successfully queued`, {
                     description: `${data.count} jobs queued`,
                 })
             }
@@ -97,17 +93,20 @@ export default function Admin() {
 
     return (
         <Card className="my-4">
-            <CardBody>
-            <Accordion defaultExpandedKeys={['team-check']} variant="light">
-                <AccordionItem
-                    key="team-check"
+            <Card.Content>
+            <Accordion defaultExpandedKeys={['team-check']}>
+                <Accordion.Item
+                    id="team-check"
                     aria-label="Team Checks Accordion section 1"
-                    title="Team Checks"
                 >
+                    <Accordion.Heading>
+                        <Accordion.Trigger>Team Checks</Accordion.Trigger>
+                    </Accordion.Heading>
+                    <Accordion.Body>
                     <CheckboxGroup
                         defaultValue={[]}
                         value={selected}
-                        onValueChange={setSelected}
+                        onChange={setSelected}
                     >
                         {teamTitles.map((team, i) => {
                             return (
@@ -119,8 +118,7 @@ export default function Admin() {
                     </CheckboxGroup>
                     <ButtonGroup className="my-4">
                         <Button
-                            color="default"
-                            isLoading={navigation.state !== 'idle'}
+                            variant="secondary"
                             isDisabled={navigation.state !== 'idle'}
                             onPress={() => {
                                 setSelected([])
@@ -129,8 +127,7 @@ export default function Admin() {
                             Clear
                         </Button>
                         <Button
-                            color="secondary"
-                            isLoading={navigation.state !== 'idle'}
+                            variant="secondary"
                             isDisabled={navigation.state !== 'idle'}
                             onPress={() => {
                                 if (selected.length < teamTitles.length) {
@@ -145,8 +142,7 @@ export default function Admin() {
                             Select All
                         </Button>
                         <Button
-                            color="success"
-                            isLoading={navigation.state !== 'idle'}
+                            variant="primary"
                             isDisabled={navigation.state !== 'idle'}
                             onPress={() => {
                                 fetcher.submit(
@@ -167,12 +163,16 @@ export default function Admin() {
                             Submit
                         </Button>
                     </ButtonGroup>
-                </AccordionItem>
-                <AccordionItem
-                    key="create-accounts"
+                    </Accordion.Body>
+                </Accordion.Item>
+                <Accordion.Item
+                    id="create-accounts"
                     aria-label="Create accounts Accordion section 2"
-                    title="Create Accounts"
                 >
+                    <Accordion.Heading>
+                        <Accordion.Trigger>Create Accounts</Accordion.Trigger>
+                    </Accordion.Heading>
+                    <Accordion.Body>
                     <div className="flex flex-row">
                         <div className="w-3/12 mr-4">
                             <Input
@@ -212,9 +212,10 @@ export default function Admin() {
                             </div>
                         </div>
                     </div>
-                </AccordionItem>
+                    </Accordion.Body>
+                </Accordion.Item>
             </Accordion>
-            </CardBody>
+            </Card.Content>
         </Card>
     )
 }
