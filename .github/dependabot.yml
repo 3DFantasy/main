@@ -30,12 +30,6 @@ updates:
             update-types: ['version-update:semver-major']
           - dependency-name: '@types/react-dom'
             update-types: ['version-update:semver-major']
-          # Vite 8 and @vitejs/plugin-react v6 are a linked migration —
-          # plugin v6 requires Vite 8 exclusively, so they must move together.
-          - dependency-name: 'vite'
-            versions: ['8.x']
-          - dependency-name: '@vitejs/plugin-react'
-            versions: ['6.x']
           # Prisma 7 removes datasource.url from schema and moves to
           # prisma.config.ts + driver adapters — needs deliberate migration.
           - dependency-name: 'prisma'
