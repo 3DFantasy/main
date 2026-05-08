@@ -6,14 +6,16 @@ updates:
           interval: weekly
       open-pull-requests-limit: 10
       ignore:
-          # Hold ESLint v8 until we migrate .eslintrc.cjs to flat config.
-          # ESLint 9 made flat config the default; v10 removed legacy support.
+          # ESLint 10 ecosystem isn't ready: eslint-plugin-react@7 peers
+          # only ^9.7, eslint-plugin-jsx-a11y@6 peers only ^9, and
+          # eslint-plugin-react-hooks@5 peers only ^9. Re-evaluate when
+          # those plugins ship v10-compatible majors.
           - dependency-name: 'eslint'
-            update-types: ['version-update:semver-major']
+            versions: ['10.x']
           - dependency-name: 'eslint-plugin-react-hooks'
-            update-types: ['version-update:semver-major']
+            versions: ['6.x']
           - dependency-name: 'eslint-import-resolver-typescript'
-            update-types: ['version-update:semver-major']
+            versions: ['5.x']
           # HeroUI v3 requires Tailwind v4 — gated behind that migration.
           - dependency-name: '@heroui/react'
             update-types: ['version-update:semver-major']
