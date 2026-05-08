@@ -21,15 +21,15 @@ updates:
             update-types: ['version-update:semver-major']
           - dependency-name: 'tailwindcss'
             update-types: ['version-update:semver-major']
-          # React 19 is a deliberate migration — handle as its own PR.
+          # React 20 will be a deliberate migration when it ships.
           - dependency-name: 'react'
-            update-types: ['version-update:semver-major']
+            versions: ['20.x']
           - dependency-name: 'react-dom'
-            update-types: ['version-update:semver-major']
+            versions: ['20.x']
           - dependency-name: '@types/react'
-            update-types: ['version-update:semver-major']
+            versions: ['20.x']
           - dependency-name: '@types/react-dom'
-            update-types: ['version-update:semver-major']
+            versions: ['20.x']
           # Vite 8 and @vitejs/plugin-react v6 are a linked migration —
           # plugin v6 requires Vite 8 exclusively, so they must move together.
           - dependency-name: 'vite'
