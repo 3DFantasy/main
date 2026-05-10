@@ -68,7 +68,7 @@ test.describe('settings — notification preferences persist', () => {
         await expect(checkboxes).toHaveCount(9)
         const firstBox = checkboxes.first()
         await expect(firstBox).toBeChecked()
-        await firstBox.click()
+        await firstBox.uncheck({ force: true })
         await expect(firstBox).not.toBeChecked()
 
         await authenticatedPage.getByRole('button', { name: /^update$/i }).click()
