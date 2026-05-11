@@ -5,7 +5,7 @@ import {
 } from '@heroui/react'
 import { Input } from '~/components/ui/Input'
 import { Outlet, useLoaderData, useLocation, useParams } from 'react-router'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { depthChartsLoader } from '~/loader/depthCharts.server'
 
 import type { Route } from './+types/depth-charts'
@@ -80,9 +80,11 @@ export default function DepthCharts() {
         return result
     }, [location.pathname, teams])
 
-    useEffect(() => {
+    const [prevPath, setPrevPath] = useState(location.pathname)
+    if (prevPath !== location.pathname) {
+        setPrevPath(location.pathname)
         setFilter('')
-    }, [location.pathname])
+    }
 
     const filteredTeams = teams.filter(
         (team) =>

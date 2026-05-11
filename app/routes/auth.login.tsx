@@ -1,6 +1,6 @@
 import { Button, Card, toast } from '@heroui/react'
 import { Form, useActionData, useLoaderData, useNavigation } from 'react-router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Input } from '~/components/ui/Input'
 import { ActionData, authLoginAction } from '~/actions/auth.login.server'
 import { authLoginLoader } from '~/loader/auth.login.server'
@@ -42,12 +42,16 @@ export default function Login() {
 
     const inputClass = 'my-2'
 
-    useEffect(() => {
+    const [reactedActionData, setReactedActionData] = useState<
+        ActionData | undefined
+    >(undefined)
+    if (actionData !== reactedActionData) {
+        setReactedActionData(actionData)
         if (actionData?.message) {
             setError({ email: true, password: true })
             toast(actionData.message, { variant: 'danger' })
         }
-    }, [actionData])
+    }
 
     const handleInputChange = (
         e: React.ChangeEvent<HTMLInputElement>,

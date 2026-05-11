@@ -34,8 +34,16 @@ export default function Unsubscribe() {
     const navigation = useNavigation()
     const fetcher = useFetcher<ActionData>()
     const error = useRef(false)
-    const [selected, setSelected] = useState<string[]>([])
     const { account, teamTitles, message, code } = useLoaderData<LoaderData>()
+    const [selected, setSelected] = useState<string[]>(() => {
+        if (!account) return []
+        const initial: string[] = []
+        for (let i = 1; i <= 9; i++) {
+            const key = `team${i}Notification` as keyof typeof account
+            if (account[key] === true) initial.push(`team${i}`)
+        }
+        return initial
+    })
 
     useEffect(() => {
         if ((message || code) && !error.current) {
@@ -48,32 +56,19 @@ export default function Unsubscribe() {
         }
     }, [message, code, navigate])
 
-    useEffect(() => {
-        if (account) {
-            const initialSelected = []
-
-            for (let i = 1; i <= 9; i++) {
-                const notificationKey = `team${i}Notification`
-
-                if (account[notificationKey as keyof typeof account] === true) {
-                    initialSelected.push(`team${i}`)
-                }
-            }
-
-            setSelected(initialSelected)
-        }
-    }, [account])
-
     const fetcherData = fetcher.data
-    useEffect(() => {
-        if (!fetcherData || !account) return
-        if (fetcherData.message) {
+    const [reactedFetcherData, setReactedFetcherData] = useState<
+        ActionData | undefined
+    >(undefined)
+    if (fetcherData !== reactedFetcherData && account) {
+        setReactedFetcherData(fetcherData)
+        if (fetcherData?.message) {
             toast('Error', {
                 description: fetcherData.message,
                 variant: 'danger',
             })
         }
-        if (fetcherData.account) {
+        if (fetcherData?.account) {
             const newSelected: string[] = []
             for (let i = 1; i <= 9; i++) {
                 const key =
@@ -88,7 +83,7 @@ export default function Unsubscribe() {
                 variant: 'success',
             })
         }
-    }, [fetcherData, account])
+    }
 
     return (
         <Card className="mt-4">
