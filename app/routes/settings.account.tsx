@@ -1,6 +1,6 @@
 import { Button, toast } from '@heroui/react'
 import { useFetcher, useOutletContext } from 'react-router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Input } from '~/components/ui/Input'
 import { settingsAccountAction } from '~/actions/settings.account.server'
 import { settingsAccountLoader } from '~/loader/settings.account.server'
@@ -51,32 +51,34 @@ export default function SettingsAccount() {
         newPasswordConfirm: false,
     })
 
-    useEffect(() => {
-        if (fetcher.data) {
-            if (fetcher.data.message) {
-                toast('Error', {
-                    description: `${fetcher.data.message}`,
-                    variant: 'danger',
-                })
-                if (fetcher.data.message.includes('Current password')) {
-                    setError((e) => ({ ...e, currentPassword: true }))
-                } else {
-                    setError((e) => ({
-                        ...e,
-                        newPasswordConfirm: true,
-                        newPassword: true,
-                        currentPassword: true,
-                    }))
-                }
-            }
-            if (fetcher.data.code === 200) {
-                toast('Account updated', {
-                    description: `Account details successfully updated`,
-                    variant: 'default',
-                })
+    const [reactedFetcherData, setReactedFetcherData] = useState<
+        ActionData | undefined
+    >(undefined)
+    if (fetcher.data !== reactedFetcherData) {
+        setReactedFetcherData(fetcher.data)
+        if (fetcher.data?.message) {
+            toast('Error', {
+                description: `${fetcher.data.message}`,
+                variant: 'danger',
+            })
+            if (fetcher.data.message.includes('Current password')) {
+                setError((e) => ({ ...e, currentPassword: true }))
+            } else {
+                setError((e) => ({
+                    ...e,
+                    newPasswordConfirm: true,
+                    newPassword: true,
+                    currentPassword: true,
+                }))
             }
         }
-    }, [fetcher.data])
+        if (fetcher.data?.code === 200) {
+            toast('Account updated', {
+                description: `Account details successfully updated`,
+                variant: 'default',
+            })
+        }
+    }
 
     const handleInputChange = (
         e: React.ChangeEvent<HTMLInputElement>,

@@ -66,11 +66,12 @@ function NavLinks({
 
 function ThemeToggle() {
     const { theme, setTheme } = useTheme()
+    // SSR-hydration guard: theme is unknown until client mount.
+    // react-hooks/set-state-in-effect flags this, but there's no
+    // non-effect alternative — useState initializers run during SSR.
     const [mounted, setMounted] = useState(false)
-
-    useEffect(() => {
-        setMounted(true)
-    }, [])
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    useEffect(() => setMounted(true), [])
 
     if (!mounted) return null
 
@@ -144,10 +145,11 @@ export function Sidebar() {
     const location = useLocation()
     const { account, logout } = useAuth()
     const [mobileOpen, setMobileOpen] = useState(false)
-
-    useEffect(() => {
+    const [prevPath, setPrevPath] = useState(location.pathname)
+    if (prevPath !== location.pathname) {
+        setPrevPath(location.pathname)
         setMobileOpen(false)
-    }, [location.pathname])
+    }
 
     return (
         <>

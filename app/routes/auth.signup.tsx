@@ -1,6 +1,6 @@
 import { Button, Card, toast } from '@heroui/react'
 import { Form, useActionData } from 'react-router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Input } from '~/components/ui/Input'
 import { authSignupAction } from '~/actions/auth.signup.server'
 import { authSignupLoader } from '~/loader/auth.signup.server'
@@ -51,30 +51,22 @@ export default function Signup() {
         password: false,
     })
 
-    useEffect(() => {
-        if (actionData) {
-            if (actionData.message) {
-                toast(actionData.message, { variant: 'danger' })
-
-                if (actionData.message.includes('characters')) {
-                    setError({
-                        email: false,
-                        password: true,
-                    })
-                } else if (actionData.message.includes('email')) {
-                    setError({
-                        email: true,
-                        password: false,
-                    })
-                } else {
-                    setError({
-                        email: true,
-                        password: true,
-                    })
-                }
+    const [reactedActionData, setReactedActionData] = useState<
+        ActionData | undefined
+    >(undefined)
+    if (actionData !== reactedActionData) {
+        setReactedActionData(actionData)
+        if (actionData?.message) {
+            toast(actionData.message, { variant: 'danger' })
+            if (actionData.message.includes('characters')) {
+                setError({ email: false, password: true })
+            } else if (actionData.message.includes('email')) {
+                setError({ email: true, password: false })
+            } else {
+                setError({ email: true, password: true })
             }
         }
-    }, [actionData])
+    }
 
     const handleInputChange = (
         e: React.ChangeEvent<HTMLInputElement>,

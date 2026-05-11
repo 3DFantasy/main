@@ -8,7 +8,7 @@ import {
     toast,
 } from '@heroui/react'
 import { useFetcher, useLoaderData, useNavigation } from 'react-router'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Input } from '~/components/ui/Input'
 import { adminLoader } from '~/loader/admin.server'
 
@@ -51,32 +51,37 @@ export default function Admin() {
             email: null,
         },
     })
-    useEffect(() => {
+    const [reactedFetcherData, setReactedFetcherData] = useState<
+        TeamCheckActionData | CreateAccountActionData | undefined
+    >(undefined)
+    if (fetcher.data !== reactedFetcherData) {
+        setReactedFetcherData(fetcher.data)
         const data = fetcher.data
-        if (!data) return
-        if (data.message) {
-            toast(`${data.code} Error`, {
-                description: data.message,
-                variant: 'danger',
-            })
-            setFormData((f) => ({
-                ...f,
-                password: '',
-                error: { ...f.error, email: data.message ?? null },
-            }))
-        } else if (data.api === 'teamCheck') {
-            if (data.count > 0) {
-                toast(`TeamCheck jobs successfully queued`, {
-                    description: `${data.count} jobs queued`,
+        if (data) {
+            if (data.message) {
+                toast(`${data.code} Error`, {
+                    description: data.message,
+                    variant: 'danger',
                 })
-            }
-        } else if (data.api === 'createAccount') {
-            if (data.plainText) {
-                const plainText = data.plainText
-                setFormData((f) => ({ ...f, password: plainText }))
+                setFormData((f) => ({
+                    ...f,
+                    password: '',
+                    error: { ...f.error, email: data.message ?? null },
+                }))
+            } else if (data.api === 'teamCheck') {
+                if (data.count > 0) {
+                    toast(`TeamCheck jobs successfully queued`, {
+                        description: `${data.count} jobs queued`,
+                    })
+                }
+            } else if (data.api === 'createAccount') {
+                if (data.plainText) {
+                    const plainText = data.plainText
+                    setFormData((f) => ({ ...f, password: plainText }))
+                }
             }
         }
-    }, [fetcher.data])
+    }
 
     const handleInputChange = (
         e: React.ChangeEvent<HTMLInputElement>,
