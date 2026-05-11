@@ -43,7 +43,7 @@
     "winston": "^3.17.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.4",
+    "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.48.0",
     "@react-router/dev": "^7.0.0",
     "@react-router/fs-routes": "^7.0.0",
