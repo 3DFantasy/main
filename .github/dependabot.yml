@@ -8,9 +8,12 @@ updates:
       ignore:
           # ESLint 10 ecosystem isn't ready: eslint-plugin-react@7 peers
           # only ^9.7, eslint-plugin-jsx-a11y@6 peers only ^9, and
-          # eslint-plugin-react-hooks@5 peers only ^9. Re-evaluate when
-          # those plugins ship v10-compatible majors.
+          # eslint-plugin-react-hooks@5 peers only ^9. @eslint/js@10
+          # peers eslint@^10 so it can't install on its own either.
+          # Re-evaluate when those plugins ship v10-compatible majors.
           - dependency-name: 'eslint'
+            versions: ['10.x']
+          - dependency-name: '@eslint/js'
             versions: ['10.x']
           - dependency-name: 'eslint-plugin-react-hooks'
             versions: ['6.x']
@@ -60,6 +63,7 @@ updates:
               patterns:
                   - 'eslint'
                   - 'eslint-*'
+                  - '@eslint/*'
                   - '@typescript-eslint/*'
           vite:
               patterns:
